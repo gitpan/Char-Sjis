@@ -49,7 +49,7 @@ DESCRIPTION
       Shift_JIS, Windows-31J, CP932, MacJapanese, SJIS(R90), Shift_JISX0213, and
       Shift_JIS-2004, etc.
 
-INSTALLATION BY MAKE (for UNIX)
+INSTALLATION BY MAKE (for UNIX like system)
 
 To install this software by make, type the following:
 

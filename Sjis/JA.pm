@@ -42,7 +42,9 @@ Sjis-JA - Source code filter to escape ShiftJIS (Japanese document)
         Sjis::index(...);
         Sjis::rindex(...);
 
-      Perl5.6 エミュレーション関数
+      Perl5.6 エミュレーション(perl5.005の場合)
+        use warnings;
+        use warnings::register;
         binmode(...);
         open(...);
 
@@ -77,13 +79,9 @@ Sjis-JA - Source code filter to escape ShiftJIS (Japanese document)
 適用できるようになりました。
 
 Perl5.8 以降は Encode モジュールによってマルチリンガル処理がサポートされたため、
-jperl は不要になったと言われています。
+jperl は不要になったと言われていました。
 
-JPerl in CPAN Perl Ports (Binary Distributions)
-
-http://www.cpan.org/ports/index.html#jperl
-
-ですが、それは本当なのでしょうか？
+ですが、それは本当のことだったでしょうか？
 
 日本国内において、汎用大型コンピュータの入出力、パーソナルコンピュータの内部コー
 ドおよび入出力、さらには携帯電話に至るまで、ShiftJIS を基本とした文字コード
@@ -91,7 +89,7 @@ http://www.cpan.org/ports/index.html#jperl
 UTF8 フラグはありません。
 このソフトウェアは Shift_JIS, Windows-31J, CP932, MacJapanese, SJIS(R90),
 Shift_JISX0213, Shift_JIS-2004 などいわゆる ShiftJIS の亜種を扱うことができます。
-この文書ではこれらの総称して ShiftJIS という語で表しています(「_」がない)。
+この文書ではこれらを総称して ShiftJIS という語で表しています(「_」がない)。
 
 複雑な解法は問題をより複雑にします。
 あなたもエンコードの問題からエスケープしませんか？
@@ -206,7 +204,7 @@ http://mail.pm.org/pipermail/tokyo-pm/1999-September/001854.html
 
 =head1 ソフトウェアの一覧
 
-   Char/Sjis.pm          --- ShiftJIS ソースコードフィルタモジュール
+   Char/Sjis.pm          --- ShiftJIS ソースコードフィルタ
    Char/Esjis.pm         --- Sjis.pm のランタイムルーチン
    Sjis.pm               --- Char/Sjis.pm の別名(機能は同じです)
    Esjis.pm              --- Char/Esjis.pm の別名(機能は同じです)
@@ -410,6 +408,13 @@ Esjis::* 関数は Esjis.pm が提供します。
   -C          Esjis::C
   ---------------------------------
 
+perl5.00503 を使用している場合でもファイルテスト演算子は「積み重ねる」ことが
+できます。
+
+  if ( -w -r $file ) {
+      print "The file is both readable and writable!\n";
+  }
+
 =head1 関数名のエスケープ
 
 もし文字指向の関数を使いたい場合は以下のように記述する必要があります。それぞれ
@@ -478,13 +483,11 @@ Esjis::* 関数は Esjis.pm が提供します。
     Sjis::length($string) はスカラー値 $string の長さを ShiftJIS の文字数で返
     します。$string を省略した場合は $_ の文字数を返します。
 
-    文字列の長さを、文字単位ではなく、バイト単位で数えるには
+    文字数ではなくバイト単位での長さを調べるには、いままで通り
 
-    $blen = length($string);
-    $blen = CORE::length($string);
-    $blen = bytes::length($string);
+    $bytes = length($string);
 
-    のいずれかを使います。
+    のようにします。
 
 =item * Sjis::substr
 
@@ -574,6 +577,10 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
 
 =head1 perl5.005 による Perl5.6 エミュレーション
 
+  perl5.005 にて warnings プラグマをエミュレートします。
+  同梱の warnings.pm_ を warnings.pm に、warnings/register.pm_ を
+  warnings/register.pm にファイル名を変更して使用できます。
+
   perl5.005 を利用している際に Perl5.6 の関数の動作をエミュレートします。
 
   --------------------------------------------------------------------
@@ -594,8 +601,9 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
 
   * 2 つの引数が使えます
 
-  perl5.005 上で実行した場合は、Perl5.6 の binmode 関数の機能をエミュレートします。
-  以下は要点のみの記述なので、詳細は perlfunc/binmode を参照してください。
+   MacPerl 以外の perl5.005 上で実行した場合は、Perl5.6 の binmode 関数の機能をエ
+  ミュレートします。以下は要点のみの記述なので、詳細は perlfunc/binmode を参照して
+  ください。
 
    ファイルハンドル FILEHANDLE に対して、$disciplines 引数で指定された扱いを行うよ
   うにする。$disciplines を省略すると、ファイルハンドルを ':raw' として扱うように
@@ -687,13 +695,13 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
   open(FH, "<:raw", $path) or die "can't open $path: $!";
 
   表 1. I/O ディシプリン
-  -------------------------------------------------
+  ---------------------------------------------------
   ディシプリン    意味
-  -------------------------------------------------
+  ---------------------------------------------------
   :raw            バイナリモード、何も手を加えない
-  :crlf           改行文字を判別する
+  :crlf           改行文字を判別する(DOS風のOSの場合)
   :encoding(...)  エンコーディング名を指定する
-  -------------------------------------------------
+  ---------------------------------------------------
 
    (そうすることに意味があるならば)ディシプリンを積み重ねることもできる。例えば、次
   のような指定も可能である:
@@ -702,19 +710,43 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
 
 =back
 
-=head1 無視する utf8 プラグマ
+=head1 無視するプラグマおよびモジュール
+
+  -----------------------------------------------------------
+  処理前                    処理後
+  -----------------------------------------------------------
+  use strict;               use strict; no strict qw(refs);
+  require utf8;             # require utf8;
+  require bytes;            # require bytes;
+  require I18N::Japanese;   # require I18N::Japanese;
+  require I18N::Collate;    # require I18N::Collate;
+  require I18N::JExt;       # require I18N::JExt;
+  require File::DosGlob;    # require File::DosGlob;
+  require Wild;             # require Wild;
+  require Wildcard;         # require Wildcard;
+  require Japanese;         # require Japanese;
+  use utf8;                 # use utf8;
+  use bytes;                # use bytes;
+  use I18N::Japanese;       # use I18N::Japanese;
+  use I18N::Collate;        # use I18N::Collate;
+  use I18N::JExt;           # use I18N::JExt;
+  use File::DosGlob;        # use File::DosGlob;
+  use Wild;                 # use Wild;
+  use Wildcard;             # use Wildcard;
+  use Japanese;             # use Japanese;
+  no utf8;                  # no utf8;
+  no bytes;                 # no bytes;
+  no I18N::Japanese;        # no I18N::Japanese;
+  no I18N::Collate;         # no I18N::Collate;
+  no I18N::JExt;            # no I18N::JExt;
+  no File::DosGlob;         # no File::DosGlob;
+  no Wild;                  # no Wild;
+  no Wildcard;              # no Wildcard;
+  no Japanese;              # no Japanese;
+  -----------------------------------------------------------
 
   utf8 プラグマ、bytes プラグマはコメントアウトされます。同ファイルで提供されて
   いる関数の代わりとして Esjis.pm がダミー関数を提供します。
-
-  ---------------------------------------------------------------------
-  処理前          処理後                 説明
-  ---------------------------------------------------------------------
-  use utf8;       # use utf8;            Esjis.pm は no utf8; されている
-  no utf8;        # no utf8;             ときも utf8::* 関数を提供します
-  use bytes;      # use bytes;           Esjis.pm は no bytes; されている
-  no bytes;       # no bytes;            ときも bytes::* 関数を提供します
-  ---------------------------------------------------------------------
 
 =over 2
 
@@ -818,14 +850,17 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
 
     perl5.005 であれば常に chdir() を正常に実行できます。
 
+    DOS風のシステム($^O の値が MSWin32, NetWare, symbian, dos のいずれかの
+    場合)は、以下の制限事項があります。
+
     perl5.006 または perl5.00800 の場合で文字コード(0x5C)で終わるディレクトリ
     を指定して実行するには jacode.pl ライブラリが必要です。
 
-    perl5.008001以降, perl5.010, perl5.012 にて文字コード(0x5C)で終わるディレ
-    クトリを指定して実行するとき、Win32 モジュールの Win32::GetShortPathName()
-    によって短い名前を取得できた場合は chdir() が成功します。ただし、chdir()
-    後のカレントディレクトリは Win32::GetShortPathName() によって取得した短い
-    名前になります。
+    perl5.008001以降, perl5.010, perl5.012, perl5.014 にて文字コード(0x5C)で
+    終わるディレクトリを指定して実行するとき、Win32 モジュールの
+    Win32::GetShortPathName() によって短い名前を取得できた場合は chdir() が
+    成功します。ただし、chdir() 後のカレントディレクトリは
+    Win32::GetShortPathName() によって取得した短い名前になります。
 
     参考リンク
     Bug #81839
@@ -879,6 +914,19 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
       $1 は 'BBB'
  
     になり、$& の代わりに使用することができます。
+
+=item * 正規表現を適用する文字列の長さの上限
+
+    上記のとおり、エスケープ後の正規表現にはマルチバイトアンカーリング処理のた
+    めの記述が追加されますが、その中に含まれる \G の制約を受けます。
+    perl5.006, perl5.008, perl5.010, perl5.012, perl5.014 で実行した場合、対象
+    文字列の32,767バイトを超える位置でのマッチすべきところでマッチしません。
+    なおかつ、その際にエラーも警告も出力されません。
+
+    参考リンク
+    Bug #89792
+    \G can't treat over 32,767 octets
+    http://bugs.activestate.com/show_bug.cgi?id=89792
 
 =back
 
@@ -1569,7 +1617,6 @@ Unicode サポートが perl に導入される以前は、eq 演算子は、2つのスカラー変数によっ
 =item * ゴール5
 
     JPerl ユーザが Perl で JPerl を保守できるようになる。
-    あるいは MacJPerl ユーザが MacPerl で MacJPerl を保守できるようになる。
 
     JPerl がいつもあなたのそばにありますように ...
 
@@ -1726,8 +1773,10 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
 されました。全ての方に感謝いたします。
 
  山下 良蔵さん, シフトJISのデザインの話
- ttp://furukawablog.spaces.live.com/Blog/cns!1pmWgsL289nm7Shn7cS0jHzA!2225.entry
+ ttp://furukawablog.spaces.live.com/Blog/cns!1pmWgsL289nm7Shn7cS0jHzA!2225.entry (リンク切れ)
+ ttp://shino.tumblr.com/post/116166805/1981-us-jis
  (先頭に 'h' を付加してアクセスしてください)
+ http://www.wdic.org/w/WDIC/%E3%82%B7%E3%83%95%E3%83%88JIS
 
  Larry Wall, Perl
  http://www.perl.org/
@@ -1740,7 +1789,6 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
 
  貞廣 知行さん, Shift-JISテキストを正しく扱う
  http://homepage1.nifty.com/nomenclator/perl/shiftjis.htm
- http://search.cpan.org/dist/ShiftJIS-Regexp/
 
  まつもと ゆきひろさん, Ruby on Perl(s)
  http://www.rubyist.net/~matz/slides/yapc2006/
@@ -1749,10 +1797,10 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
  http://homepage1.nifty.com/kazuf/jperl.html
 
  Bruce., Unicode in Perl
- http://www.rakunet.org/TSNET/TSabc/18/546.html
+ http://www.rakunet.org/tsnet/TSabc/18/546.html
 
  和泉 宏明さん, WindowsでPerl 5.8/5.10を使うモンじゃない
- http://www.aritia.jp/hizumi/oldtext/perlwin.html
+ http://www.aritia.org/hizumi/perl/perlwin.html
 
  塚本 牧生さん, Perlメモ/Windowsでのファイルパス
  http://digit.que.ne.jp/work/wiki.cgi?Perl%E3%83%A1%E3%83%A2%2FWindows%E3%81%A7%E3%81%AE%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%83%91%E3%82%B9
@@ -1764,6 +1812,7 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
  http://homepage2.nifty.com/kipp/perl/jperl/
 
  渡辺 博文さん, Jperl
+ http://www.cpan.org/src/5.0/jperl/
  http://search.cpan.org/~watanabe/
  ftp://ftp.oreilly.co.jp/pcjp98/watanabe/jperlconf.ppt
 
