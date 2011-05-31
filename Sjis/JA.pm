@@ -1760,6 +1760,18 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
  346ページ
  ISBN 4-7561-0963-2
 
+ 長谷川 勇さん, 国際化正規表現ライブラリなど
+ http://lc.linux.or.jp/lc2001/papers/dfa-i18n-paper.pdf
+ http://lc.linux.or.jp/lc2002/papers/hasegawa0918h.pdf
+ http://lc.linux.or.jp/lc2002/papers/hasegawa0918p.pdf
+ http://www.j-tokkyo.com/2003/G06F/JP2003-242179.shtml
+
+ 前田 泰成さん, マルチバイト文字セット用正規表現コンパイラ構成方法及びプログラム 
+ http://patent.astamuse.com/ja/published/JP/No/2007102744
+
+ YAMAGAKI Norio, マルチバイト処理向け文字列照合用有限オートマトン生成システム
+ http://www.wipo.int/pctdb/ja/wo.jsp?WO=2009116646&IA=JP2009055515
+
  関連ソフトウェア
  http://search.cpan.org/dist/jacode/
  http://search.cpan.org/dist/Char/

@@ -6,10 +6,10 @@ die "This file is not encoded in ShiftJIS.\n" if q{‚ } ne "\x82\xa0";
 my $__FILE__ = __FILE__;
 
 use Char::Esjis;
-print "1..25\n";
+print "1..24\n";
 
 if ($^O !~ /\A (?: MSWin32 | NetWare | symbian | dos ) \z/oxms) {
-    for my $tno (1..25) {
+    for my $tno (1..24) {
         print "ok - $tno # SKIP $^X $0\n";
     }
     exit;
@@ -172,53 +172,44 @@ else {
     print "not ok - 19 Char::Esjis::g_ == -g  $^X $__FILE__\n";
 }
 
-local $^W = 0;
-$_ = 'file';
-if ((Char::Esjis::k_ ne '') == (-k ne '')) {
-    print "ok - 20 Char::Esjis::k_ == -k  $^X $__FILE__\n";
-}
-else {
-    print "not ok - 20 Char::Esjis::k_ == -k  $^X $__FILE__\n";
-}
-
 $_ = 'file';
 if ((Char::Esjis::T_ ne '') == (-T ne '')) {
-    print "ok - 21 Char::Esjis::T_ == -T  $^X $__FILE__\n";
+    print "ok - 20 Char::Esjis::T_ == -T  $^X $__FILE__\n";
 }
 else {
-    print "not ok - 21 Char::Esjis::T_ == -T  $^X $__FILE__\n";
+    print "not ok - 20 Char::Esjis::T_ == -T  $^X $__FILE__\n";
 }
 
 $_ = 'file';
 if ((Char::Esjis::B_ ne '') == (-B ne '')) {
-    print "ok - 22 Char::Esjis::B_ == -B  $^X $__FILE__\n";
+    print "ok - 21 Char::Esjis::B_ == -B  $^X $__FILE__\n";
 }
 else {
-    print "not ok - 22 Char::Esjis::B_ == -B  $^X $__FILE__\n";
+    print "not ok - 21 Char::Esjis::B_ == -B  $^X $__FILE__\n";
 }
 
 $_ = 'file';
 if ((Char::Esjis::M_ ne '') == (-M ne '')) {
-    print "ok - 23 Char::Esjis::M_ == -M  $^X $__FILE__\n";
+    print "ok - 22 Char::Esjis::M_ == -M  $^X $__FILE__\n";
 }
 else {
-    print "not ok - 23 Char::Esjis::M_ == -M  $^X $__FILE__\n";
+    print "not ok - 22 Char::Esjis::M_ == -M  $^X $__FILE__\n";
 }
 
 $_ = 'file';
 if ((Char::Esjis::A_ ne '') == (-A ne '')) {
-    print "ok - 24 Char::Esjis::A_ == -A  $^X $__FILE__\n";
+    print "ok - 23 Char::Esjis::A_ == -A  $^X $__FILE__\n";
 }
 else {
-    print "not ok - 24 Char::Esjis::A_ == -A  $^X $__FILE__\n";
+    print "not ok - 23 Char::Esjis::A_ == -A  $^X $__FILE__\n";
 }
 
 $_ = 'file';
 if ((Char::Esjis::C_ ne '') == (-C ne '')) {
-    print "ok - 25 Char::Esjis::C_ == -C  $^X $__FILE__\n";
+    print "ok - 24 Char::Esjis::C_ == -C  $^X $__FILE__\n";
 }
 else {
-    print "not ok - 25 Char::Esjis::C_ == -C  $^X $__FILE__\n";
+    print "not ok - 24 Char::Esjis::C_ == -C  $^X $__FILE__\n";
 }
 
 close(FILE);
