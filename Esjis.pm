@@ -16,24 +16,24 @@ use strict qw(subs vars);
 # (and so on)
 
 BEGIN { eval q{ use vars qw($VERSION) } }
-$VERSION = sprintf '%d.%02d', q$Revision: 0.75 $ =~ m/(\d+)/xmsg;
+$VERSION = sprintf '%d.%02d', q$Revision: 0.76 $ =~ m/(\d+)/xmsg;
 
 BEGIN {
     my $PERL5LIB = __FILE__;
 
     # DOS-like system
     if ($^O =~ /\A (?: MSWin32 | NetWare | symbian | dos ) \z/oxms) {
-        $PERL5LIB =~ s{[^/]*$}{Sjis};
+        $PERL5LIB =~ s{[^\x81-\x9F\xE0-\xFC/]*$}{Sjis};
     }
 
     # MacOS system
     elsif ($^O eq 'MacOS') {
-        $PERL5LIB =~ s{[^:]+$}{Sjis:};
+        $PERL5LIB =~ s{[^\x81-\x9F\xE0-\xFC:]+$}{Sjis:};
     }
 
     # UNIX-like system
     else {
-        $PERL5LIB =~ s{[^/]*$}{Sjis};
+        $PERL5LIB =~ s{[^\x81-\x9F\xE0-\xFC/]*$}{Sjis};
     }
 
     my @inc = ();
@@ -88,7 +88,7 @@ BEGIN {
             my %global = map {$_ => 1} qw(ARGV ARGVOUT ENV INC SIG STDERR STDIN STDOUT);
 
             # Global names: special character, "^xyz", or other.
-            if ($name =~ /^(([^a-z])|(\^[a-z_]+))\z/i || $global{$name}) {
+            if ($name =~ /^(([^\x81-\x9F\xE0-\xFCa-z])|(\^[a-z_]+))\z/i || $global{$name}) {
                 # RGS 2001-11-05 : translate leading ^X to control-char
                 $name =~ s/^\^([a-z_])/'qq(\c'.$1.')'/eei;
                 $pkg = "main";
@@ -445,6 +445,7 @@ sub Esjis::ucfirst_();
 sub Esjis::uc(@);
 sub Esjis::uc_();
 sub Esjis::ignorecase(@);
+sub Esjis::classic_character_class($);
 sub Esjis::capture($);
 sub Esjis::chr(;$);
 sub Esjis::chr_();
@@ -2207,40 +2208,8 @@ sub Esjis::ignorecase(@) {
                 }
             }
 
-            # rewrite character class or escape character
-            elsif (my $char = {
-                '\D' => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^0-9])',
-                '\S' => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x09\x0A\x0C\x0D\x20])',
-                '\W' => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^0-9A-Z_a-z])',
-                '\d' => '[0-9]',
-                '\s' => '[\x09\x0A\x0C\x0D\x20]',
-                '\w' => '[0-9A-Z_a-z]',
-
-                # \h \v \H \V
-                #
-                # P.114 Character Class Shortcuts
-                # in Chapter 7: In the World of Regular Expressions
-                # of ISBN 978-0-596-52010-6 Learning Perl, Fifth Edition
-
-                '\H' => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x09\x20])',
-                '\V' => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x0C\x0A\x0D])',
-                '\h' => '[\x09\x20]',
-                '\v' => '[\x0C\x0A\x0D]',
-
-                # \b \B
-                #
-                # P.131 Word boundaries: \b, \B, \<, \>, ...
-                # in Chapter 3: Overview of Regular Expression Features and Flavors
-                # of ISBN 0-596-00289-0 Mastering Regular Expressions, Second edition
-
-                # '\b' => '(?:(?<=\A|\W)(?=\w)|(?<=\w)(?=\W|\z))',
-                '\b' => '(?:\A(?=[0-9A-Z_a-z])|(?<=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF])(?=[0-9A-Z_a-z])|(?<=[0-9A-Z_a-z])(?=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF]|\z))',
-
-                # '\B' => '(?:(?<=\w)(?=\w)|(?<=\W)(?=\W))',
-                '\B' => '(?:(?<=[0-9A-Z_a-z])(?=[0-9A-Z_a-z])|(?<=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF])(?=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF]))',
-
-                }->{$char[$i]}
-            ) {
+            # rewrite classic character class or escape character
+            elsif (my $char = classic_character_class($char[$i])) {
                 $char[$i] = $char;
             }
 
@@ -2276,6 +2245,58 @@ sub Esjis::ignorecase(@) {
 
     # make regexp string
     return @string;
+}
+
+#
+# classic character class ( \D \S \W \d \s \w \C \X \H \V \h \v \R \N \b \B )
+#
+sub classic_character_class($) {
+    my($char) = @_;
+
+    return {
+        '\D' => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC0-9])',
+        '\S' => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x0A\x0C\x0D\x20])',
+        '\W' => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC0-9A-Z_a-z])',
+        '\d' => '[0-9]',
+                 # \t  \n  \f  \r space
+        '\s' => '[\x09\x0A\x0C\x0D\x20]',
+        '\w' => '[0-9A-Z_a-z]',
+        '\C' => '[\x00-\xFF]',
+        '\X' => 'X',
+
+        # \h \v \H \V
+        #
+        # P.114 Character Class Shortcuts
+        # in Chapter 7: In the World of Regular Expressions
+        # of ISBN 978-0-596-52010-6 Learning Perl, Fifth Edition
+
+        '\H' => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x20])',
+        '\V' => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x0C\x0A\x0D])',
+        '\h' => '[\x09\x20]',
+        '\v' => '[\x0C\x0A\x0D]',
+        '\R' => '(?:\x0D\x0A|[\x0A\x0D])',
+
+        # \N
+        #
+        # http://perldoc.perl.org/perlre.html
+        # Character Classes and other Special Escapes
+        # Any character but \n (experimental). Not affected by /s modifier
+
+        '\N' => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x0A])',
+
+        # \b \B
+        #
+        # P.131 Word boundaries: \b, \B, \<, \>, ...
+        # in Chapter 3: Overview of Regular Expression Features and Flavors
+        # of ISBN 0-596-00289-0 Mastering Regular Expressions, Second edition
+
+        # '\b' => '(?:(?<=\A|\W)(?=\w)|(?<=\w)(?=\W|\z))',
+        '\b' => '(?:\A(?=[0-9A-Z_a-z])|(?<=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF])(?=[0-9A-Z_a-z])|(?<=[0-9A-Z_a-z])(?=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF]|\z))',
+
+        # '\B' => '(?:(?<=\w)(?=\w)|(?<=\W)(?=\W))',
+        '\B' => '(?:(?<=[0-9A-Z_a-z])(?=[0-9A-Z_a-z])|(?<=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF])(?=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF]))',
+
+    }->{$char} || '';
 }
 
 #
@@ -2662,6 +2683,37 @@ sub _charlist {
                 $char[$i] = '...';
             }
         }
+
+        # octal escape sequence
+        elsif ($char[$i] =~ m/\A \\o \{ ([0-7]+) \} \z/oxms) {
+            $char[$i] = octchr($1);
+        }
+
+        # hexadecimal escape sequence
+        elsif ($char[$i] =~ m/\A \\x \{ ([0-9A-Fa-f]+) \} \z/oxms) {
+            $char[$i] = hexchr($1);
+        }
+
+        # \N{CHARNAME} --> N{CHARNAME}
+        elsif ($char[$i] =~ m/\A \\ ( N\{ ([^\x81-\x9F\xE0-\xFC0-9\}][^\x81-\x9F\xE0-\xFC\}]*) \} ) \z/oxms) {
+            $char[$i] = $1;
+        }
+
+        # \p{PROPERTY} --> p{PROPERTY}
+        elsif ($char[$i] =~ m/\A \\ ( p\{ ([^\x81-\x9F\xE0-\xFC0-9\}][^\x81-\x9F\xE0-\xFC\}]*) \} ) \z/oxms) {
+            $char[$i] = $1;
+        }
+
+        # \P{PROPERTY} --> P{PROPERTY}
+        elsif ($char[$i] =~ m/\A \\ ( P\{ ([^\x81-\x9F\xE0-\xFC0-9\}][^\x81-\x9F\xE0-\xFC\}]*) \} ) \z/oxms) {
+            $char[$i] = $1;
+        }
+
+        # \p, \P, \X --> p, P, X
+        elsif ($char[$i] =~ m/\A \\ ( [pPX] ) \z/oxms) {
+            $char[$i] = $1;
+        }
+
         elsif ($char[$i] =~ m/\A \\ ([0-7]{2,3}) \z/oxms) {
             $char[$i] = CORE::chr oct $1;
         }
@@ -2671,7 +2723,7 @@ sub _charlist {
         elsif ($char[$i] =~ m/\A \\c ([\x40-\x5F]) \z/oxms) {
             $char[$i] = CORE::chr(CORE::ord($1) & 0x1F);
         }
-        elsif ($char[$i] =~ m/\A (\\ [0nrtfbaedDhHsSvVwW]) \z/oxms) {
+        elsif ($char[$i] =~ m/\A (\\ [0nrtfbaedswDSWHVhvR]) \z/oxms) {
             $char[$i] = {
                 '\0' => "\0",
                 '\n' => "\n",
@@ -2684,14 +2736,52 @@ sub _charlist {
                 '\d' => '[0-9]',
                 '\s' => '[\x09\x0A\x0C\x0D\x20]',
                 '\w' => '[0-9A-Z_a-z]',
-                '\D' => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^0-9])',
-                '\S' => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x09\x0A\x0C\x0D\x20])',
-                '\W' => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^0-9A-Z_a-z])',
+                '\D' => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC0-9])',
+                '\S' => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x0A\x0C\x0D\x20])',
+                '\W' => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC0-9A-Z_a-z])',
 
-                '\H' => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x09\x20])',
-                '\V' => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x0C\x0A\x0D])',
+                '\H' => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x20])',
+                '\V' => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x0C\x0A\x0D])',
                 '\h' => '[\x09\x20]',
                 '\v' => '[\x0C\x0A\x0D]',
+                '\R' => '(?:\x0D\x0A|[\x0A\x0D])',
+
+            }->{$1};
+        }
+
+        # POSIX-style character classes
+        elsif ($char[$i] =~ m/\A ( \[\: \^? (?:alnum|alpha|ascii|blank|cntrl|digit|graph|lower|print|punct|space|upper|word|xdigit) :\] ) \z/oxms) {
+            $char[$i] = {
+
+                '[:alnum:]'   => '[\x30-\x39\x41-\x5A\x61-\x7A]',
+                '[:alpha:]'   => '[\x41-\x5A\x61-\x7A]',
+                '[:ascii:]'   => '[\x00-\x7F]',
+                '[:blank:]'   => '[\x09\x20]',
+                '[:cntrl:]'   => '[\x00-\x1F\x7F]',
+                '[:digit:]'   => '[\x30-\x39]',
+                '[:graph:]'   => '[\x21-\x7F]',
+                '[:lower:]'   => '[\x61-\x7A]',
+                '[:print:]'   => '[\x20-\x7F]',
+                '[:punct:]'   => '[\x21-\x2F\x3A-\x3F\x40\x5B-\x5F\x60\x7B-\x7E]',
+                '[:space:]'   => '[\x09\x0A\x0B\x0C\x0D\x20]',
+                '[:upper:]'   => '[\x41-\x5A]',
+                '[:word:]'    => '[\x30-\x39\x41-\x5A\x5F\x61-\x7A]',
+                '[:xdigit:]'  => '[\x30-\x39\x41-\x46\x61-\x66]',
+
+                '[:^alnum:]'  => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x5A\x61-\x7A])',
+                '[:^alpha:]'  => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x41-\x5A\x61-\x7A])',
+                '[:^ascii:]'  => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x00-\x7F])',
+                '[:^blank:]'  => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x20])',
+                '[:^cntrl:]'  => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x00-\x1F\x7F])',
+                '[:^digit:]'  => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39])',
+                '[:^graph:]'  => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x21-\x7F])',
+                '[:^lower:]'  => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x61-\x7A])',
+                '[:^print:]'  => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x20-\x7F])',
+                '[:^punct:]'  => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x21-\x2F\x3A-\x3F\x40\x5B-\x5F\x60\x7B-\x7E])',
+                '[:^space:]'  => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x0A\x0B\x0C\x0D\x20])',
+                '[:^upper:]'  => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x41-\x5A])',
+                '[:^word:]'   => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x5A\x5F\x61-\x7A])',
+                '[:^xdigit:]' => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x46\x61-\x66])',
 
             }->{$1};
         }
@@ -2818,7 +2908,7 @@ sub _charlist {
             push @singleoctet, "\f","\n","\r";
             $i += 1;
         }
-        elsif ($char[$i] =~ m/\A (?: [\x00-\xFF] | \\d | \\s | \\w ) \z/oxms) {
+        elsif ($char[$i] =~ m/\A (?: \\d | \\s | \\w ) \z/oxms) {
             push @singleoctet, $char[$i];
             $i += 1;
         }
@@ -2853,6 +2943,58 @@ sub _charlist {
 
     # return character list
     return \@singleoctet, \@charlist;
+}
+
+#
+# ShiftJIS octal escape sequence
+#
+sub octchr {
+    my($octdigit) = @_;
+
+    my @binary = ();
+    for my $octal (split(//,$octdigit)) {
+        push @binary, {
+            '0' => '000',
+            '1' => '001',
+            '2' => '010',
+            '3' => '011',
+            '4' => '100',
+            '5' => '101',
+            '6' => '110',
+            '7' => '111',
+        }->{$octal};
+    }
+    my $binary = join '', @binary;
+
+    my $octchr = {
+        #                1234567
+        1 => pack('B*', "0000000$binary"),
+        2 => pack('B*', "000000$binary"),
+        3 => pack('B*', "00000$binary"),
+        4 => pack('B*', "0000$binary"),
+        5 => pack('B*', "000$binary"),
+        6 => pack('B*', "00$binary"),
+        7 => pack('B*', "0$binary"),
+        0 => pack('B*', "$binary"),
+
+    }->{CORE::length($binary) % 8};
+
+    return $octchr;
+}
+
+#
+# ShiftJIS hexadecimal escape sequence
+#
+sub hexchr {
+    my($hexdigit) = @_;
+
+    my $hexchr = {
+        1 => pack('H*', "0$hexdigit"),
+        0 => pack('H*', "$hexdigit"),
+
+    }->{CORE::length($_[0]) % 2};
+
+    return $hexchr;
 }
 
 #
@@ -2904,7 +3046,7 @@ sub charlist_not_qr {
         if (scalar(@singleoctet) >= 1) {
 
             # any character other than multiple octet and single octet character class
-            return '(?!' . join('|', @charlist) . ')(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^'. join('', @singleoctet) . '])';
+            return '(?!' . join('|', @charlist) . ')(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC'. join('', @singleoctet) . '])';
         }
         else {
 
@@ -2916,7 +3058,7 @@ sub charlist_not_qr {
         if (scalar(@singleoctet) >= 1) {
 
             # any character other than single octet character class
-            return                                 '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^'. join('', @singleoctet) . '])';
+            return                                 '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC'. join('', @singleoctet) . '])';
         }
         else {
 
@@ -3014,7 +3156,7 @@ sub Esjis::r(;*@) {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $r = -r $fh;
                 close $fh;
                 return wantarray ? ($r,@_) : $r;
@@ -3047,7 +3189,7 @@ sub Esjis::w(;*@) {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, ">>$_") {
+            if (open $fh, ">>$_") {
                 my $w = -w $fh;
                 close $fh;
                 return wantarray ? ($w,@_) : $w;
@@ -3080,7 +3222,7 @@ sub Esjis::x(;*@) {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $dummy_for_underline_cache = -x $fh;
                 close $fh;
             }
@@ -3115,7 +3257,7 @@ sub Esjis::o(;*@) {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $o = -o $fh;
                 close $fh;
                 return wantarray ? ($o,@_) : $o;
@@ -3148,7 +3290,7 @@ sub Esjis::R(;*@) {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $R = -R $fh;
                 close $fh;
                 return wantarray ? ($R,@_) : $R;
@@ -3181,7 +3323,7 @@ sub Esjis::W(;*@) {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, ">>$_") {
+            if (open $fh, ">>$_") {
                 my $W = -W $fh;
                 close $fh;
                 return wantarray ? ($W,@_) : $W;
@@ -3214,7 +3356,7 @@ sub Esjis::X(;*@) {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $dummy_for_underline_cache = -X $fh;
                 close $fh;
             }
@@ -3249,7 +3391,7 @@ sub Esjis::O(;*@) {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $O = -O $fh;
                 close $fh;
                 return wantarray ? ($O,@_) : $O;
@@ -3293,7 +3435,7 @@ sub Esjis::e(;*@) {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $e = -e $fh;
                 close $fh;
                 return wantarray ? ($e,@_) : $e;
@@ -3326,7 +3468,7 @@ sub Esjis::z(;*@) {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $z = -z $fh;
                 close $fh;
                 return wantarray ? ($z,@_) : $z;
@@ -3359,7 +3501,7 @@ sub Esjis::s(;*@) {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $s = -s $fh;
                 close $fh;
                 return wantarray ? ($s,@_) : $s;
@@ -3392,7 +3534,7 @@ sub Esjis::f(;*@) {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $f = -f $fh;
                 close $fh;
                 return wantarray ? ($f,@_) : $f;
@@ -3450,7 +3592,7 @@ sub Esjis::l(;*@) {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $l = -l $fh;
                 close $fh;
                 return wantarray ? ($l,@_) : $l;
@@ -3483,7 +3625,7 @@ sub Esjis::p(;*@) {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $p = -p $fh;
                 close $fh;
                 return wantarray ? ($p,@_) : $p;
@@ -3516,7 +3658,7 @@ sub Esjis::S(;*@) {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $S = -S $fh;
                 close $fh;
                 return wantarray ? ($S,@_) : $S;
@@ -3549,7 +3691,7 @@ sub Esjis::b(;*@) {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $b = -b $fh;
                 close $fh;
                 return wantarray ? ($b,@_) : $b;
@@ -3582,7 +3724,7 @@ sub Esjis::c(;*@) {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $c = -c $fh;
                 close $fh;
                 return wantarray ? ($c,@_) : $c;
@@ -3615,7 +3757,7 @@ sub Esjis::u(;*@) {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $u = -u $fh;
                 close $fh;
                 return wantarray ? ($u,@_) : $u;
@@ -3648,7 +3790,7 @@ sub Esjis::g(;*@) {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $g = -g $fh;
                 close $fh;
                 return wantarray ? ($g,@_) : $g;
@@ -3728,7 +3870,7 @@ sub Esjis::T(;*@) {
         }
 
         $fh = gensym();
-        unless (CORE::open $fh, $_) {
+        unless (open $fh, $_) {
             return wantarray ? (undef,@_) : undef;
         }
         if (sysread $fh, my $block, 512) {
@@ -3791,7 +3933,7 @@ sub Esjis::B(;*@) {
         }
 
         $fh = gensym();
-        unless (CORE::open $fh, $_) {
+        unless (open $fh, $_) {
             return wantarray ? (undef,@_) : undef;
         }
         if (sysread $fh, my $block, 512) {
@@ -3837,7 +3979,7 @@ sub Esjis::M(;*@) {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,$ctime,$blksize,$blocks) = CORE::stat $fh;
                 close $fh;
                 my $M = ($^T - $mtime) / (24*60*60);
@@ -3871,7 +4013,7 @@ sub Esjis::A(;*@) {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,$ctime,$blksize,$blocks) = CORE::stat $fh;
                 close $fh;
                 my $A = ($^T - $atime) / (24*60*60);
@@ -3905,7 +4047,7 @@ sub Esjis::C(;*@) {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,$ctime,$blksize,$blocks) = CORE::stat $fh;
                 close $fh;
                 my $C = ($^T - $ctime) / (24*60*60);
@@ -3948,7 +4090,7 @@ sub Esjis::r_() {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $r = -r $fh;
                 close $fh;
                 return $r ? 1 : '';
@@ -3972,7 +4114,7 @@ sub Esjis::w_() {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, ">>$_") {
+            if (open $fh, ">>$_") {
                 my $w = -w $fh;
                 close $fh;
                 return $w ? 1 : '';
@@ -3996,7 +4138,7 @@ sub Esjis::x_() {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $dummy_for_underline_cache = -x $fh;
                 close $fh;
             }
@@ -4022,7 +4164,7 @@ sub Esjis::o_() {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $o = -o $fh;
                 close $fh;
                 return $o ? 1 : '';
@@ -4046,7 +4188,7 @@ sub Esjis::R_() {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $R = -R $fh;
                 close $fh;
                 return $R ? 1 : '';
@@ -4070,7 +4212,7 @@ sub Esjis::W_() {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, ">>$_") {
+            if (open $fh, ">>$_") {
                 my $W = -W $fh;
                 close $fh;
                 return $W ? 1 : '';
@@ -4094,7 +4236,7 @@ sub Esjis::X_() {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $dummy_for_underline_cache = -X $fh;
                 close $fh;
             }
@@ -4120,7 +4262,7 @@ sub Esjis::O_() {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $O = -O $fh;
                 close $fh;
                 return $O ? 1 : '';
@@ -4144,7 +4286,7 @@ sub Esjis::e_() {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $e = -e $fh;
                 close $fh;
                 return $e ? 1 : '';
@@ -4168,7 +4310,7 @@ sub Esjis::z_() {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $z = -z $fh;
                 close $fh;
                 return $z ? 1 : '';
@@ -4192,7 +4334,7 @@ sub Esjis::s_() {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $s = -s $fh;
                 close $fh;
                 return $s;
@@ -4216,7 +4358,7 @@ sub Esjis::f_() {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $f = -f $fh;
                 close $fh;
                 return $f ? 1 : '';
@@ -4254,7 +4396,7 @@ sub Esjis::l_() {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $l = -l $fh;
                 close $fh;
                 return $l ? 1 : '';
@@ -4278,7 +4420,7 @@ sub Esjis::p_() {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $p = -p $fh;
                 close $fh;
                 return $p ? 1 : '';
@@ -4302,7 +4444,7 @@ sub Esjis::S_() {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $S = -S $fh;
                 close $fh;
                 return $S ? 1 : '';
@@ -4326,7 +4468,7 @@ sub Esjis::b_() {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $b = -b $fh;
                 close $fh;
                 return $b ? 1 : '';
@@ -4350,7 +4492,7 @@ sub Esjis::c_() {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $c = -c $fh;
                 close $fh;
                 return $c ? 1 : '';
@@ -4374,7 +4516,7 @@ sub Esjis::u_() {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $u = -u $fh;
                 close $fh;
                 return $u ? 1 : '';
@@ -4398,7 +4540,7 @@ sub Esjis::g_() {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my $g = -g $fh;
                 close $fh;
                 return $g ? 1 : '';
@@ -4430,7 +4572,7 @@ sub Esjis::T_() {
         return;
     }
     my $fh = gensym();
-    unless (CORE::open $fh, $_) {
+    unless (open $fh, $_) {
         return;
     }
 
@@ -4464,7 +4606,7 @@ sub Esjis::B_() {
         return;
     }
     my $fh = gensym();
-    unless (CORE::open $fh, $_) {
+    unless (open $fh, $_) {
         return;
     }
 
@@ -4501,7 +4643,7 @@ sub Esjis::M_() {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,$ctime,$blksize,$blocks) = CORE::stat $fh;
                 close $fh;
                 my $M = ($^T - $mtime) / (24*60*60);
@@ -4526,7 +4668,7 @@ sub Esjis::A_() {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,$ctime,$blksize,$blocks) = CORE::stat $fh;
                 close $fh;
                 my $A = ($^T - $atime) / (24*60*60);
@@ -4551,7 +4693,7 @@ sub Esjis::C_() {
         }
         else {
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 my($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,$ctime,$blksize,$blocks) = CORE::stat $fh;
                 close $fh;
                 my $C = ($^T - $ctime) / (24*60*60);
@@ -4613,7 +4755,7 @@ sub _dosglob {
                           { $ENV{'HOME'} || $ENV{'LOGDIR'} }oxmse;
             }
             else {
-                eval q{ require Mac::Files; };
+                eval q{ CORE::require Mac::Files; };
                 die if $@;
                 $expr =~ s{ \A ~ (?= [^/:] ) }
                           { Mac::Files::FindFolder(Mac::Files::kOnSystemDisk(), Mac::Files::kDesktopFolderType()) }oxmse;
@@ -4623,7 +4765,7 @@ sub _dosglob {
 
     # UNIX-like system
     else {
-        $expr =~ s{ \A ~ ( (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^/])* ) }
+        $expr =~ s{ \A ~ ( (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC/])* ) }
                   { $1 ? (getpwnam($1))[7] : ($ENV{'HOME'} || $ENV{'LOGDIR'} || (getpwuid($<))[7]) }oxmse;
     }
 
@@ -4673,6 +4815,7 @@ sub _do_glob {
 
     my($cond,@expr) = @_;
     my @glob = ();
+    my $fix_drive_relative_paths = 0;
 
 OUTER:
     for my $expr (@expr) {
@@ -4704,7 +4847,9 @@ OUTER:
         # wildcards with a drive prefix such as h:*.pm must be changed
         # to h:./*.pm to expand correctly
         if ($^O =~ /\A (?: MSWin32 | NetWare | symbian | dos ) \z/oxms) {
-            $expr =~ s# \A ((?:[A-Za-z]:)?) ([\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^/\\]) #$1./$2#oxms;
+            if ($expr =~ s# \A ((?:[A-Za-z]:)?) ([\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC/\\]) #$1./$2#oxms) {
+                $fix_drive_relative_paths = 1;
+            }
         }
 
         if (($head, $tail) = _parse_path($expr,$pathsep)) {
@@ -4811,6 +4956,11 @@ INNER:
             push @glob, @matched;
         }
     }
+    if ($fix_drive_relative_paths) {
+        for my $glob (@glob) {
+            $glob =~ s# \A ([A-Za-z]:) \./ #$1#oxms;
+        }
+    }
     return @glob;
 }
 
@@ -4824,8 +4974,8 @@ sub _parse_line {
     $line .= ' ';
     my @piece = ();
     while ($line =~ m{
-        " ( (?: [\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^"]   )*  ) " \s+ |
-          ( (?: [\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^"\s] )*  )   \s+
+        " ( (?: [\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC"]   )*  ) " \s+ |
+          ( (?: [\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC"\s] )*  )   \s+
         }oxmsg
     ) {
         push @piece, defined($1) ? $1 : $2;
@@ -4843,7 +4993,7 @@ sub _parse_path {
     $path .= '/';
     my @subpath = ();
     while ($path =~ m{
-        ((?: [\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^/\\] )+?) [/\\] }oxmsg
+        ((?: [\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC/\\] )+?) [/\\] }oxmsg
     ) {
         push @subpath, $1;
     }
@@ -4894,7 +5044,7 @@ OUTER_MACOS:
         }
 
         # note: $1 is not greedy
-        if (($head,$pathsep,$tail) = $expr =~ m{\A ((?:$q_char)*?) (:+) ((?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^:])*) \z}oxms) {
+        if (($head,$pathsep,$tail) = $expr =~ m{\A ((?:$q_char)*?) (:+) ((?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC:])*) \z}oxms) {
             if ($tail eq '') {
                 push @glob, $expr;
                 next OUTER_MACOS;
@@ -4990,7 +5140,7 @@ INNER_MACOS:
 #
 sub _expand_volume_MacOS {
 
-    eval q{ require MacPerl; };
+    eval q{ CORE::require MacPerl; };
     die if $@;
 
     my @volume_glob = @_;
@@ -4998,7 +5148,7 @@ sub _expand_volume_MacOS {
     for my $volume_glob (@volume_glob) {
 
         # volume name in pattern
-        if ($volume_glob =~ m/\A ((?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^:])+:) (.*) \z/oxms) {
+        if ($volume_glob =~ m/\A ((?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC:])+:) (.*) \z/oxms) {
             my $pattern = _quotemeta_MacOS($1);
             my $tail = $2;
 
@@ -5032,10 +5182,10 @@ sub _canonpath_MacOS {
     for my $expr (@expr) {
 
         # resolve any updirs, e.g. "*HD:t?p::a*" -> "*HD:a*"
-        1 while ($expr =~ s/\A ((?:$q_char)*) : (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^:])+ :: ((?:$q_char)*?) \z/$1:$2/oxms);
+        1 while ($expr =~ s/\A ((?:$q_char)*) : (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC:])+ :: ((?:$q_char)*?) \z/$1:$2/oxms);
 
         # remove a single trailing colon, e.g. ":*:" -> ":*"
-        $expr =~ s/ : ((?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^:])+) : \z/:$1/oxms;
+        $expr =~ s/ : ((?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC:])+) : \z/:$1/oxms;
     }
     return @expr;
 }
@@ -5145,7 +5295,7 @@ sub Esjis::lstat(*) {
     }
     elsif (_MSWin32_5Cended_path($_)) {
         my $fh = gensym();
-        if (CORE::open $fh, $_) {
+        if (open $fh, $_) {
             my @lstat = CORE::stat $fh; # not CORE::lstat
             close $fh;
             return @lstat;
@@ -5164,7 +5314,7 @@ sub Esjis::lstat_() {
     }
     elsif (_MSWin32_5Cended_path($_)) {
         my $fh = gensym();
-        if (CORE::open $fh, $_) {
+        if (open $fh, $_) {
             my @lstat = CORE::stat $fh; # not CORE::lstat
             close $fh;
             return @lstat;
@@ -5206,7 +5356,7 @@ sub Esjis::stat(*) {
     }
     elsif (_MSWin32_5Cended_path($_)) {
         my $fh = gensym();
-        if (CORE::open $fh, $_) {
+        if (open $fh, $_) {
             my @stat = CORE::stat $fh;
             close $fh;
             return @stat;
@@ -5229,7 +5379,7 @@ sub Esjis::stat_() {
     }
     elsif (_MSWin32_5Cended_path($_)) {
         my $fh = gensym();
-        if (CORE::open $fh, $_) {
+        if (open $fh, $_) {
             my @stat = CORE::stat $fh;
             close $fh;
             return @stat;
@@ -5268,7 +5418,7 @@ sub Esjis::unlink(@) {
             system qq{del $file >NUL 2>NUL};
 
             my $fh = gensym();
-            if (CORE::open $fh, $_) {
+            if (open $fh, $_) {
                 close $fh;
             }
             else {
@@ -5302,7 +5452,7 @@ sub Esjis::chdir(;$) {
             if ($^O eq 'MSWin32') {
                 local $@;
                 my $chdir = eval q{
-                    require 'jacode.pl';
+                    CORE::require 'jacode.pl';
 
                     # P.676 ${^WIDE_SYSTEM_CALLS}
                     # in Chapter 28: Special Names
@@ -5402,10 +5552,10 @@ ITER_DO:
 
                 if (Esjis::e("$realfilename.e")) {
                     my $fh = gensym();
-                    if (CORE::open $fh, "$realfilename.e") {
+                    if (open $fh, "$realfilename.e") {
                         if ($^O eq 'MacOS') {
                             eval q{
-                                require Mac::Files;
+                                CORE::require Mac::Files;
                                 Mac::Files::FSpSetFLock("$realfilename.e");
                             };
                         }
@@ -5430,7 +5580,7 @@ ITER_DO:
                         $script = <$fh>;
                         if ($^O eq 'MacOS') {
                             eval q{
-                                require Mac::Files;
+                                CORE::require Mac::Files;
                                 Mac::Files::FSpRstFLock("$realfilename.e");
                             };
                         }
@@ -5439,21 +5589,21 @@ ITER_DO:
                 }
                 else {
                     my $fh = gensym();
-                    CORE::open $fh, $realfilename;
+                    open $fh, $realfilename;
                     local $/ = undef; # slurp mode
                     $script = <$fh>;
                     close $fh;
 
-                    if ($script =~ m/^ \s* use \s+ Sjis \s* ([^;]*) ; \s* \n? $/oxms) {
+                    if ($script =~ m/^ \s* use \s+ Sjis \s* ([^\x81-\x9F\xE0-\xFC;]*) ; \s* \n? $/oxms) {
                         CORE::require Sjis;
                         $script = Sjis::escape_script($script);
                         my $fh = gensym();
                         if ((eval q{ use Fcntl qw(O_WRONLY O_APPEND O_CREAT); 1 } and CORE::sysopen($fh, "$realfilename.e", &O_WRONLY|&O_APPEND|&O_CREAT))
-                            or CORE::open($fh, ">>$realfilename.e")
+                            or open($fh, ">>$realfilename.e")
                         ) {
                             if ($^O eq 'MacOS') {
                                 eval q{
-                                    require Mac::Files;
+                                    CORE::require Mac::Files;
                                     Mac::Files::FSpSetFLock("$realfilename.e");
                                 };
                             }
@@ -5473,7 +5623,7 @@ ITER_DO:
                             print {$fh} $script;
                             if ($^O eq 'MacOS') {
                                 eval q{
-                                    require Mac::Files;
+                                    CORE::require Mac::Files;
                                     Mac::Files::FSpRstFLock("$realfilename.e");
                                 };
                             }
@@ -5544,10 +5694,10 @@ ITER_REQUIRE:
 
                 if (Esjis::e("$realfilename.e")) {
                     my $fh = gensym();
-                    CORE::open($fh, "$realfilename.e") or croak "Can't open file: $realfilename.e";
+                    open($fh, "$realfilename.e") or croak "Can't open file: $realfilename.e";
                     if ($^O eq 'MacOS') {
                         eval q{
-                            require Mac::Files;
+                            CORE::require Mac::Files;
                             Mac::Files::FSpSetFLock("$realfilename.e");
                         };
                     }
@@ -5566,7 +5716,7 @@ ITER_REQUIRE:
                     $script = <$fh>;
                     if ($^O eq 'MacOS') {
                         eval q{
-                            require Mac::Files;
+                            CORE::require Mac::Files;
                             Mac::Files::FSpRstFLock("$realfilename.e");
                         };
                     }
@@ -5574,23 +5724,23 @@ ITER_REQUIRE:
                 }
                 else {
                     my $fh = gensym();
-                    CORE::open($fh, $realfilename) or croak "Can't open file: $realfilename";
+                    open($fh, $realfilename) or croak "Can't open file: $realfilename";
                     local $/ = undef; # slurp mode
                     $script = <$fh>;
                     close($fh) or croak "Can't close file: $realfilename";
 
-                    if ($script =~ m/^ \s* use \s+ Sjis \s* ([^;]*) ; \s* \n? $/oxms) {
+                    if ($script =~ m/^ \s* use \s+ Sjis \s* ([^\x81-\x9F\xE0-\xFC;]*) ; \s* \n? $/oxms) {
                         CORE::require Sjis;
                         $script = Sjis::escape_script($script);
                         my $fh = gensym();
                         if (eval q{ use Fcntl qw(O_WRONLY O_APPEND O_CREAT); 1 } and CORE::sysopen($fh,"$realfilename.e",&O_WRONLY|&O_APPEND|&O_CREAT)) {
                         }
                         else {
-                            CORE::open($fh, ">>$realfilename.e") or croak "Can't write open file: $realfilename.e";
+                            open($fh, ">>$realfilename.e") or croak "Can't write open file: $realfilename.e";
                         }
                         if ($^O eq 'MacOS') {
                             eval q{
-                                require Mac::Files;
+                                CORE::require Mac::Files;
                                 Mac::Files::FSpSetFLock("$realfilename.e");
                             };
                         }
@@ -5610,7 +5760,7 @@ ITER_REQUIRE:
                         print {$fh} $script;
                         if ($^O eq 'MacOS') {
                             eval q{
-                                require Mac::Files;
+                                CORE::require Mac::Files;
                                 Mac::Files::FSpRstFLock("$realfilename.e");
                             };
                         }
@@ -6051,9 +6201,9 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   $chr = Esjis::chr_;
 
   This function returns the character represented by that $code in the character
-  set. For example, Esjis::chr(65) is "A" in either ASCII or ShiftJIS, and
-  Esjis::chr(0x82a0) is a ShiftJIS HIRAGANA LETTER A. For the reverse of Esjis::chr,
-  use Sjis::ord.
+  set. For example, Esjis::chr(65) is "A" in either ASCII or ShiftJIS, not Unicode,
+  and Esjis::chr(0x82a0) is a ShiftJIS HIRAGANA LETTER A. For the reverse of
+  Esjis::chr, use Sjis::ord.
 
 =item File test operator -X
 

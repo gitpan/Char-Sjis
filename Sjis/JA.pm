@@ -45,8 +45,6 @@ Sjis-JA - Source code filter to escape ShiftJIS (Japanese document)
       Perl5.6 エミュレーション(perl5.005の場合)
         use warnings;
         use warnings::register;
-        binmode(...);
-        open(...);
 
       以下はダミー関数として
         utf8::upgrade(...);
@@ -85,8 +83,8 @@ jperl は不要になったと言われていました。
 
 日本国内において、汎用大型コンピュータの入出力、パーソナルコンピュータの内部コー
 ドおよび入出力、さらには携帯電話に至るまで、ShiftJIS を基本とした文字コード
-が広く使われています。このソフトウェアはその ShiftJIS を直接扱います。そのため
-UTF8 フラグはありません。
+が広く使われています。このソフトウェアはその ShiftJIS を直接扱います。そして
+Latin-1 を扱いません。そのため UTF8 フラグはありません。
 このソフトウェアは Shift_JIS, Windows-31J, CP932, MacJapanese, SJIS(R90),
 Shift_JISX0213, Shift_JIS-2004 などいわゆる ShiftJIS の亜種を扱うことができます。
 この文書ではこれらを総称して ShiftJIS という語で表しています(「_」がない)。
@@ -222,8 +220,9 @@ http://mail.pm.org/pipermail/tokyo-pm/1999-September/001854.html
 =head1 エスケープによる上位互換性の確保
 
 このソフトウェアは過去のものを壊したりはせず、常に「エスケープ」によって機能を追加
-しています。だから今まで可能であったことが不可能になることはありません。
-このアプローチは、後退が決して許されない分野に有効です。
+しています。だから今まで可能であったことが不可能になることはありません。このアプ
+ローチは、後退が決して許されない分野に有効です。なお、上位互換性の確保のためには、
+これまでのPerlと非互換な拡張は取り除くこともあります。
 
 =head1 スクリプトのエスケープ
 
@@ -287,18 +286,57 @@ http://mail.pm.org/pipermail/tokyo-pm/1999-September/001854.html
   ---------------------------------------------------------------------------
   escape        class
   ---------------------------------------------------------------------------
-   .            (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x0A])
-                (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[\x00-\xFF]) (/s 修飾子あり)
+   .            (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x0A])
+                (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])     (/s 修飾子あり)
   \d            [0-9]
   \s            [\x09\x0A\x0C\x0D\x20]
   \w            [0-9A-Z_a-z]
-  \D            (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^0-9])
-  \S            (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x09\x0A\x0C\x0D\x20])
-  \W            (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^0-9A-Z_a-z])
+  \D            (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC0-9])
+  \S            (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x0A\x0C\x0D\x20])
+  \W            (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC0-9A-Z_a-z])
   \h            [\x09\x20]
   \v            [\x0C\x0A\x0D]
-  \H            (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x09\x20])
-  \V            (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x0C\x0A\x0D])
+  \H            (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x20])
+  \V            (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x0C\x0A\x0D])
+  \C            [\x00-\xFF]
+  \X            X (ただの英字、X です)
+  \R            (?:\x0D\x0A|[\x0A\x0D])
+  \N            (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x0A])
+  ---------------------------------------------------------------------------
+
+同様に POSIX スタイルの文字クラスも再定義されています。
+
+  ---------------------------------------------------------------------------
+  escape        class
+  ---------------------------------------------------------------------------
+  [:alnum:]     [\x30-\x39\x41-\x5A\x61-\x7A]
+  [:alpha:]     [\x41-\x5A\x61-\x7A]
+  [:ascii:]     [\x00-\x7F]
+  [:blank:]     [\x09\x20]
+  [:cntrl:]     [\x00-\x1F\x7F]
+  [:digit:]     [\x30-\x39]
+  [:graph:]     [\x21-\x7F]
+  [:lower:]     [\x61-\x7A]
+  [:print:]     [\x20-\x7F]
+  [:punct:]     [\x21-\x2F\x3A-\x3F\x40\x5B-\x5F\x60\x7B-\x7E]
+  [:space:]     [\x09\x0A\x0B\x0C\x0D\x20]
+  [:upper:]     [\x41-\x5A]
+  [:word:]      [\x30-\x39\x41-\x5A\x5F\x61-\x7A]
+  [:xdigit:]    [\x30-\x39\x41-\x46\x61-\x66]
+  [:^alnum:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x5A\x61-\x7A])
+  [:^alpha:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x41-\x5A\x61-\x7A])
+  [:^ascii:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x00-\x7F])
+  [:^blank:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x20])
+  [:^cntrl:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x00-\x1F\x7F])
+  [:^digit:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39])
+  [:^graph:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x21-\x7F])
+  [:^lower:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x61-\x7A])
+  [:^print:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x20-\x7F])
+  [:^punct:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x21-\x2F\x3A-\x3F\x40\x5B-\x5F\x60\x7B-\x7E])
+  [:^space:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x0A\x0B\x0C\x0D\x20])
+  [:^upper:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x41-\x5A])
+  [:^word:]     (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x5A\x5F\x61-\x7A])
+  [:^xdigit:]   (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x46\x61-\x66])
   ---------------------------------------------------------------------------
 
 同様に \b と \B も過去のperlとの互換性を保つために再定義されています。
@@ -372,6 +410,26 @@ Esjis::* 関数は Esjis.pm が提供します。
   bytes::substr    substr
   ------------------------------------
 
+=head1 \N, \p, \P, \X のアンエスケープ
+
+このソフトウェアによって英数字の正規表現メタシンボル \N, \p, \P, \X の先頭の
+'\' が取り除かれます。この方法で抽象化の罠を避けることができます。
+
+  ------------------------------------
+  処理前           処理後
+  ------------------------------------
+  \N{CHARNAME}     N{CHARNAME}
+  \p{L}            p{L}
+  \p{^L}           p{^L}
+  \p{\^L}          p{\^L}
+  \pL              pL
+  \P{L}            P{L}
+  \P{^L}           P{^L}
+  \P{\^L}          P{\^L}
+  \PL              PL
+  \X               X
+  ------------------------------------
+
 =head1 ファイルテスト演算子のエスケープ
 
 このソフトウェアによって演算子の '-' は 'Esjis::' に書き換わります。
@@ -437,21 +495,17 @@ perl5.00503 を使用している場合でもファイルテスト演算子は「積み重ねる」ことが
 
 =item * Sjis::ord
 
-    "use Sjis qw(ord);" によって ord は Sjis::ord に書き換わるようになります。
-
     $ord = Sjis::ord($string);
 
-    Sjis::ord($string) は $string の先頭の文字の ShiftJIS コード値を返します。
-    $string が省略された場合は $_ が対象となります。この関数は常に符号なしの
-    値を返します。
+    Sjis::ord($string) は $string の先頭の文字の ShiftJIS コード値を返します
+    (Unicode ではありません)。$string が省略された場合は $_ が対象となります。
+    この関数は常に符号なしの値を返します。
 
-    この動作は JPerl と非互換なので明示的にインポートした場合のみ機能するように
-    なっています。
+    "use Sjis qw(ord);" によってスクリプト中に記述した ord は Sjis::ord に書き
+    換わるようになります。ord が Sjis::ord の動作をするのは JPerl と非互換なの
+    で明示的にインポートした場合のみ書き換わります。
 
 =item * Sjis::reverse
-
-    "use Sjis qw(reverse);" によって reverse は Sjis::reverse に書き換わるよう
-    になります。
 
     @reverse = Sjis::reverse(@list);
     $reverse = Sjis::reverse(@list);
@@ -472,8 +526,9 @@ perl5.00503 を使用している場合でもファイルテスト演算子は「積み重ねる」ことが
     スカラーコンテキストでは @list のすべての要素を連結した上で、ShiftJIS の
     文字単位で逆順にしたものを返します。
 
-    この動作は JPerl と非互換なので明示的にインポートした場合のみ機能するように
-    なっています。
+    "use Sjis qw(reverse);" によってスクリプト中に記述した reverse は
+    Sjis::reverse に書き換わるようになります。reverse が Sjis::reverse の動作を
+    するのは JPerl と非互換なので明示的にインポートした場合のみ書き換わります。
 
 =item * Sjis::length
 
@@ -589,6 +644,7 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
   use strict;               use strict; no strict qw(refs);
   require utf8;             # require utf8;
   require bytes;            # require bytes;
+  require charnames;        # require charnames;
   require I18N::Japanese;   # require I18N::Japanese;
   require I18N::Collate;    # require I18N::Collate;
   require I18N::JExt;       # require I18N::JExt;
@@ -598,6 +654,7 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
   require Japanese;         # require Japanese;
   use utf8;                 # use utf8;
   use bytes;                # use bytes;
+  use charnames;            # use charnames;
   use I18N::Japanese;       # use I18N::Japanese;
   use I18N::Collate;        # use I18N::Collate;
   use I18N::JExt;           # use I18N::JExt;
@@ -607,6 +664,7 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
   use Japanese;             # use Japanese;
   no utf8;                  # no utf8;
   no bytes;                 # no bytes;
+  no charnames;             # no charnames;
   no I18N::Japanese;        # no I18N::Japanese;
   no I18N::Collate;         # no I18N::Collate;
   no I18N::JExt;            # no I18N::JExt;
@@ -786,6 +844,17 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
  
     になり、$& の代わりに使用することができます。
 
+ あるいは以下の方法もあります。
+
+  -------------------------------------------------
+  変数   代替法
+  -------------------------------------------------
+  $`     substr(対象文字列, 0, $-[0])
+  $&     substr(対象文字列, $-[0], $+[0], - $-[0])
+  $'     substr(対象文字列, $+[0])
+  -------------------------------------------------
+  「詳説 正規表現 第2版 P.349 7.9.3.4 マッチ前コピーを回避する」より
+
 =item * 正規表現を適用する文字列の長さの上限
 
     上記のとおり、エスケープ後の正規表現にはマルチバイトアンカーリング処理のた
@@ -798,6 +867,12 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
     Bug #89792
     \G can't treat over 32,767 octets
     http://bugs.activestate.com/show_bug.cgi?id=89792
+
+=item * 正規表現の修飾子 /a /d /l /u
+
+    このソフトウェアのコンセプトは複数の符号化方式を同時に利用しないようにする
+    ことです。従って修飾子 /a /d /l /u をサポートしません。
+    \d は昔も今も [0-9] を意味します。
 
 =back
 
@@ -1710,7 +1785,7 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
 
  小飼 弾さん, Encode モジュール
  http://search.cpan.org/dist/Encode/
- http://www.dan.co.jp/~dankogai/yapcasia2006/slide.html
+ http://www.dan.co.jp/~dankogai/yapcasia2006/slide.html (404 Slide Not Found)
 
  Juerd, Perl Unicode Advice
  http://juerd.nl/site.plp/perluniadvice
