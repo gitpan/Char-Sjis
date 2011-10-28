@@ -92,7 +92,7 @@ Shift_JISX0213, Shift_JIS-2004 ‚È‚Ç‚¢‚í‚ä‚é ShiftJIS ‚ÌˆŸŽí‚ðˆµ‚¤‚±‚Æ‚ª‚Å‚«‚Ü‚·
 •¡ŽG‚È‰ð–@‚Í–â‘è‚ð‚æ‚è•¡ŽG‚É‚µ‚Ü‚·B
 ‚ ‚È‚½‚àƒGƒ“ƒR[ƒh‚Ì–â‘è‚©‚çƒGƒXƒP[ƒv‚µ‚Ü‚¹‚ñ‚©H
 
-=head1 ‚à‚¤‚Ð‚Æ‚Â‚Ì–¢—ˆ
+=head1 ‚à‚¤‚Ð‚Æ‚Â‚Ì–¢—ˆ(‚Ý‚ç‚¢)
 
 JPerl ‚Í‚Æ‚Ä‚à—D‚ê‚½ƒ\ƒtƒgƒEƒFƒA‚Å‚·B‚¨‚Á‚ÆA‚±‚±‚Å‚¢‚¤ JPerl ‚Í“ú–{Œê‘Î‰ž”Å‚Ì
 Perl ‚Ì‚±‚Æ‚ÅAJava ‚â JVM ‚Æ‚ÍŠÖŒW‚ª‚ ‚è‚Ü‚¹‚ñB‚»‚ñ‚È‚í‚¯‚ÅA‚±‚Ìƒ\ƒtƒgƒEƒFƒA
@@ -124,17 +124,17 @@ ftp://ftp.oreilly.co.jp/pcjp98/watanabe/jperlconf.ppt
 
 =over 2
 
-=item * ShiftJIS ‚»‚Ì‚Ü‚Ü‚Ì’l‚ðˆµ‚¤
+=item * Perl4 ‚Æ Perl5 ‚Ì‚æ‚¤‚ÈãˆÊŒÝŠ·«
 
-=item * ‰ß‹Ž‚Ìƒf[ƒ^AƒXƒNƒŠƒvƒgAƒmƒEƒnƒE‚ÆŒÝŠ·«‚ð•Û‚Ä‚é
+=item * jcode.pl ‚Ì‚æ‚¤‚ÈÅ‘åŒÀ‚ÌˆÚA«
 
-=item * UNIX•—OSADOS•—OS‚Ìê‡‚ÍASjis.pm ‚Æ Esjis.pm ‚¾‚¯‚Å‹@”\‚·‚é
+=item * JPerl ‚Ì‚æ‚¤‚ÉƒVƒtƒgJIS‚ð‚»‚Ì‚Ü‚Üˆµ‚¢AUTF8ƒtƒ‰ƒO‚ª‚È‚¢
 
-=item * UTF8 ƒtƒ‰ƒO‚ðˆµ‚í‚È‚¢‚Å‚·‚Þ(perlunitut ‚Æ perluniadvice ‚Ì‘Î‰ž‚Í•s—v)
+=item * Encode ƒ‚ƒWƒ…[ƒ‹‚Ì‚æ‚¤‚É Perl ‚Í1‚Â‚ÌƒCƒ“ƒ^ƒvƒŠƒ^‚Ì‚Ü‚Ü
 
-=item * (JPerl‚ð•ÛŽç‚·‚é‚½‚ß‚É) C ƒvƒƒOƒ‰ƒ~ƒ“ƒO‚ðs‚í‚È‚¢‚Å‚·‚Þ
+=item * Ruby ‚Ì‚æ‚¤‚É•¶ŽšW‡“Æ—§‚ÈŽè–@
 
-=item * (CPU, OS, perl‚Ìƒo[ƒWƒ‡ƒ“, 32ƒrƒbƒg/64ƒrƒbƒg”Å‚Ìˆá‚¢‚É‚æ‚é) ƒoƒCƒiƒŠƒtƒ@ƒCƒ‹‚ÉˆË‘¶‚µ‚È‚¢
+=item * Perl Ž©g‚Ì‚æ‚¤‚É TMTOWTDI(There's more than one way to do it)
 
 =back
 
@@ -642,6 +642,7 @@ Esjis.pm ‚Ìæ“ª‚Å "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" ‚ªs‚í‚êA
   ˆ—‘O                    ˆ—Œã
   -----------------------------------------------------------
   use strict;               use strict; no strict qw(refs);
+  use 5.12.0;               use 5.12.0; no strict qw(refs);
   require utf8;             # require utf8;
   require bytes;            # require bytes;
   require charnames;        # require charnames;
@@ -915,74 +916,76 @@ Esjis.pm ‚Ìæ“ª‚Å "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" ‚ªs‚í‚êA
 
 =head1 ƒEƒBƒLƒyƒfƒBƒA‚É‚æ‚éuShift_JISv‚Ì’è‹`
 
-Shift_JIS (2009.09.17 14:00:00 JST). In Wikipedia: The Free Encyclopedia.
+Shift_JIS (2011.10.27 00:00:00 JST). In Wikipedia: The Free Encyclopedia.
 Retrieved from
 http://ja.wikipedia.org/wiki/Shift_JIS
 
 o“T: ƒtƒŠ[•S‰ÈŽ–“TwƒEƒBƒLƒyƒfƒBƒA(Wikipedia)x
 
-Shift_JIS(IANA‚Ö‚Ì“o˜^–¼B“Ç‚Ý•û‚ÍwƒVƒtƒgƒWƒXx)‚ÍAŒ»Ý‘½‚­‚Ìƒpƒ\ƒRƒ“ã‚Å
-“ú–{Œê‚ð•\‚·‚½‚ß‚ÉŽg‚í‚ê‚Ä‚¢‚é•¶ŽšƒR[ƒh‚Å‚ ‚éB“ÆŽ©‚ÌƒR[ƒh‚ðŽg‚Á‚Ä‚¢‚½‰ïŽÐ
-‚ª‚ ‚Á‚½‚ªAŒ»Ý‚Í•W€‰»‚µ‚Ä‚¢‚éJIS X 0208‚Ì•‘®‘1‚Å‹K’è‚µ‚Ä‚¢‚éB
-
-Microsoft“™‚ÌŠeƒxƒ“ƒ_‚ªŽÀ‘•‚·‚éShift_JIS‚ÌˆŸŽí‚É‚Â‚¢‚Ä‚ÍwMicrosoftƒR[ƒhƒy[
-ƒW932x‚ðŽQÆBMac OS‚ªŽÀ‘•‚·‚éˆŸŽí‚É‚Â‚¢‚Ä‚ÍwMacJapanesex‚ðŽQÆB
+Shift_JISiƒVƒtƒgƒWƒXj‚ÍAŒ»Ý‘½‚­‚Ìƒpƒ\ƒRƒ“ã‚Ìƒtƒ@ƒCƒ‹“à‚Å“ú–{Œê‚ð•\‚·‚½‚ß
+‚ÉŽg‚í‚ê‚Ä‚¢‚é•¶ŽšƒR[ƒh‚Å‚ ‚éB‚©‚Â‚Ä‚Íƒxƒ“ƒ_[‚É‚æ‚é“ÆŽ©Šg’£‚ðŠÜ‚Þ•¶ŽšƒR[ƒh
+ŒQ‚É‘Î‚·‚éžB–†‚È–¼Ì‚Å‚ ‚Á‚½‚ªAŒ»Ý‚Í•W€‰»•¶‘JIS X 0208‚Ì•‘®‘1‚Å‹K’è‚³‚ê
+‚Ä‚¢‚éBuShift_JISv‚ÍIANA‚É‚¨‚¯‚é“o˜^–¼‚Å‚ ‚éB
 
 Shift_JIS‚Ì’a¶
-1980”N‘ãAƒpƒ\ƒRƒ“—p16ƒrƒbƒgCPU‚Ì•‹y‚à‚ ‚¢‚Ü‚Á‚ÄAŠ¿Žš‚ð•\Ž¦‰Â”\‚Èƒn[ƒhƒEƒF
-ƒA‚ð”õ‚¦‚½ƒpƒ\ƒRƒ“‚ª‘±X‚Æ”­”„‚³‚ê‚½B‚»‚Ì‚½‚ßA‚±‚ê‚çƒpƒ\ƒRƒ“—p‚Ì•¶Žš•„†‰»
-•ûŽ®‚ð–Íõ‚µ‚Ä‚¢‚½B
 
-Shift_JIS‚ðuƒVƒtƒgJISƒR[ƒhv‚ÆŒÄ‚ñ‚Å•„†‰»•¶ŽšW‡(•¶ŽšƒR[ƒh)‚Ì–Ê‚Ì‚Ý‚ð
-l‚¦‚é‹c˜_‚ª‚ ‚é‚ªA‚±‚±‚Å‚Í•¶Žš•„†‰»•ûŽ®‚Ì–Ê‚ÉÅ“_‚ð“–‚Ä‚éB
+1980”N‘ãAƒpƒ\ƒRƒ“—p16ƒrƒbƒgCPU‚Ì•‹y‚à‚ ‚¢‚Ü‚Á‚ÄAŠ¿Žš‚â‰¼–¼‚ð•\Ž¦‰Â”\‚Èƒn[
+ƒhƒEƒFƒA‚ð”õ‚¦‚½ƒpƒ\ƒRƒ“‚ª‘±X‚Æ”­”„‚³‚ê‚½B‚»‚Ì‚½‚ßA“ú–{Œê‚ð•\Œ»‚Å‚«‚é•¶Žš
+•„†‰»•ûŽ®‚ª–Íõ‚³‚ê‚Ä‚¢‚½iShift_JIS‚ðuƒVƒtƒgJISƒR[ƒhv‚ÆŒÄ‚ñ‚Å•„†‰»•¶Žš
+W‡i•¶ŽšƒR[ƒhj‚Ì–Ê‚Ì‚Ý‚ðl‚¦‚é‹c˜_‚ª‚ ‚é‚ªA‚±‚±‚Å‚Í•¶Žš•„†‰»•ûŽ®‚Ì–Ê‚É
+Å“_‚ð“–‚Ä‚éjB
 
-‚±‚Ì•¶Žš•„†‰»•ûŽ®‚É‚ÍAæs‚µ‚Ä‚æ‚­—˜—p‚µ‚Ä‚¢‚½JIS C 6220(Œ»Ý‚ÌJIS X 0201)
-‚Ì8ƒrƒbƒg•„†(ˆÈ‰ºu‰p”ŽšE”¼ŠpƒJƒiv)‚ÆAJIS C 6226(Œ»Ý‚ÌJIS X 0208A
-ˆÈ‰ºuŠ¿Žšv)‚Ì—¼•¶ŽšW‡‚ðA•\Œ»‚µ‚æ‚¤‚Æ‚µ‚½Bƒtƒ@ƒCƒ‹‚Ì‘å‚«‚³Aˆ—ŽžŠÔ‚Ì
-’Zk‚ð}‚é‚½‚ßƒGƒXƒP[ƒvƒV[ƒPƒ“ƒX‚È‚µ‚Å¬Ý‰Â”\‚É‚·‚é‚±‚Æ‚ðlˆÄ‚µ‚½B
+•¶Žš•„†‰»•ûŽ®Shift_JIS‚ÌÝŒvŽÒ‚ç‚ÍAæs‚µ‚Ä‚æ‚­—˜—p‚³‚ê‚Ä‚¢‚½JIS C 6220
+iŒ»Ý‚ÌJIS X 0201j‚Ì8ƒrƒbƒg•„†iˆÈ‰ºu‰p”ŽšE”¼ŠpƒJƒivj‚ÆAJIS C 6226
+iŒ»Ý‚ÌJIS X 0208AˆÈ‰ºuŠ¿Žšvj‚Ì—¼•¶ŽšW‡‚ð•\Œ»‚µ‚æ‚¤‚Æ‚µ‚½B‚Ü‚½Aƒtƒ@
+ƒCƒ‹‚Ì‘å‚«‚³‚âˆ—ŽžŠÔ‚Ì’Zk‚ð}‚é‚½‚ßAƒGƒXƒP[ƒvƒV[ƒPƒ“ƒX‚È‚µ‚Å¬Ý‰Â”\‚É
+‚·‚é‚±‚Æ‚ðŠé}‚µ‚½B
 
 JIS C 6220‚ÆJIS C 6226‚Ì2‚Â‚Í‚Æ‚à‚ÉAISO 2022‚Å•¶ŽšW‡‚ðØ‚è‘Ö‚¦‚Ä—˜—p‚·‚é
-ÝŒv‚ª‚ ‚Á‚½BISO 2022‚É‚à‚Æ‚Ã‚­•¶Žš•„†‰»•ûŽ®‚Å‚ÍA‰p”ŽšA”¼ŠpƒJƒiAŠ¿Žš‚Í
-‚»‚ê‚¼‚êA8ƒrƒbƒg•„†‹óŠÔ‚Ì’†‚ÌGL/GR‚Æ‚¢‚¤—Ìˆæ‚Ì1‚Â‚ð(‚½‚¾‚µŠ¿Žš‚Í2‰ñ)Žg‚¤
-‚±‚Æ‚Å•\Œ»‚Å‚«‚éB‚à‚µ‰p”Žš‚ÆŠ¿Žš‚Ì2‚Â‚ðƒGƒXƒP[ƒvƒV[ƒPƒ“ƒX‚È‚µ‚Å¬Ý‚µ‚½‚¢
-‚È‚çA‰p”Žš‚ðGLAŠ¿Žš‚ðGR‚ÉŠ„‚è“–‚Ä‚é•û–@‚ª‚ ‚éBEUC-JP‚ÍA‚¨‚¨‚æ‚»‚»‚Ì‚æ‚¤
-‚ÉŽÀ‘•‚µ‚Ä‚¢‚éB
+ÝŒv‚ª‚ ‚Á‚½BISO 2022‚ÉŠî‚Ã‚­•¶Žš•„†‰»•ûŽ®‚Å‚ÍA‰p”ŽšA”¼ŠpƒJƒiAŠ¿Žš‚Í‚»‚ê
+‚¼‚êA8ƒrƒbƒg•„†‹óŠÔ‚Ì’†‚ÌGL/GR‚Æ‚¢‚¤—Ìˆæ‚Ì1‚Â‚ði‚½‚¾‚µŠ¿Žš‚Í2‰ñjŽg‚¤‚±‚Æ‚Å
+•\Œ»‚Å‚«‚éB‚à‚µ‰p”Žš‚ÆŠ¿Žš‚Ì2‚Â‚ðƒGƒXƒP[ƒvƒV[ƒPƒ“ƒX‚È‚µ‚Å¬Ý‚µ‚½‚¢‚È‚çA
+‰p”Žš‚ðGLAŠ¿Žš‚ðGR‚ÉŠ„‚è“–‚Ä‚é•û–@‚ª‚ ‚éBEUC-JP‚ÍA‚¨‚¨‚æ‚»‚»‚Ì‚æ‚¤‚ÉŽÀ‘•
+‚³‚ê‚Ä‚¢‚éB
 
-‚µ‚©‚µAƒpƒ\ƒRƒ“‚Å‚Í‚·‚Å‚ÉAJIS X 0201‚Ì8ƒrƒbƒg•„†A‚Â‚Ü‚èAGL‚É‰p”ŽšAGR‚É
-‚PƒoƒCƒgƒJƒ^ƒJƒi(”¼ŠpƒJƒ^ƒJƒi)‚ðŠ„‚è“–‚Ä‚é‚±‚Æ‚ª•‹y‚µ‚Ä‚¢‚½B‰p”Žš‚Æ‚PƒoƒC
-ƒgƒJƒ^ƒJƒi‚Ì2‚Â‚ð“®‚©‚·‚±‚Æ‚ÍA•¶Žš‰»‚¯‚ÌŒ´ˆö‚É‚È‚é‚½‚ß”ð‚¯‚é•K—v‚ª‚ ‚Á‚½B
-‚»‚Ì‚½‚ßAISO 2022‚Ì˜g“à‚Ì—Ìˆæ‚ÉŠ¿Žš‚ð¬Ý‚³‚¹‚é‚±‚Æ‚Í¢“ï‚¾‚Á‚½‚Ì‚Å‚ ‚éB
+‚µ‚©‚µAƒpƒ\ƒRƒ“‚Å‚Í‚·‚Å‚ÉAJIS X 0201‚Ì8ƒrƒbƒg•„†A‚Â‚Ü‚èGL‚É‰p”ŽšAGR‚É1ƒo
+ƒCƒgƒJƒ^ƒJƒii”¼ŠpƒJƒ^ƒJƒij‚ðŠ„‚è“–‚Ä‚½•„†‚ª•‹y‚µ‚Ä‚¢‚½B‰p”Žš‚Æ1ƒoƒCƒgƒJ
+ƒ^ƒJƒi‚Ì2‚Â‚ð“®‚©‚·‚±‚Æ‚ÍA•¶Žš‰»‚¯‚ÌŒ´ˆö‚É‚È‚é‚½‚ß”ð‚¯‚é•K—v‚ª‚ ‚Á‚½B‚»‚Ì
+‚½‚ßAISO 2022‚Ì˜g“à‚Ì—Ìˆæ‚ÉŠ¿Žš‚ð¬Ý‚³‚¹‚é‚±‚Æ‚Í¢“ï‚¾‚Á‚½B
 
-1982”NAŠ¿Žš‚Ì•„†ˆÊ’u‚ð•¡ŽG‚ÉˆÚ“®(ƒVƒtƒg)‚µA•„†‹óŠÔ‚ÌŒ„ŠÔ‚É‰Ÿ‚µž‚Þ
-ShiftJIS‚ª’a¶‚µ‚½B‚±‚ê‚ðŽÀŒ»‚·‚é‚½‚ß‚É‚ÍAŠ¿Žš‚Ì1ƒoƒCƒg–Ú‚Æ‚µ‚ÄAISO 2022
-‚É‚¨‚¯‚éGR(A1(16)-FE(16))—Ìˆæ‚É3•ª‚Ì1Žc‚µ‚Ä‚¢‚½–¢Žg—p—Ìˆæ‚É‚­‚í‚¦AISO 2022
-‚É‚¨‚¢‚Ä”ñŽg—p‚ÌCR(80(16)-9F(16))—Ìˆæ‚ðŽg—p‚·‚é‚±‚Æ‚Æ‚µ‚½B‚½‚¾‚µAGL
-(21(16)-7E(16))—Ìˆæ‚É‚¨‚¢‚Ä‚ÍAJIS X 0201‚Ì‹L†‚É“–‚½‚é•”•ª‚Í‹É—Í”ð‚¯‚½B
-‚³‚ç‚É2ƒoƒCƒg–Ú‚É‚ÍISO 2022‚Æ‚ÍˆÙ‚È‚èA‰p”ŽšE”¼ŠpƒJƒi‚ÉŽg—pÏ‚Ý‚Ì—Ìˆæ‚ð‚à
-ŠÜ‚ÞAGLACRAGR‚É‚ ‚½‚éŠe—Ìˆæ‚Ì‚Ù‚Ú‘S‚Ä‚ðŽg‚¤•K—v‚ª‚ ‚Á‚½B
+1982”NAŠ¿Žš‚Ì•„†ˆÊ’u‚ð•¡ŽG‚ÉˆÚ“®iƒVƒtƒgj‚µA•„†‹óŠÔ‚ÌŒ„ŠÔ‚É‰Ÿ‚µž‚Þ
+Shift JIS‚ª’a¶‚µ‚½B‚±‚ê‚ðŽÀŒ»‚·‚é‚½‚ß‚É‚ÍAŠ¿Žš‚Ì1ƒoƒCƒg–Ú‚Æ‚µ‚ÄAISO 2022
+‚É‚¨‚¯‚éGRiA1(16)-FE(16)j—Ìˆæ‚É3•ª‚Ì1Žc‚µ‚Ä‚¢‚½–¢Žg—p—Ìˆæ‚É‰Á‚¦AISO 2022‚É
+‚¨‚¢‚Ä”ñŽg—p‚ÌCRi80(16)-9F(16)j—Ìˆæ‚ðŽg—p‚·‚é‚±‚Æ‚Æ‚µ‚½B‚½‚¾‚µAGLi21(16)
+-7E(16)j—Ìˆæ‚É‚¨‚¢‚Ä‚ÍAJIS X 0201‚Ì‹L†‚É“–‚½‚é•”•ª‚Í‹É—Í”ð‚¯‚½B‚³‚ç‚É2ƒoƒC
+ƒg–Ú‚É‚ÍAISO 2022‚Æ‚ÍˆÙ‚È‚èA‰p”ŽšE”¼ŠpƒJƒi‚ÉŽg—pÏ‚Ý‚Ì—Ìˆæ‚ð‚àŠÜ‚ÞAGLA
+CRAGR‚É‚ ‚½‚éŠe—Ìˆæ‚Ì‚Ù‚Ú‘S‚Ä‚ðŽg‚¤•K—v‚ª‚ ‚Á‚½B
 
-ƒ}ƒCƒNƒƒ\ƒtƒg(“ú–{–@l)Œ³‰ï’·‚ÌŒÃì‹‚É‚æ‚é‚ÆAShift_JIS‚Ì§’è‚É‚ÍAƒAƒX
-ƒL[Aƒ}ƒCƒNƒƒ\ƒtƒg(•Ä)AŽO•H“d‹@Aƒ}ƒCƒNƒƒ\ƒtƒgƒEƒFƒAEƒAƒ\ƒVƒGƒCƒcA
-ƒfƒWƒ^ƒ‹ƒŠƒT[ƒ`(•Ä)‚ªŠÖ‚í‚èA“Á‚ÉƒAƒXƒL[‚ÌŽR‰º—Ç‘ ‚ª’†S‚Æ‚È‚Á‚Äì¬‚µ‚½
-‚à‚Ì‚¾‚Æ‚¢‚¤B‚±‚ê‚É‘Î‚·‚éˆÙà‚Æ‚µ‚ÄA‹ž“s‘åŠw•‹³Žö‚ÌˆÀ‰ªFˆê‚ÍAƒ}ƒCƒNƒƒ\ƒt
-ƒgƒEƒFƒAEƒAƒ\ƒVƒGƒCƒc‚ÆŽO•H“d‹@‚Ì‚Ý‚Ì‹¤“¯ŠJ”­‚¾‚ÆŽå’£‚µ‚Ä‚¢‚éBŽR‰º–{l‚Ì”­Œ¾
-‚É‚æ‚èˆÀ‰ª‚ÍŽ©à‚Ì“P‰ñ‚Æ‚àŽæ‚ê‚é”­Œ¾‚ð‚µ‚Ä‚¢‚éB
+ƒ}ƒCƒNƒƒ\ƒtƒgi“ú–{–@ljŒ³‰ï’·‚ÌŒÃì‹‚É‚æ‚é‚ÆAShift_JIS‚Ì§’è‚É‚ÍAƒAƒX
+ƒL[Aƒ}ƒCƒNƒƒ\ƒtƒgi•ÄjAŽO•H“d‹@Aƒ}ƒCƒNƒƒ\ƒtƒgƒEƒFƒAEƒAƒ\ƒVƒGƒCƒcAƒf
+ƒWƒ^ƒ‹ƒŠƒT[ƒ`i•Äj‚ªŠÖ‚í‚èA“Á‚ÉƒAƒXƒL[‚ÌŽR‰º—Ç‘ ‚ª’†S‚Æ‚È‚Á‚Äì¬‚µ‚½
+‚à‚Ì‚¾‚Æ‚¢‚¤B‚±‚ê‚É‘Î‚·‚éˆÙà‚Æ‚µ‚ÄA‹ž“s‘åŠw•‹³Žö‚ÌˆÀ‰ªFˆê‚ÍAƒ}ƒCƒNƒƒ\
+ƒtƒgƒEƒFƒAEƒAƒ\ƒVƒGƒCƒc‚ÆŽO•H“d‹@‚Ì‚Ý‚Ì‹¤“¯ŠJ”­‚¾‚ÆŽå’£‚µ‚Ä‚¢‚½‚ªAŽR‰º–{l
+‚Ì”­Œ¾‚É‚æ‚èˆÀ‰ª‚ÍŽ©à‚ð“P‰ñ‚·‚é”­Œ¾‚ð‚µ‚Ä‚¢‚éB‚Ü‚½ŒÃ‚­‚ÍLife with UNIX‚Ì
+–ó‘iISBN 4-7561-0783-4j‚ÌuUNIXl–¼Ž–“Tv–|–ó”Å‰Á•M•”•ªip. 45j‚ÅA[£
+O‹±‚ÉuMSŠ¿ŽšƒR[ƒh‚ÌìŽÒ‚Ìˆêlv‚Æ‚¢‚¤Ð‰î•¶‚ª‘‚©‚ê‚Ä‚¢‚½B
 
 Shift_JIS‚Ì•W€‰»
-Shift_JIS‚ÍA•„†‰»•¶ŽšW‡‚Æ‚»‚Ì•¶Žš•„†‰»•ûŽ®‚Ì—¼•û‚ðŠÜ‚ÞŒ»ŽÀ‚Ì–â‘è‚ð‰ðŒˆ
-‚·‚é‚½‚ß‚Ì‹Zp‚Å‚ ‚éB‚»‚ê‚ä‚¦AJIS X 0208‚Ì•¶ŽšW‡‚ð—˜—p‚µ‚Ä‚Í‚¢‚é‚à‚Ì‚ÌA
+
+Shift_JIS‚ÍA•„†‰»•¶ŽšW‡‚Æ‚»‚Ì•¶Žš•„†‰»•ûŽ®‚Ì—¼•û‚ðŠÜ‚ÞŒ»ŽÀ‚Ì–â‘è‚ð‰ðŒˆ‚·
+‚é‚½‚ß‚Ì‹Zp‚Å‚ ‚éB‚»‚ê‚ä‚¦AJIS X 0208‚Ì•¶ŽšW‡‚ð—˜—p‚µ‚Ä‚Í‚¢‚é‚à‚Ì‚ÌA
 ISO 2022‚Ì•„†‰»‚Ì•ûj‚Ì”ÍˆÍ‚ÌŠO‚É‚ ‚éB
 
-‚µ‚©‚µ‚È‚ª‚çAŒ»Ý‚Å‚ÍAJIS X 0208:1997‚Ì•‘®‘1‚É‚ÄuƒVƒtƒg•„†‰»•\Œ»v‚Æ‚¢‚¤
-–¼‘O‚ÅAŽd—l‚ª’è‹`‚³‚ê‚Ä‚¢‚éB‚±‚ê‚ÍAƒfƒtƒ@ƒNƒgƒXƒ^ƒ“ƒ_[ƒh‚Æ‚È‚Á‚Ä‚¢‚é‹Zp
-‚É‚Â‚¢‚Ä‚ÍoŽ©‚ð–â‘è‚Æ‚¹‚¸A‚Æ‚à‚©‚­•W€‰»‚µ‚Ä‚µ‚Ü‚¨‚¤‚Æ‚¢‚¤ˆÓ}‚ª“ú–{H‹Æ•W€
-’²¸‰ï (JISC) ‚É‚ ‚Á‚Ä‚Ì‚±‚Æ‚Å‚ ‚éB
+‚µ‚©‚µŒ»Ý‚Å‚ÍAJIS X 0208:1997‚Ì•‘®‘1‚ÉAuƒVƒtƒg•„†‰»•\Œ»v‚Æ‚¢‚¤–¼‘O‚Å
+Žd—l‚ª’è‹`‚³‚ê‚Ä‚¢‚éB‚±‚ê‚ÍAƒfƒtƒ@ƒNƒgƒXƒ^ƒ“ƒ_[ƒh‚Æ‚È‚Á‚Ä‚¢‚é‹Zp‚É‚Â‚¢‚Ä
+‚ÍoŽ©‚ð–â‘è‚Æ‚¹‚¸A‚Æ‚à‚©‚­•W€‰»‚µ‚Ä‚µ‚Ü‚¨‚¤‚Æ‚¢‚¤ˆÓ}‚ª“ú–{H‹Æ•W€’²¸‰ï
+ (JISC) ‚É‚ ‚Á‚Ä‚Ì‚±‚Æ‚Å‚ ‚éB
 
 JIS X 0208‚ÌŠg’£‹KŠi‚Å‚ ‚éJIS X 0213‚Å‚ÍA2000”N§’è‚Ì‰”Å‚Å•‘®‘1‚Æ‚µ‚Ä
 Shift_JISX0213‚ª’è‚ß‚ç‚ê‚½B2004”N‰ü³Žž‚Ì10•¶Žš’Ç‰Á‚É”º‚Á‚ÄAShift_JIS-2004
 ‚Æ–¼Ì‚ª•ÏX‚³‚ê‚½B
 
-IANA‚àuShift_JISv‚Æ‚¢‚¤–¼‘O‚Å“o˜^‚µ‚Ä‚¢‚éB
+IANA‚Å‚àuShift_JISv‚Æ‚¢‚¤–¼‘O‚ªŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚éB
 
 —˜“_‚ÆŒ‡“_
 
@@ -991,55 +994,55 @@ IANA‚àuShift_JISv‚Æ‚¢‚¤–¼‘O‚Å“o˜^‚µ‚Ä‚¢‚éB
    •\Œ»‚Å‚«‚éB
 2. “ú–{ŒêŠÂ‹«‚É‚¨‚¢‚Ä‚ÍAMS-DOS‚Å“ú–{Œê—p•¶ŽšƒR[ƒh‚Æ‚µ‚ÄÌ—p‚³‚ê‚ÄˆÈ—ˆAƒpƒ\
    ƒRƒ“‚É‚¨‚¢‚Äˆ³“|“I‚È•‹y“x‚ª‚ ‚èA‚»‚Ì‘¼‚Ì•¶Žš•„†‰»•ûŽ®‚É”ä‚×‚Äƒf[ƒ^ŒðŠ·
-   ‰Â”\«‚ª‚‚¢ (‚½‚¾‚µA•¶ŽšW‡‚É‚Â‚¢‚Ä‚ÍŽÀ‘•ƒxƒ“ƒ_‚ªJIS X 0208‚Å‹K’è‚³‚ê‚Ä
-   ‚¢‚È‚¢‹@ŽíˆË‘¶‚ÌŠg’£‚ðŽ{‚µ‚Ä‚¢‚é‚±‚Æ‚ª‘½‚­A‚±‚¤‚¢‚Á‚½Šg’£•”•ª‚ÉŠÖ‚µ‚Ä‚Í
-   ƒf[ƒ^ŒðŠ·‰Â”\«‚ª’á‚¢)B
+   ‰Â”\«‚ª‚‚¢B
 
 Œ‡“_
 1. ”¼ŠpƒJƒi‚Ì‚½‚ß‚Ì—Ìˆæ‚ðŠm•Û‚µ‚½ŠÖŒWãAƒR[ƒhƒV[ƒNƒGƒ“ƒX‚ª‹æ“_”Ô†‚Ìu‹æv
    ‚Ì‹æØ‚è‚Å‚Í‚È‚¢‰ÓŠ‚Å•ª’f‚µ‚Ä‚¢‚éB‚±‚Ì‚½‚ßAƒR[ƒh”Ô†‚ð‰‰ŽZ‚Å‹‚ß‚éÛ‚Í
    ”ÏŽG‚Èˆ—‚ª•K—v‚Å‚ ‚éB
 2. 2ƒoƒCƒg–Ú‚É80(16)–¢–ž(ASCII‚ÌƒR[ƒh—Ìˆæ)‚ªŒ»‚ê‚éB‚±‚Ì‚½‚ßA•¶Žš‚Ì‹æØ‚è‚Ì
-   ”»’è‚ÉŽèŠÔ‚ª‚©‚©‚éBƒtƒ@ƒCƒ‹A“d•¶‚Ìæ“ª‚©‚ç•¶ŽšƒR[ƒh”»’è‚·‚éê‡‚Í‚æ‚¢‚ªA
-   Œã‚ë‚©‚ç•¶ŽšƒR[ƒh‚Ì”»’è‚ð‚µ‚æ‚¤‚ÆŽv‚¤‚ÆAÅˆ«‚Ìê‡Aæ“ª‚Ü‚Å‚½‚Ç‚ç‚È‚¢‚Æ
-   ‚¢‚¯‚È‚¢‚±‚Æ‚ª‚ ‚é‚½‚ßAƒvƒƒOƒ‰ƒ€‚Ìì‚è•û‚ÉH•v‚ª•K—v‚É‚È‚éB‚Ü‚½A‚±‚Ì—Ì
-   ˆæ‚ÉŠÜ‚Ü‚ê‚éˆê•”‚Ì•¶Žš‚Ìˆµ‚¢‚Ì‚½‚ßAƒ}ƒ‹ƒ`ƒoƒCƒg‚ÌEUC-JPAUTF-8‚È‚Ç‚æ‚èAƒv
-   ƒƒOƒ‰ƒ~ƒ“ƒOã‚Ìˆµ‚¢‚ª“ï‚µ‚¢B¨ŽŸ€
+   ”»’è‚ÉŽèŠÔ‚ª‚©‚©‚éBƒtƒ@ƒCƒ‹‚â“d•¶‚Ìæ“ª‚©‚ç•¶ŽšƒR[ƒh‚Ì”»’è‚ð‚·‚éê‡‚Í‚æ‚¢
+   ‚ªAŒã‚ë‚©‚ç”»’è‚ð‚µ‚æ‚¤‚Æ‚·‚é‚ÆAÅˆ«‚Ìê‡Aæ“ª‚Ü‚Å‚½‚Ç‚ç‚È‚¢‚Æ‚¢‚¯‚È‚¢
+   ‚±‚Æ‚ª‚ ‚é‚½‚ßAƒvƒƒOƒ‰ƒ€‚Ìì‚è•û‚ÉH•v‚ª•K—v‚É‚È‚éB‚Ü‚½A‚±‚Ì—Ìˆæ‚ÉŠÜ‚Ü
+   ‚ê‚éˆê•”‚Ì•¶Žš‚Ìˆµ‚¢‚Ì‚½‚ßAƒ}ƒ‹ƒ`ƒoƒCƒg‚ÌEUC-JPAUTF-8‚È‚Ç‚É”ä‚×AƒvƒƒO
+   ƒ‰ƒ~ƒ“ƒOã‚Ìˆµ‚¢‚ª“ï‚µ‚¢iŽŸ€‚ðŽQÆjB
 3. JIS•â•Š¿Žš‚ª•\Œ»‚Å‚«‚È‚¢B•â•Š¿Žš‚Ì•¶Žš”‚ÍShift_JIS‚ÌƒR[ƒh–¢“o˜^•”•ª‚É
    Žû‚Ü‚ç‚È‚¢B
+4. •¶ŽšW‡‚É‚Â‚¢‚Ä‚ÍŽÀ‘•ƒxƒ“ƒ_‚ªJIS X 0208‚Å‹K’è‚³‚ê‚Ä‚¢‚È‚¢‹@ŽíˆË‘¶‚ÌŠg’£‚ð
+   Ž{‚µ‚Ä‚¢‚é‚±‚Æ‚ª‘½‚­A‚±‚¤‚¢‚Á‚½Šg’£•”•ª‚ÉŠÖ‚µ‚Ä‚Íƒf[ƒ^ŒðŠ·‰Â”\«‚ª’á‚¢B
 
 2ƒoƒCƒg–Ú‚ª5C“™‚É‚È‚è‚¤‚é‚±‚Æ‚É‚æ‚é–â‘è
 
-Shift_JIS‚Å‚ÍAuƒ\vu‰\v‚È‚Çˆê•”‚ÌŽš‚Ì2ƒoƒCƒg–Ú‚ÉA5C(16)(Shift_JIS‚Å‚Í
-‹L†AASCII‚È‚Ç‚Å‚ÍƒoƒbƒNƒXƒ‰ƒbƒVƒ…)‚ðŽg—p‚µ‚Ä‚¢‚éB‘½‚­‚ÌƒvƒƒOƒ‰ƒ~ƒ“ƒO
-Œ¾Œê (CAPerlABourne Shell‚È‚Ç‘½”) ‚Å‚ÍA‚±‚Ì5C(16)‚ðƒGƒXƒP[ƒv•¶Žš‚Æ‚µ‚Ä
-‚¢‚éB‚µ‚½‚ª‚Á‚ÄAƒ\[ƒXƒR[ƒh‚â•¶Žšƒf[ƒ^‚Ìˆ—‚É‚¨‚¢‚ÄShift_JIS‚ð‘z’è‚µ‚Ä
-‚¢‚È‚¢ƒvƒƒOƒ‰ƒ~ƒ“ƒOŠÂ‹«‚Å‚Í–â‘è‚ª‹N‚±‚éB‚±‚Ì–â‘è‚ÍA“¯‚¶‚æ‚¤‚É2ƒoƒCƒg–Ú‚Ì
-”ÍˆÍ‚É5C(16)‚ðŠÜ‚ÞBig5‚âA‚Ü‚ê‚Å‚Í‚ ‚é‚ªGBK‚È‚Ç‚Ì•¶ŽšƒR[ƒh‚Å‚à”­¶‚µ‚¤‚éB
+Shift_JIS‚Å‚ÍAuƒ\vu‰\v‚È‚Çˆê•”‚ÌŽš‚Ì2ƒoƒCƒg–Ú‚ÉA5C(16)iShift_JIS‚Å‚Í
+‹L†AASCII‚È‚Ç‚Å‚ÍƒoƒbƒNƒXƒ‰ƒbƒVƒ…j‚ðŽg—p‚µ‚Ä‚¢‚éB‘½‚­‚ÌƒvƒƒOƒ‰ƒ~ƒ“ƒOŒ¾Œê
+ (CAPerlABourne Shell‚È‚Ç‘½”) ‚Å‚ÍA‚±‚Ì5C(16)‚ðƒGƒXƒP[ƒv•¶Žš‚Æ‚µ‚Ä‚¢‚éB
+‚µ‚½‚ª‚Á‚ÄAƒ\[ƒXƒR[ƒh‚â•¶Žšƒf[ƒ^‚Ìˆ—‚É‚¨‚¢‚ÄShift_JIS‚ð‘z’è‚µ‚Ä‚¢‚È‚¢ƒv
+ƒƒOƒ‰ƒ~ƒ“ƒOŠÂ‹«‚Å‚Í–â‘è‚ª‹N‚±‚éB‚±‚Ì–â‘è‚ÍA“¯‚¶‚æ‚¤‚É2ƒoƒCƒg–Ú‚Ì”ÍˆÍ‚É5C(16)
+‚ðŠÜ‚ÞBig5‚âA‚Ü‚ê‚Å‚Í‚ ‚é‚ªGBK‚È‚Ç‚Ì•¶ŽšƒR[ƒh‚Å‚à”­¶‚µ‚¤‚éB
 
 ‚Ü‚½A5C(16)ˆÈŠO‚É‚Â‚¢‚Ä‚à—ÞŽ—‚Ì–â‘è‚ª”­¶‚·‚é‚±‚Æ‚ª‚ ‚éB‚½‚Æ‚¦‚ÎAUnix‚â
-MS-DOS‚È‚Ç‚ÌƒVƒFƒ‹ã‚Å7C(16) (Shift_JIS‚âASCII‚Å‚Íƒo[ƒeƒBƒJƒ‹ƒo[) ‚ðŠÜ‚Þ
-•¶Žš(|Aƒ|A„|A‰|AŠ|A‹|AŒ|Acc)‚ðƒtƒ@ƒCƒ‹–¼‚ÉŽg—p‚µ‚æ‚¤‚Æ‚·‚é‚ÆA
-ƒpƒCƒv‹L†‚Æ”FŽ¯‚³‚êA³í‚Éƒtƒ@ƒCƒ‹‚ªì¬‚³‚ê‚È‚©‚Á‚½‚èA“Ç‚Ýž‚Ý‚ª•s—Ç‚É
-‚È‚Á‚½‚è‚·‚é‚±‚Æ‚ª‚ ‚éB
+MS-DOS‚È‚Ç‚ÌƒVƒFƒ‹ã‚Å7C(16) (Shift_JIS‚âASCII‚Å‚Íƒo[ƒeƒBƒJƒ‹ƒo[) ‚ðŠÜ‚Þ•¶Žš
+i|Aƒ|A„|A‰|AŠ|A‹|AŒ|Accj‚ðƒtƒ@ƒCƒ‹–¼‚ÉŽg—p‚µ‚æ‚¤‚Æ‚·‚é‚ÆAƒpƒCƒv
+‹L†‚Æ”FŽ¯‚³‚êA³í‚Éƒtƒ@ƒCƒ‹‚ªì¬‚³‚ê‚È‚©‚Á‚½‚èA“Ç‚Ýž‚Ý‚ª•s—Ç‚É‚È‚Á‚½‚è
+‚·‚é‚±‚Æ‚ª‚ ‚éB
 
 Œ»Ý‚Å‚àAƒVƒ“ƒOƒ‹ƒoƒCƒg•¶ŽšƒR[ƒh‘Î‰ž‚Ìƒ\ƒtƒgƒEƒFƒA‚ðShift_JISŠÂ‹«‚ÅŽg—p‚·‚é
 ‚ÆA‰üs‚È‚Ç‚Ì“®ì‚âƒtƒ@ƒCƒ‹–¼‚Ìˆ—‚È‚Ç‚É‚µ‚Î‚µ‚Î‚±‚Ì–â‘è‚ª‚Â‚«‚Ü‚Æ‚¤B‚±‚Ì
-•s‹ï‡‚ðµ‚­A2ƒoƒCƒg–Ú‚É5C(16)‚ðŽ‚Â•¶Žš‚Ì‚±‚Æ‚ðA‚¾‚ß•¶Žš‚ÆŒÄ‚ÑA‚±‚Ì’†‚É‚Í
-uƒ\vu\vu”\vu•\v‚È‚Çˆê”Ê‚ÉŽg—p•p“x‚Ì‚‚¢•¶Žš‚à‚ ‚é[1]B
+•s‹ï‡‚ðµ‚­A2ƒoƒCƒg–Ú‚É5C(16)‚ðŽ‚Â•¶Žš‚Í‘­‚Éu‚¾‚ß•¶Žšv‚ÆŒÄ‚Î‚êA‚±‚Ì’†‚É
+‚Íuƒ\vu\vu”\vu•\v‚È‚Çˆê”Ê‚ÉŽg—p•p“x‚Ì‚‚¢•¶Žš‚àŠÜ‚Ü‚ê‚éB
 
-‚±‚Ì–â‘è‚ð‰ñ”ð‚·‚é“`““I‚È•û–@‚Æ‚µ‚ÄAƒ\[ƒXƒR[ƒh‘S‘Ì‚ðEUCƒR[ƒh‚âUTF-8‚È‚Ç
-‚É•ÏŠ·‚µ‚Ä‚©‚çƒRƒ“ƒpƒCƒ‹‚µ‚½‚èŽÀs‚µ‚½‚è‚·‚é•û–@‚ª‚ ‚éB‚ ‚é‚¢‚Íuƒ\\v‚Ì
-‚æ‚¤‚É2ƒoƒCƒg–Ú‚Ì’¼‘O‚ÉƒGƒXƒP[ƒv•¶Žš‚Ì5C(16)‚ð‹Lq‚µA‚¾‚ß•¶Žš‚ð•¶Žš‚Æ‚µ‚Ä
-³‚µ‚­”FŽ¯‚³‚¹‚é‚È‚Ç‚Ì•û–@‚à‚ ‚é(Perl ‚ÌSjisƒ\ƒtƒgƒEƒFƒA‚È‚Ç)BÅ‹ß‚Å‚ÍA‘½‚­
-‚ÌƒvƒƒOƒ‰ƒ~ƒ“ƒOŒ¾Œê‚ªShift_JIS‚É‘Î‰ž‚·‚é‚æ‚¤‚É‚È‚Á‚½‚½‚ßAShift_JIS‚ðŠÜ‚Þ
-ƒ\[ƒXƒR[ƒh‚âƒf[ƒ^‚ðˆµ‚Á‚Ä‚à‚±‚Ì–â‘è‚Í‹N‚«‚È‚­‚È‚Á‚½‚ªA‹Œ—ˆ‚Ìƒ\ƒtƒgƒEƒFƒA
-Ž‘ŽY‚ð—˜—p‚·‚éã‚Å‚ÍˆË‘RA–â‘è‚ª‚Â‚«‚Ü‚Æ‚¤B
+‚±‚Ì–â‘è‚ð‰ñ”ð‚·‚é“`““I‚È•û–@‚Æ‚µ‚ÄAƒ\[ƒXƒR[ƒh‘S‘Ì‚ðEUCƒR[ƒh‚âUTF-8‚È‚Ç‚É
+•ÏŠ·‚µ‚Ä‚©‚çƒRƒ“ƒpƒCƒ‹‚µ‚½‚èŽÀs‚µ‚½‚è‚·‚é•û–@‚ª‚ ‚éi—áFPerl ‚Ìencodingƒvƒ‰
+ƒOƒ}jB‚ ‚é‚¢‚Íuƒ\v¨uƒ\\v‚Ì‚æ‚¤‚ÉA2ƒoƒCƒg–Ú‚Ì’¼‘O‚ÉƒGƒXƒP[ƒv•¶Žš‚Ì
+5C(16)‚ð‹Lq‚µAu‚¾‚ß•¶Žšv‚ð•¶Žš‚Æ‚µ‚Ä³‚µ‚­”FŽ¯‚³‚¹‚é•û–@‚à‚ ‚éi—áFPerl
+‚ÌSjisƒ\ƒtƒgƒEƒFƒAjB‚ ‚é‚¢‚Í•¶Žš‚Ü‚½‚Í•¶Žš—ñ‚Æ‚µ‚Äˆµ‚í‚¸‘ÎÛ•¶Žš‚¨‚æ‚Ñ“à•”
+•\Œ»Œ`Ž®‚ð”’l‚Ì”z—ñ‚Æ‚µ‚Ä•ÏŠ·‚ðs‚¢AŽæ‚èˆµ‚¤Û‚É•¶Žš‚É•œ†‚µ‚Äˆµ‚¤•û–@‚à‚ ‚é
+i—áFPerl ‚ÌEncodeƒ‚ƒWƒ…[ƒ‹jB
 
 —á
 
-•p”É‚ÉŒ©‚é—á‚Æ‚µ‚ÄAu\‚í‚È‚¢v‚Æ‚¢‚¤•¶Žš—ñ‚ª‚¢‚­‚Â‚©‚ÌŒfŽ¦”Âƒ\ƒtƒg‚Å
-u‚ï¢¯È‚¢v‚Æ‰»‚¯‚éB
+u\‚í‚È‚¢v‚Æ‚¢‚¤•¶Žš—ñ‚ª‚¢‚­‚Â‚©‚ÌŒfŽ¦”Âƒ\ƒtƒg‚Åu‚úžÈ‚¢v‚Æ•¶Žš‰»‚¯‚·‚é—á
+‚ª•p”É‚ÉŒ©‚ç‚ê‚éB
 
    \   ‚í   ‚È   ‚¢
   8d5c 82ed 82c8 82a2
@@ -1071,7 +1074,7 @@ MS-DOS‚È‚Ç‚ÌƒVƒFƒ‹ã‚Å7C(16) (Shift_JIS‚âASCII‚Å‚Íƒo[ƒeƒBƒJƒ‹ƒo[) ‚ðŠÜ‚Þ
   Ž\   8E5C ƒJƒCƒRB—{Ž\
   \   8F5C Š¿”Žš‚Ì10B
   \   905C ‚à‚¤‚·A‚µ‚ñB\¿
-  ‘\   915C ‚»A‚ÐBu‘]v‚Ìˆóü•W€Žš‘ÌB‘\‘·
+  ‘\   915C ‚»A‚ÐBu‘]v‚Ìˆóü•W€Žš‘Ìi³Žš‘ÌjB‘\‘·
   ’\   925C ‚½‚ñB’\y
   “\   935C ‚Í‚éB“\•t
   ”\   945C ‚Ì‚¤B”\—Í
@@ -1082,7 +1085,7 @@ MS-DOS‚È‚Ç‚ÌƒVƒFƒ‹ã‚Å7C(16) (Shift_JIS‚âASCII‚Å‚Íƒo[ƒeƒBƒJƒ‹ƒo[) ‚ðŠÜ‚Þ
   ™\   995C ‚ÆA‚¤‚³‚¬Bu“ev‚ÌˆÙ‘ÌŽš
   š\   9A5C ‚©‚­Bš\ŒŒ
   ›\   9B5C ‚±‚¤B›\˜a(u˜a‚Ì”ñ‘Š·‚¦)
-  œ\   9C5C ‚âB–í¶‚Ìu–ív‚Ì‹ŒŽš‘Ì
+  œ\   9C5C ‚âB–í¶‚Ìu–ív‚Ì³Žš‘Ì
   \   9D5C ‚¾B\•ß
   ž\   9E5C “È‚Ì•Ê‘Ì
   Ÿ\   9F5C ‚·‚·‚éA‚»‚¤A‚µ‚å‚¤B
@@ -1103,47 +1106,53 @@ MS-DOS‚È‚Ç‚ÌƒVƒFƒ‹ã‚Å7C(16) (Shift_JIS‚âASCII‚Å‚Íƒo[ƒeƒBƒJƒ‹ƒo[) ‚ðŠÜ‚Þ
   û\   FB5C ‚¬‚ñB
 
 ƒR[ƒh‹óŠÔ‚É‚¨‚¯‚é•¶Žš”§ŒÀ
-Shift_JIS‚Ì2ƒoƒCƒgƒR[ƒh‚Ì‹óŠÔ‚ÍA‘æ1ƒoƒCƒg‚ª81(16)-9F(16)‚È‚ç‚Ñ‚ÉE0(16)-FC(16)A
-‘æ2ƒoƒCƒg‚ª40(16)-7E(16)‚È‚ç‚Ñ‚É80(16)-FC(16)‚Å‚ ‚éB‚µ‚½‚ª‚Á‚ÄA60~188=11280
-•¶ŽšA‚³‚ç‚É1ƒoƒCƒgƒR[ƒh‚ª158•¶Žš (ƒXƒy[ƒX‚ðŠÜ‚ÝADEL‚Í”‚¦‚¸)‚Å‚ ‚é‚½‚ßA
-Œv11438•¶Žš‚Æ‚È‚éB
+
+Shift_JIS‚Ì2ƒoƒCƒgƒR[ƒh‚Ì‹óŠÔ‚ÍA‘æ1ƒoƒCƒg‚ª81(16)-9F(16)‚È‚ç‚Ñ‚ÉE0(16)-
+FC(16)A‘æ2ƒoƒCƒg‚ª40(16)-7E(16)‚È‚ç‚Ñ‚É80(16)-FC(16)‚Å‚ ‚éB‚µ‚½‚ª‚Á‚ÄA
+60~188=11280•¶ŽšA‚³‚ç‚É1ƒoƒCƒgƒR[ƒh‚ª158•¶ŽšiƒXƒy[ƒX‚ðŠÜ‚ÝADEL‚Í”‚¦‚¸j
+‚Å‚ ‚é‚½‚ßAŒv11438•¶Žš‚Æ‚È‚éB
 
 ‚È‚¨AShift_JIS-2004‚Å‚ÍA2ƒoƒCƒg•¶Žš‚ª11233•¶ŽšA1ƒoƒCƒg•¶Žš‚ª158•¶Žš‚Ì‚½‚ßA
 ‡Œv11391•¶Žš‚ðŽg—p‚µ‚Ä‚¢‚éB
 
 Shift_JIS‚É‚¨‚¯‚éuƒVƒtƒgv‚Æ‚Í
+
+Shift JIS‚ÌuƒVƒtƒgv‚Æ‚ÍA256~256‚Ì•½–Ê‚Ì’†‚Å•¶Žš‚ð•¡ŽG‚É"‚¸‚ç‚·"‚Æ‚¢‚¤ˆÓ–¡
+‚ÌuƒVƒtƒgv‚Å‚ ‚éB
+
 ISO-2022-JP‚ÍŽwŽ¦ƒV[ƒPƒ“ƒX‚ÅŠ¿Žš‚ÆƒAƒ‹ƒtƒ@ƒxƒbƒg‚ðØ‚è‘Ö‚¦‚é•„†‰»•ûŽ®‚Å‚ ‚éB
 ‚Ü‚½AEUC-JP‚Í•â•Š¿Žš‚Æ”¼ŠpƒJƒ^ƒJƒi‚ðƒVƒ“ƒOƒ‹ƒVƒtƒg‚ÅˆêŽž“I‚ÉØ‚è‘Ö‚¦‚ÄŽg‚¤
-•„†‰»•ûŽ®‚Å‚ ‚éB‚±‚ê‚ç‚Ì•„†‰»•ûŽ®‚Å‚ÍAŠe•¶ŽšW‡‚Ì–Ê‚ðƒVƒtƒgƒR[ƒh‚É‚æ‚Á‚Ä
-Ø‚è‘Ö‚¦(ƒVƒtƒg‚µ)‚Ä‚¢‚éB
-
-‚µ‚©‚µ‚È‚ª‚çAShift_JIS‚ÌwƒVƒtƒgx‚Æ‚Í‚±‚ÌˆÓ–¡‚Å‚ÌƒVƒtƒg‚Å‚Í‚È‚¢B‚Ü‚½Aƒrƒbƒg
-ƒVƒtƒg‚ÌwƒVƒtƒgx‚Å‚à‚È‚¢B‚±‚ÌwƒVƒtƒgx‚Æ‚ÍA256~256‚Ì•½–Ê‚Ì’†‚Å•¶Žš‚ð
-•¡ŽG‚É"‚¸‚ç‚·"‚Æ‚¢‚¤ˆÓ–¡‚ÌwƒVƒtƒgx‚Å‚ ‚éB
+•„†‰»•ûŽ®‚Å‚ ‚éB‚±‚ê‚ç‚Ì•„†‰»•ûŽ®‚Ås‚í‚ê‚Ä‚¢‚éAŠe•¶ŽšW‡‚Ì–Ê‚ðƒVƒtƒgƒR[
+ƒh‚É‚æ‚Á‚ÄØ‚è‘Ö‚¦‚é‘€ì‚àuƒVƒtƒgv‚ÆŒÄ‚Î‚ê‚é‚ªAShift_JIS‚ÌuƒVƒtƒgv‚Í‚±‚ê
+‚ç‚Æ‚ÍˆÙ‚È‚éˆÓ–¡‚Å‚ ‚éB‚Ü‚½ƒrƒbƒg‚ð‚¸‚ç‚·‘€ìiƒrƒbƒgƒVƒtƒgj‚Æ‚àˆÙ‚È‚éB
 
 Shift_JIS‚Æ‹æ“_”Ô†
-Shift_JIS‚ª•„†‰»‚Ì‘ÎÛ‚É‚·‚é•¶ŽšƒZƒbƒg‚ÍAJIS X 0208‚Å‚ ‚éB‚±‚Ì•„†‰»•¶Žš
-W‡‚É‚ÍA‹æ“_”Ô†‚Æ‚¢‚¤ŠT”O‚ª‘¶Ý‚·‚éB‚±‚ê‚ÍA94~94‚Ì•¶Žš•\‚Ìs‚Æ—ñ‚Ì”Ô†
-‚Ì‘g‚Å‚ ‚éB
 
-Shift_JIS‚Å‚ÍA8140(16)-FCFC(16)‚Æ‚¢‚¤‚æ‚¤‚ÉAJIS X 0208‚Æ‚Í‚Ü‚Á‚½‚­ˆá‚Á‚½
-ƒR[ƒh‘ÌŒn‚Å‚ ‚é‚ªAJIS X 0208‚ðŒvŽZ‚É‚æ‚è•ÏŒ`‚µ‚½‚à‚Ì‚Å‚ ‚é‚½‚ßA‹æ“_”Ô†‚ð
-—p‚¢‚Ä•¶Žš‚ÌƒR[ƒhƒ|ƒCƒ“ƒg‚ðŽw‚µŽ¦‚·‚±‚Æ‚ª‘½‚¢B“à—e‚É‚Â‚¢‚Ä‚ÍAJIS X 0208‚Ì
-1`94‹æ‚Æ“¯‚¶‚Å‚ ‚éB‚½‚¾‚µA‹@ŽíˆË‘¶•¶Žš‚Å‚ÍAƒVƒtƒgJIS‚Ì•„†‹óŠÔ‚©‚ç‹t¬‚µA
-94‹æ‚Ì‰º•û‚É‚ ‚½‚©‚à120‹æ‚Ü‚Å‚ªŠg’£‚µ‚Ä‚¢‚é‚©‚Ì‚æ‚¤‚Éˆµ‚¤‚±‚Æ‚ª‚ ‚éB95‹æˆÈã
-‚ÍAISO/IEC 2022‚É‘¥‚Á‚½JIS X 0208‚Ì\‘¢‚Å‚Í‘¶Ý‚µ“¾‚È‚¢‚Ì‚ÅA–{—ˆ‚Í‚¨‚©‚µ‚¢B
+Shift_JIS‚ª•„†‰»‚Ì‘ÎÛ‚É‚·‚é•¶ŽšW‡‚ÍAJIS X 0208‚Å‚ ‚éB‚±‚Ì•„†‰»•¶ŽšW‡
+‚É‚ÍA‹æ“_”Ô†‚Æ‚¢‚¤ŠT”O‚ª‘¶Ý‚·‚éB‚±‚ê‚ÍA94~94‚Ì•¶Žš•\‚Ìs‚Æ—ñ‚Ì”Ô†‚Ì‘g
+‚Å‚ ‚éB
+
+Shift_JIS‚Å‚ÍA8140(16)-FCFC(16)‚Æ‚¢‚¤‚æ‚¤‚ÉAJIS X 0208‚Æ‚Í‚Ü‚Á‚½‚­ˆá‚Á‚½ƒR[
+ƒh‘ÌŒn‚Å‚ ‚é‚ªAJIS X 0208‚ðŒvŽZ‚É‚æ‚è•ÏŒ`‚µ‚½‚à‚Ì‚Å‚ ‚é‚½‚ßA‹æ“_”Ô†‚ð—p‚¢‚Ä
+•¶Žš‚ÌƒR[ƒhƒ|ƒCƒ“ƒg‚ðŽw‚µŽ¦‚·‚±‚Æ‚ª‘½‚¢B“à—e‚É‚Â‚¢‚Ä‚ÍAJIS X 0208‚Ì1`94‹æ
+‚Æ“¯‚¶‚Å‚ ‚éB‚½‚¾‚µA‹@ŽíˆË‘¶•¶Žš‚Å‚ÍAƒVƒtƒgJIS‚Ì•„†‹óŠÔ‚©‚ç‹t¬‚µA94‹æ‚Ì
+‰º•û‚É‚ ‚½‚©‚à120‹æ‚Ü‚Å‚ªŠg’£‚µ‚Ä‚¢‚é‚©‚Ì‚æ‚¤‚Éˆµ‚¤‚±‚Æ‚ª‚ ‚éB95‹æˆÈã‚ÍA
+ISO/IEC 2022‚É‘¥‚Á‚½JIS X 0208‚Ì\‘¢‚Å‚Í‘¶Ý‚µ“¾‚È‚¢‚Ì‚ÅA–{—ˆ‚Í‚¨‚©‚µ‚¢B
 ƒxƒ“ƒ_“ÆŽ©‚Ì”ñŒöŽ®‚ÈŠT”O‚Å‚ ‚éB‚È‚¨AJIS X 0213‚Ì‹KŠi‚Ìˆê•”‚Å‚ ‚é
-Shift_JISX0213•„†‰»•\Œ»‚É‚¨‚¢‚Ä‚ÍA‘æ1ƒoƒCƒgF0(16)ˆÈ~‚ð2–Ê‚Ì•¶Žš‚ÉŠ„‚è“–‚Ä
-‚Ä‚¨‚èA•S‰½‹æ‚Æ‚¢‚¤‚æ‚¤‚È‘¶Ý‚µ‚È‚¢‹æ”Ô†‚Í“oê‚µ‚È‚¢B
+Shift_JISX0213•„†‰»•\Œ»‚É‚¨‚¢‚Ä‚ÍA‘æ1ƒoƒCƒgF0(16)ˆÈ~‚ð2–Ê‚Ì•¶Žš‚ÉŠ„‚è“–‚Ä‚Ä
+‚¨‚èA•S‰½‹æ‚Æ‚¢‚¤‚æ‚¤‚È‘¶Ý‚µ‚È‚¢‹æ”Ô†‚Í“oê‚µ‚È‚¢B
 
 ux-sjisv‚ÆuMS_Kanjiv
+
 ux-sjisv‚ÆuMS_Kanjiv‚Í‚Æ‚à‚ÉAHTMLƒhƒLƒ…ƒƒ“ƒg‚Ìucharsetv‚ÌŽw’è‚É
 uShift_JISv‚Ì•Ê–¼‚Æ‚µ‚ÄŽg‚¤‚±‚Æ‚ªo—ˆ‚éB
 
-ux-sjisv‚ÍIANA‚ÉuShift_JISv‚Æ‚¢‚¤–¼‘O‚ð“o˜^‚·‚é‘O‚ÉANetscape Navigator 2.0
-‚É‚¨‚¢‚ÄŽg‚Á‚Ä‚¢‚½ƒGƒ“ƒR[ƒfƒBƒ“ƒO‚ÌŽw’èŽq–¼‚Å‚ ‚éBˆê•”‚ÌHTML¶¬ƒ\ƒtƒg‚ªŽ©“®
-‚Å‚±‚ÌŽw’èŽq‚ð‘g‚Ýž‚ñ‚ÅŽg‚Á‚Ä‚¢‚éB‚»‚Ì‚½‚ß”FŽ¯‰Â”\‚Èƒuƒ‰ƒEƒU‚ª‚ ‚é‚ªA
+ux-sjisv‚ÍIANA‚ÉuShift_JISv‚Æ‚¢‚¤–¼‘O‚ð“o˜^‚·‚é‘O‚ÉANetscape Navigator
+2.0‚É‚¨‚¢‚ÄŽg‚Á‚Ä‚¢‚½ƒGƒ“ƒR[ƒfƒBƒ“ƒO‚ÌŽw’èŽq–¼‚Å‚ ‚éBˆê•”‚ÌHTML¶¬ƒ\ƒtƒg‚ª
+Ž©“®‚Å‚±‚ÌŽw’èŽq‚ð‘g‚Ýž‚ñ‚ÅŽg‚Á‚Ä‚¢‚éB‚»‚Ì‚½‚ß”FŽ¯‰Â”\‚Èƒuƒ‰ƒEƒU‚ª‚ ‚é‚ªA
 uShift_JISv‚É‘‚«Š·‚¦‚é‚±‚Æ‚ð„§‚µ‚Ä‚¢‚éB
+
+uMS_Kanjiv‚ÍIANA‚É‚æ‚èuShift_JISv‚Ì•Ê–¼‚Æ‚µ‚ÄŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚éB
 
 
 =head1 ‚±‚Ìƒ\ƒtƒgƒEƒFƒA‚Å‚Ì "ShiftJIS"
@@ -1450,19 +1459,6 @@ Unicode ƒTƒ|[ƒg‚ª perl ‚É“±“ü‚³‚ê‚éˆÈ‘O‚ÍAeq ‰‰ŽZŽq‚ÍA2‚Â‚ÌƒXƒJƒ‰[•Ï”‚É‚æ‚Á
 ‚»‚±‚ÅÌ‚Ì•û–@‚É–ß‚·‚±‚Æ‚É‚æ‚Á‚ÄA‚Ç‚Ì‚æ‚¤‚É‰ðŒˆ‚³‚ê‚é‚Ì‚© Programming Perl, 3rd ed.
 (–M–ó ƒvƒƒOƒ‰ƒ~ƒ“ƒOPerl ‘æ3”Å) ‚Ì402ƒy[ƒW‚ð‚à‚¤ˆê“xˆø—p‚µ‚Ü‚µ‚å‚¤B
 
-  Sjisƒ\ƒtƒgƒEƒFƒA—˜—p‚É‚æ‚éî•ñˆ—ƒ‚ƒfƒ‹
- 
-    +-----------------------------------+
-    |           Octet Strings           | ƒoƒCƒiƒŠƒf[ƒ^
-    +-----------------------------------+
-    |         Character Strings         | ƒeƒLƒXƒgƒf[ƒ^
-    +-----------------------------------+
-    |      ASCII Compatible Encoding    | ShiftJIS ‚È‚Ç
-    +-----------------------------------+
-              (UTF8ƒtƒ‰ƒO‚ª‚È‚¢)
- 
-    ‚±‚Ì}‚ÉˆÓ–¡‚Í‚È‚¢‚½‚ßAŠo‚¦‚é•K—v‚ª‚ ‚è‚Ü‚¹‚ñB
-
 —‘z“I‚É‚ÍAˆÈ‰º‚Ì5‚Â‚ÌƒS[ƒ‹‚ðŽÀŒ»‚µ‚æ‚¤‚Æl‚¦‚Ä‚¢‚Ü‚·B
 
 =over 2
@@ -1633,6 +1629,7 @@ Programming Perl, 3rd ed. ‚ª‘‚©‚ê‚½ ‚É‚ÍAUTF8 ƒtƒ‰ƒO‚Í¶‚Ü‚ê‚Ä‚¨‚ç‚¸APerl ‚Í
  PerlƒŠƒ\[ƒXƒLƒbƒg - UNIX”Å
  Futato, Irving, Jepson, Patwardhan, Siever ‹¤’˜, ƒCƒGƒ[ƒŒ[ƒxƒ‹ ŽR–{ _ –ó
  ISBN4-900900-65-6
+ http://www.oreilly.co.jp/out/presuni/
 
  “ú–{Œêî•ñˆ—
  Understanding Japanese Information Processing
@@ -1640,6 +1637,7 @@ Programming Perl, 3rd ed. ‚ª‘‚©‚ê‚½ ‚É‚ÍAUTF8 ƒtƒ‰ƒO‚Í¶‚Ü‚ê‚Ä‚¨‚ç‚¸APerl ‚Í
  1995”N8ŒŽ ”­s
  496ƒy[ƒW
  ISBN 4-89052-708-7
+ http://www.fukkan.com/vote.php3?no=4293
 
  CJKV“ú’†ŠØ‰zî•ñˆ—
  Chinese, Japanese, Korean & Vietnamese Computing
@@ -1686,7 +1684,7 @@ Programming Perl, 3rd ed. ‚ª‘‚©‚ê‚½ ‚É‚ÍAUTF8 ƒtƒ‰ƒO‚Í¶‚Ü‚ê‚Ä‚¨‚ç‚¸APerl ‚Í
  1993”N8ŒŽ†
  172ƒy[ƒW
  T1008901080816 ŽGŽ08901-8
- http://ascii.asciimw.jp/books/magazines/unix.shtml
+ http://ascii.asciimw.jp/books/books/detail/978-4-7561-5008-0.shtml
 
  MacPerl“ü–å
  Vicki Brown, Chris Nandor ’˜, (Š”)ƒRƒXƒ‚Eƒvƒ‰ƒlƒbƒg –ó
@@ -1741,9 +1739,10 @@ Programming Perl, 3rd ed. ‚ª‘‚©‚ê‚½ ‚É‚ÍAUTF8 ƒtƒ‰ƒO‚Í¶‚Ü‚ê‚Ä‚¨‚ç‚¸APerl ‚Í
 
  ‰Ì‘ã ˜a³‚³‚ñ, jcode.pl
  ftp://ftp.iij.ad.jp/pub/IIJ/dist/utashiro/perl/
+ http://log.utashiro.com/pub/2006/07/jkondo_a580.html
 
  Jeffrey E. F. Friedl, Mastering Regular Expressions
- http://www.oreilly.com/catalog/regex/index.html
+ http://regex.info/
 
  ’åœA ’ms‚³‚ñ, Shift-JISƒeƒLƒXƒg‚ð³‚µ‚­ˆµ‚¤
  http://homepage1.nifty.com/nomenclator/perl/shiftjis.htm
@@ -1758,7 +1757,7 @@ Programming Perl, 3rd ed. ‚ª‘‚©‚ê‚½ ‚É‚ÍAUTF8 ƒtƒ‰ƒO‚Í¶‚Ü‚ê‚Ä‚¨‚ç‚¸APerl ‚Í
  http://www.rakunet.org/tsnet/TSabc/18/546.html
 
  ˜aò G–¾‚³‚ñ, Windows‚ÅPerl 5.8/5.10‚ðŽg‚¤ƒ‚ƒ“‚¶‚á‚È‚¢
- http://www.aritia.org/hizumi/perl/perlwin.html
+ http://www.aritia.jp/hizumi/perl/perlwin.html
 
  ’Ë–{ –q¶‚³‚ñ, Perlƒƒ‚/Windows‚Å‚Ìƒtƒ@ƒCƒ‹ƒpƒX
  http://digit.que.ne.jp/work/wiki.cgi?Perl%E3%83%A1%E3%83%A2%2FWindows%E3%81%A7%E3%81%AE%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%83%91%E3%82%B9
@@ -1785,7 +1784,8 @@ Programming Perl, 3rd ed. ‚ª‘‚©‚ê‚½ ‚É‚ÍAUTF8 ƒtƒ‰ƒO‚Í¶‚Ü‚ê‚Ä‚¨‚ç‚¸APerl ‚Í
 
  ¬Ž” ’e‚³‚ñ, Encode ƒ‚ƒWƒ…[ƒ‹
  http://search.cpan.org/dist/Encode/
- http://www.dan.co.jp/~dankogai/yapcasia2006/slide.html (404 Slide Not Found)
+ http://www.archive.org/details/YAPCAsia2006TokyoPerl58andUnicodeMythsFactsandChanges (“®‰æ)
+ http://yapc.g.hatena.ne.jp/jkondo/ (‰¹º)
 
  Juerd, Perl Unicode Advice
  http://juerd.nl/site.plp/perluniadvice
