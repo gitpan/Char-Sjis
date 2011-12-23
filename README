@@ -477,5 +477,5 @@ See also code table:
 
 SEE ALSO
 
-perl, Sjis.pm
+perl, Sjis.pm, Esjis.pm, jacode.pl, SjisTk.pm, DBD::mysqlPPrawSjis.pm
 

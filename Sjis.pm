@@ -18,7 +18,7 @@ use Esjis;
 
 BEGIN { eval q{ use vars qw($VERSION) } }
 
-$VERSION = sprintf '%d.%02d', q$Revision: 0.78 $ =~ m/(\d+)/oxmsg;
+$VERSION = sprintf '%d.%02d', q$Revision: 0.79 $ =~ m/(\d+)/oxmsg;
 
 # poor Symbol.pm - substitute of real Symbol.pm
 BEGIN {
@@ -5243,7 +5243,7 @@ incompatible upgrade part to traditional Perl should be rewound.
 You need write 'use Sjis;' in your script.
 
   ---------------------------------
-  Before      After
+  Before      You do
   ---------------------------------
   (nothing)   use Sjis;
   ---------------------------------
@@ -5330,10 +5330,12 @@ Also POSIX-style character classes.
   [:digit:]     [\x30-\x39]
   [:graph:]     [\x21-\x7F]
   [:lower:]     [\x61-\x7A]
+                [\x41-\x5A\x61-\x7A]     (/i modifier)
   [:print:]     [\x20-\x7F]
   [:punct:]     [\x21-\x2F\x3A-\x3F\x40\x5B-\x5F\x60\x7B-\x7E]
   [:space:]     [\x09\x0A\x0B\x0C\x0D\x20]
   [:upper:]     [\x41-\x5A]
+                [\x41-\x5A\x61-\x7A]     (/i modifier)
   [:word:]      [\x30-\x39\x41-\x5A\x5F\x61-\x7A]
   [:xdigit:]    [\x30-\x39\x41-\x46\x61-\x66]
   [:^alnum:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x5A\x61-\x7A])
@@ -5344,10 +5346,12 @@ Also POSIX-style character classes.
   [:^digit:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39])
   [:^graph:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x21-\x7F])
   [:^lower:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x61-\x7A])
+                (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])           (/i modifier)
   [:^print:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x20-\x7F])
   [:^punct:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x21-\x2F\x3A-\x3F\x40\x5B-\x5F\x60\x7B-\x7E])
   [:^space:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x0A\x0B\x0C\x0D\x20])
   [:^upper:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x41-\x5A])
+                (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])           (/i modifier)
   [:^word:]     (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x5A\x5F\x61-\x7A])
   [:^xdigit:]   (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x46\x61-\x66])
   ---------------------------------------------------------------------------
@@ -5410,7 +5414,7 @@ functions.
 
 =head1 Un-Escaping bytes::* Functions (Sjis.pm provides)
 
-Sjis.pm remove 'bytes::' at head of function name.
+Sjis.pm removes 'bytes::' at head of function name.
 
   ------------------------------------
   Before           After
@@ -5425,7 +5429,7 @@ Sjis.pm remove 'bytes::' at head of function name.
 
 =head1 Un-Escaping \ Of \N, \p, \P and \X (Sjis.pm provides)
 
-Sjis.pm remove '\' at head of alphanumeric regexp metasymbols \N, \p, \P
+Sjis.pm removes '\' at head of alphanumeric regexp metasymbols \N, \p, \P
 and \X. By this method, you can avoid the trap of the abstraction.
 
   ------------------------------------
@@ -5447,37 +5451,37 @@ and \X. By this method, you can avoid the trap of the abstraction.
 
 Insert 'Esjis::' instead of '-' of operator.
 
-  ---------------------------------
-  Before      After
-  ---------------------------------
-  -r          Esjis::r
-  -w          Esjis::w
-  -x          Esjis::x
-  -o          Esjis::o
-  -R          Esjis::R
-  -W          Esjis::W
-  -X          Esjis::X
-  -O          Esjis::O
-  -e          Esjis::e
-  -z          Esjis::z
-  -f          Esjis::f
-  -d          Esjis::d
-  -l          Esjis::l
-  -p          Esjis::p
-  -S          Esjis::S
-  -b          Esjis::b
-  -c          Esjis::c
-  -t          -t
-  -u          Esjis::u
-  -g          Esjis::g
-  -k          Esjis::k
-  -T          Esjis::T
-  -B          Esjis::B
-  -s          Esjis::s
-  -M          Esjis::M
-  -A          Esjis::A
-  -C          Esjis::C
-  ---------------------------------
+  --------------------------------------------------------------------------
+  Before   After      Meaning
+  --------------------------------------------------------------------------
+  -r       Esjis::r   File is readable by effective uid/gid
+  -w       Esjis::w   File is writable by effective uid/gid
+  -x       Esjis::x   File is executable by effective uid/gid
+  -o       Esjis::o   File is owned by effective uid
+  -R       Esjis::R   File is readable by real uid/gid
+  -W       Esjis::W   File is writable by real uid/gid
+  -X       Esjis::X   File is executable by real uid/gid
+  -O       Esjis::O   File is owned by real uid
+  -e       Esjis::e   File exists
+  -z       Esjis::z   File has zero size
+  -f       Esjis::f   File is a plain file
+  -d       Esjis::d   File is a directory
+  -l       Esjis::l   File is a symbolic link
+  -p       Esjis::p   File is a named pipe (FIFO)
+  -S       Esjis::S   File is a socket
+  -b       Esjis::b   File is a block special file
+  -c       Esjis::c   File is a character special file
+  -t       -t         Filehandle is opened to a tty
+  -u       Esjis::u   File has setuid bit set
+  -g       Esjis::g   File has setgid bit set
+  -k       Esjis::k   File has sticky bit set
+  -T       Esjis::T   File is a text file
+  -B       Esjis::B   File is a binary file (opposite of -T)
+  -s       Esjis::s   File has nonzero size (returns size in bytes)
+  -M       Esjis::M   Age of file (at startup) in days since modification
+  -A       Esjis::A   Age of file (at startup) in days since last access
+  -C       Esjis::C   Age of file (at startup) in days since inode change
+  --------------------------------------------------------------------------
 
 As of Perl 5.00503, as a form of purely syntactic sugar, you can stack file
 test operators, in a way that -w -x $file is equivalent to -x $file && -w _ .
@@ -5504,16 +5508,38 @@ Back to and see 'Escaping Your Script'. Enjoy hacking!!
 You need write 'Sjis::' at head of function name when you want character
 oriented function. See 'Character Oriented Functions'.
 
-  ---------------------------------
-  Before      After
-  ---------------------------------
-  ord         Sjis::ord
-  reverse     Sjis::reverse
-  length      Sjis::length
-  substr      Sjis::substr
-  index       Sjis::index
-  rindex      Sjis::rindex
-  ---------------------------------
+  --------------------------------------------------------
+  Function   Character Oriented   Description
+  --------------------------------------------------------
+  ord        Sjis::ord
+  reverse    Sjis::reverse
+  length     Sjis::length
+  substr     Sjis::substr
+  index      Sjis::index          See 'About Indexes'
+  rindex     Sjis::rindex         See 'About Rindexes'
+  --------------------------------------------------------
+
+  About Indexes
+  -------------------------------------------------------------------------
+  Function       Works as    Returns as   Description
+  -------------------------------------------------------------------------
+  index          Character   Byte         JPerl semantics (most useful)
+  (same as Esjis::index)
+  Sjis::index    Character   Character    Character-oriented semantics
+  CORE::index    Byte        Byte         Byte-oriented semantics
+  (nothing)      Byte        Character    (most useless)
+  -------------------------------------------------------------------------
+
+  About Rindexes
+  -------------------------------------------------------------------------
+  Function       Works as    Returns as   Description
+  -------------------------------------------------------------------------
+  rindex         Character   Byte         JPerl semantics (most useful)
+  (same as Esjis::rindex)
+  Sjis::rindex   Character   Character    Character-oriented semantics
+  CORE::rindex   Byte        Byte         Byte-oriented semantics
+  (nothing)      Byte        Character    (most useless)
+  -------------------------------------------------------------------------
 
 =head1 Character Oriented Functions
 
@@ -6063,7 +6089,7 @@ programming environment like at that time.
 
  Programming Perl, Second Edition
  By Larry Wall, Tom Christiansen, Randal L. Schwartz
- January 1900 (really so?)
+ October 1996
  Pages: 670
  ISBN 10: 1-56592-149-6 | ISBN 13: 9781565921498
  http://shop.oreilly.com/product/9781565921498.do
@@ -6074,6 +6100,16 @@ programming environment like at that time.
  Pages: 1104
  ISBN 10: 0-596-00027-8 | ISBN 13: 9780596000271
  http://shop.oreilly.com/product/9780596000271.do
+
+ Programming Perl, 4th Edition
+ By: Tom Christiansen, brian d foy, Larry Wall, Jon Orwant
+ Publisher: O'Reilly Media
+ Formats: Print, Ebook, Safari Books Online
+ Released: February 2012
+ Pages: 1054
+ Print ISBN: 978-0-596-00492-7 | ISBN 10: 0-596-00492-3
+ Ebook ISBN: 978-1-4493-9890-3 | ISBN 10: 1-4493-9890-1
+ http://shop.oreilly.com/product/9780596004927.do
 
  Perl Cookbook, Second Edition
  By Tom Christiansen, Nathan Torkington

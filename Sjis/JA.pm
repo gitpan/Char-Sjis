@@ -34,32 +34,6 @@ Sjis-JA - Source code filter to escape ShiftJIS (Japanese document)
       ? * を使ってワイルドカードの指定ができます
       ' ～ ' を使ってクォートすることができます
 
-      使える関数
-        Sjis::ord(...);
-        Sjis::reverse(...);
-        Sjis::length(...);
-        Sjis::substr(...);
-        Sjis::index(...);
-        Sjis::rindex(...);
-
-      Perl5.6 エミュレーション(perl5.005の場合)
-        use warnings;
-        use warnings::register;
-
-      以下はダミー関数として
-        utf8::upgrade(...);
-        utf8::downgrade(...);
-        utf8::encode(...);
-        utf8::decode(...);
-        utf8::is_utf8(...);
-        utf8::valid(...);
-        bytes::chr(...);
-        bytes::index(...);
-        bytes::length(...);
-        bytes::ord(...);
-        bytes::rindex(...);
-        bytes::substr(...);
-
   ● 使い方: B
 
     コマンドプロンプトで以下のように実行する
@@ -69,6 +43,32 @@ Sjis-JA - Source code filter to escape ShiftJIS (Japanese document)
 
       ShiftJIS_script.pl  --- ShiftJIS で書かれたスクリプト
       Escaped_script.pl.e --- エスケープされたスクリプト
+
+  ● 使える関数
+      Sjis::ord(...);
+      Sjis::reverse(...);
+      Sjis::length(...);
+      Sjis::substr(...);
+      Sjis::index(...);
+      Sjis::rindex(...);
+
+  ● Perl5.6 エミュレーション(perl5.005の場合)
+      use warnings;
+      use warnings::register;
+
+  ● 以下はダミー関数として
+      utf8::upgrade(...);
+      utf8::downgrade(...);
+      utf8::encode(...);
+      utf8::decode(...);
+      utf8::is_utf8(...);
+      utf8::valid(...);
+      bytes::chr(...);
+      bytes::index(...);
+      bytes::length(...);
+      bytes::ord(...);
+      bytes::rindex(...);
+      bytes::substr(...);
 
 =head1 要約
 
@@ -124,7 +124,7 @@ ftp://ftp.oreilly.co.jp/pcjp98/watanabe/jperlconf.ppt
 
 =over 2
 
-=item * Perl4 と Perl5 のような上位互換性
+=item * Perl4 から Perl5 のような上位互換性
 
 =item * jcode.pl のような最大限の移植性
 
@@ -317,10 +317,12 @@ http://mail.pm.org/pipermail/tokyo-pm/1999-September/001854.html
   [:digit:]     [\x30-\x39]
   [:graph:]     [\x21-\x7F]
   [:lower:]     [\x61-\x7A]
+                [\x41-\x5A\x61-\x7A]     (/i 修飾子あり)
   [:print:]     [\x20-\x7F]
   [:punct:]     [\x21-\x2F\x3A-\x3F\x40\x5B-\x5F\x60\x7B-\x7E]
   [:space:]     [\x09\x0A\x0B\x0C\x0D\x20]
   [:upper:]     [\x41-\x5A]
+                [\x41-\x5A\x61-\x7A]     (/i 修飾子あり)
   [:word:]      [\x30-\x39\x41-\x5A\x5F\x61-\x7A]
   [:xdigit:]    [\x30-\x39\x41-\x46\x61-\x66]
   [:^alnum:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x5A\x61-\x7A])
@@ -331,10 +333,12 @@ http://mail.pm.org/pipermail/tokyo-pm/1999-September/001854.html
   [:^digit:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39])
   [:^graph:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x21-\x7F])
   [:^lower:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x61-\x7A])
+                (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])           (/i 修飾子あり)
   [:^print:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x20-\x7F])
   [:^punct:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x21-\x2F\x3A-\x3F\x40\x5B-\x5F\x60\x7B-\x7E])
   [:^space:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x0A\x0B\x0C\x0D\x20])
   [:^upper:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x41-\x5A])
+                (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])           (/i 修飾子あり)
   [:^word:]     (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x5A\x5F\x61-\x7A])
   [:^xdigit:]   (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x46\x61-\x66])
   ---------------------------------------------------------------------------
@@ -478,16 +482,34 @@ perl5.00503 を使用している場合でもファイルテスト演算子は「積み重ねる」ことが
 もし文字指向の関数を使いたい場合は以下のように記述する必要があります。それぞれ
 の機能については「文字指向の関数」を参照してください。
 
-  ---------------------------------
-  バイト指向  文字指向
-  ---------------------------------
-  ord         Sjis::ord
-  reverse     Sjis::reverse
-  length      Sjis::length
-  substr      Sjis::substr
-  index       Sjis::index
-  rindex      Sjis::rindex
-  ---------------------------------
+  ----------------------------------------------------
+  関数名    文字指向        説明
+  ----------------------------------------------------
+  ord       Sjis::ord
+  reverse   Sjis::reverse
+  length    Sjis::length
+  substr    Sjis::substr
+  index     Sjis::index     以下の記述も参照のこと
+  rindex    Sjis::rindex    以下の記述も参照のこと
+  ----------------------------------------------------
+
+  index の仲間たち
+  --------------------------------------------------------------
+  関数名         動作         返値         説明
+  --------------------------------------------------------------
+  index          文字指向     バイト単位   JPerlと同じ動作
+  Sjis::index    文字指向     文字単位     文字指向の動作
+  CORE::index    バイト指向   バイト単位   バイト指向の動作
+  --------------------------------------------------------------
+
+  rindex の仲間たち
+  --------------------------------------------------------------
+  関数名         動作         返値         説明
+  --------------------------------------------------------------
+  rindex         文字指向     バイト単位   JPerlと同じ動作
+  Sjis::rindex   文字指向     文字単位     文字指向の動作
+  CORE::rindex   バイト指向   バイト単位   バイト指向の動作
+  --------------------------------------------------------------
 
 =head1 文字指向の関数
 
@@ -1546,12 +1568,12 @@ Unicode サポートが perl に導入される以前は、eq 演算子は、2つのスカラー変数によっ
 
     JPerl は Perl 言語を分岐させないようにするために、インタプリタを分岐させました。
     でも Perl コアチームはインタプリタの分岐を望んでいないのでしょう。結果的にPerl
-    言語が分岐し、コミュニティは縮小を余儀なくされました。
+    言語が分岐することになり、コミュニティは縮小を余儀なくされました。
 
     バイト指向の perl はすでにバイナリデータを扱うことができるため、文字指向の
-    perl を別立てで作成する必要はありません。このソフトウェアは単なる Perl のアプ
-    リケーションプログラムであり、フィルタプログラムとして作成されています。
-    基本的には perl が実行できる環境ならば動作するでしょう。
+    perl を別立てで作成する必要はありません。またこのソフトウェアは、単なるアプリ
+    ケーションプログラムなので、Perl コアチームから睨まれることもないでしょうし、
+    誘われる心配もありません。
 
     それに問題を Perl スクリプトで解決しようとするなら、Perl コミュニティのサポート
     を得られるでしょう。
@@ -1590,6 +1612,16 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
  680ページ
  ISBN 4-87311-097-1
  http://www.oreilly.co.jp/books/4873110971/
+
+ Programming Perl, 4th Edition
+ By: Tom Christiansen, brian d foy, Larry Wall, Jon Orwant
+ Publisher: O'Reilly Media
+ Formats: Print, Ebook, Safari Books Online
+ Released: February 2012
+ Pages: 1054
+ Print ISBN: 978-0-596-00492-7 | ISBN 10: 0-596-00492-3
+ Ebook ISBN: 978-1-4493-9890-3 | ISBN 10: 1-4493-9890-1
+ http://shop.oreilly.com/product/9780596004927.do
 
  Perlクックブック 第2版 VOLUME 1
  By Tom Christiansen, Nathan Torkington, Shibuya Perl Mongers 監訳, 株式会社ドキュメントシステム 訳

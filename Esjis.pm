@@ -16,7 +16,7 @@ use strict qw(subs vars);
 # (and so on)
 
 BEGIN { eval q{ use vars qw($VERSION) } }
-$VERSION = sprintf '%d.%02d', q$Revision: 0.78 $ =~ m/(\d+)/xmsg;
+$VERSION = sprintf '%d.%02d', q$Revision: 0.79 $ =~ m/(\d+)/xmsg;
 
 BEGIN {
     my $PERL5LIB = __FILE__;
@@ -2929,6 +2929,8 @@ sub _charlist {
     my $modifier = pop @_;
     my @char = @_;
 
+    my $ignorecase = ($modifier =~ m/i/oxms) ? 1 : 0;
+
     # unescape character
     for (my $i=0; $i <= $#char; $i++) {
 
@@ -3005,6 +3007,16 @@ sub _charlist {
         }
 
         # POSIX-style character classes
+        elsif ($ignorecase and ($char[$i] =~ m/\A ( \[\: \^? (?:lower|upper) :\] ) \z/oxms)) {
+            $char[$i] = {
+
+                '[:lower:]'   => '[\x41-\x5A\x61-\x7A]',
+                '[:upper:]'   => '[\x41-\x5A\x61-\x7A]',
+                '[:^lower:]'  => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])',
+                '[:^upper:]'  => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])',
+
+            }->{$1};
+        }
         elsif ($char[$i] =~ m/\A ( \[\: \^? (?:alnum|alpha|ascii|blank|cntrl|digit|graph|lower|print|punct|space|upper|word|xdigit) :\] ) \z/oxms) {
             $char[$i] = {
 
@@ -3022,7 +3034,6 @@ sub _charlist {
                 '[:upper:]'   => '[\x41-\x5A]',
                 '[:word:]'    => '[\x30-\x39\x41-\x5A\x5F\x61-\x7A]',
                 '[:xdigit:]'  => '[\x30-\x39\x41-\x46\x61-\x66]',
-
                 '[:^alnum:]'  => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x5A\x61-\x7A])',
                 '[:^alpha:]'  => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x41-\x5A\x61-\x7A])',
                 '[:^ascii:]'  => '(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x00-\x7F])',
@@ -5906,6 +5917,26 @@ ITER_DO:
 # require
 # in Chapter 3: Functions
 # of ISBN 1-56592-149-6 Programming Perl, Second Edition.
+#
+# sub require {
+#     my($filename) = @_;
+#     return 1 if $INC{$filename};
+#     my($realfilename, $result);
+#     ITER:{
+#         foreach $prefix (@INC) {
+#             $realfilename = "$prefix/$filename";
+#             if (-f $realfilename) {
+#                 $result = eval `cat $realfilename`;
+#                 last ITER;
+#             }
+#         }
+#         die "Can't find $filename in \@INC";
+#     }
+#     die $@ if $@;
+#     die "$filename did not return true value" unless $result;
+#     $INC{$filename} = $realfilename;
+#     return $result;
+# }
 
 sub Esjis::require(;$) {
 
@@ -6364,6 +6395,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   If no ShiftJIS string is specified via =~ operator, the $_ variable is translated.
   $modifier are:
 
+  ------------------------------------------------------
   Modifier   Meaning
   ------------------------------------------------------
   c          Complement $searchlist
@@ -6472,6 +6504,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   Returns 1 when true case or '' when false case.
   Returns undef unless successful.
 
+  ------------------------------------------------------------------------------
   Function and Prototype     Meaning
   ------------------------------------------------------------------------------
   Esjis::r(*), Esjis::r_()   File is readable by effective uid/gid
@@ -6511,6 +6544,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   a filehandle. Both Esjis::T and Esjis::B deosn't work when given the special
   filehandle consisting of a solitary underline.
 
+  ------------------------------------------------------------------------------
   Function and Prototype     Meaning
   ------------------------------------------------------------------------------
   Esjis::T(*), Esjis::T_()   File is a text file
@@ -6522,9 +6556,10 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   $value = Esjis::s $string;
   $value = Esjis::s_;
 
+  ------------------------------------------------------------------------------
   Function and Prototype     Meaning
   ------------------------------------------------------------------------------
-  Esjis::s(*), Esjis::s_()   File has nonzero size (returns size)
+  Esjis::s(*), Esjis::s_()   File has nonzero size (returns size in bytes)
   Esjis::M(*), Esjis::M_()   Age of file (at startup) in days since modification
   Esjis::A(*), Esjis::A_()   Age of file (at startup) in days since last access
   Esjis::C(*), Esjis::C_()   Age of file (at startup) in days since inode change
@@ -6589,6 +6624,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   Not all fields are supported on all filesystem types. Here are the meanings of
   the fields:
 
+  -----------------------------------------------------------------
   Field     Meaning
   -----------------------------------------------------------------
   dev       Device number of filesystem
