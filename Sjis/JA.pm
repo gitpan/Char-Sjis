@@ -29,6 +29,7 @@ Sjis-JA - Source code filter to escape ShiftJIS (Japanese document)
       perl510  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
       perl512  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
       perl514  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      perl516  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
       perl64   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
 
       ? * を使ってワイルドカードの指定ができます
@@ -51,6 +52,7 @@ Sjis-JA - Source code filter to escape ShiftJIS (Japanese document)
       Sjis::substr(...);
       Sjis::index(...);
       Sjis::rindex(...);
+      CORE::chop(...);
 
   ● Perl5.6 エミュレーション(perl5.005の場合)
       use warnings;
@@ -84,12 +86,11 @@ jperl は不要になったと言われていました。
 日本国内において、汎用大型コンピュータの入出力、パーソナルコンピュータの内部コー
 ドおよび入出力、さらには携帯電話に至るまで、ShiftJIS を基本とした文字コード
 が広く使われています。このソフトウェアはその ShiftJIS を直接扱います。そして
-Latin-1 を扱いません。そのため UTF8 フラグはありません。
+Latin-1 を扱いません。そのため UTF8 フラグは使いません。
 このソフトウェアは Shift_JIS, Windows-31J, CP932, MacJapanese, SJIS(R90),
 Shift_JISX0213, Shift_JIS-2004 などいわゆる ShiftJIS の亜種を扱うことができます。
 この文書ではこれらを総称して ShiftJIS という語で表しています(「_」がない)。
 
-複雑な解法は問題をより複雑にします。
 あなたもエンコードの問題からエスケープしませんか？
 
 =head1 もうひとつの未来(みらい)
@@ -120,7 +121,7 @@ ftp://ftp.oreilly.co.jp/pcjp98/watanabe/jperlconf.ppt
 ソースコードフィルタです。エスケープ処理によって文字コードが変化することはあり
 ません。
 
-このソフトウェアは以下の特徴があります。
+成功したソフトウェアから以下のことを学んでこのソフトウェアは作成されました。
 
 =over 2
 
@@ -128,7 +129,7 @@ ftp://ftp.oreilly.co.jp/pcjp98/watanabe/jperlconf.ppt
 
 =item * jcode.pl のような最大限の移植性
 
-=item * JPerl のようにシフトJISをそのまま扱い、UTF8フラグがない
+=item * JPerl のようにシフトJISをそのまま扱い、UTF8フラグを使わない
 
 =item * Encode モジュールのように Perl は1つのインタプリタのまま
 
@@ -192,6 +193,7 @@ http://mail.pm.org/pipermail/tokyo-pm/1999-September/001854.html
    perl510  pmake.bat install --- perl5.010 環境にインストールします
    perl512  pmake.bat install --- perl5.012 環境にインストールします
    perl514  pmake.bat install --- perl5.014 環境にインストールします
+   perl516  pmake.bat install --- perl5.016 環境にインストールします
    perl64   pmake.bat install --- perl64    環境にインストールします
 
    もしシステムに strict.pm がない場合は付属の strict.pm_ を strict.pm にリネーム
@@ -212,6 +214,7 @@ http://mail.pm.org/pipermail/tokyo-pm/1999-September/001854.html
    perl510.bat           --- 環境変数 PATH の設定なしに perl5.10 を探して実行する
    perl512.bat           --- 環境変数 PATH の設定なしに perl5.12 を探して実行する
    perl514.bat           --- 環境変数 PATH の設定なしに perl5.14 を探して実行する
+   perl516.bat           --- 環境変数 PATH の設定なしに perl5.16 を探して実行する
    perl64.bat            --- 環境変数 PATH の設定なしに perl64   を探して実行する
    strict.pm_            --- ダミーの strict.pm
    warnings.pm_          --- warnings.pm の簡易版
@@ -279,36 +282,121 @@ http://mail.pm.org/pipermail/tokyo-pm/1999-September/001854.html
   in the perl     "`/"    [83] [5c]
   -----------------------------------------
 
+=head1 正規表現中へのマルチバイトアンカーリング処理の追加
+
+Sjis.pm は正規表現の先頭にマルチバイトアンカーリング処理を付け足します。
+
+  --------------------------------------------------------------------------------
+  処理前                  処理後
+  --------------------------------------------------------------------------------
+  m/regexp/               m/@{Esjis::anchor}(?:regexp).../
+  --------------------------------------------------------------------------------
+
+=head1 第2オクテットのエスケープ処理
+
+Sjis.pm は正規表現中のマルチバイト文字の第2オクテットをエスケープします。
+
+  --------------------------------------------------------------------------------
+  処理前                  処理後
+  --------------------------------------------------------------------------------
+  m{...`/...}             m{...`/\...}
+  --------------------------------------------------------------------------------
+
+=head1 正規表現中のマルチバイト文字の扱いについて
+
+Sjis.pm はマルチバイト文字への量指定子、およびマルチバイト文字のカスタム文字クラス
+をクラスタリングします。またクラッシックな Perl 文字クラス、POSIX スタイルの文字
+クラスをマルチバイト文字対応版に書き換えます。
+
+  --------------------------------------------------------------------------------
+  処理前                  処理後
+  --------------------------------------------------------------------------------
+  m/...MULTIOCT+.../      m/...(?:MULTIOCT)+.../
+  m/...[AN-EM].../        m/...(?:A[N-Z]|[B-D][A-Z]|E[A-M]).../
+  m/...\D.../             m/...@{Esjis::eD}.../
+  m/...[[:^digit:]].../   m/...@{Esjis::not_digit}.../
+  --------------------------------------------------------------------------------
+
+=head1 Esjis::ignorecase() の呼び出し
+
+Sjis.pm は /i 修飾子の代わりに Esjis::ignorecase() の呼出しを書き加えます。
+
+  --------------------------------------------------------------------------------
+  処理前                  処理後
+  --------------------------------------------------------------------------------
+  m/...$var.../i          m/...@{[Esjis::ignorecase($var)]}.../
+  --------------------------------------------------------------------------------
+
+=head1 文字指向の正規表現
+
+/b 修飾子のない正規表現は文字指向の働きをします。
+
+  --------------------------------------------------------------------------------
+  処理前                  処理後
+  --------------------------------------------------------------------------------
+  /regexp/                / 上記参照 @Esjis::matched/
+  m/regexp/               m/ 上記参照 @Esjis::matched/
+  ?regexp?                m? 上記参照 @Esjis::matched?
+  m?regexp?               m? 上記参照 @Esjis::matched?
+  s/regexp//              ($_ =~ m/ 上記参照 @Esjis::matched/) ?
+                          eval{ Esjis::s_matched(); local $^W=0; my $__r=qq//; $_="${1}$__r$'"; 1 } :
+                          undef
+  split(/regexp/)         Esjis::split(qr/regexp/)
+  split(m/regexp/)        Esjis::split(qr/regexp/)
+  split(qr/regexp/)       Esjis::split(qr/regexp/)
+  qr/regexp/              qr/ 上記参照 @Esjis::matched/
+  --------------------------------------------------------------------------------
+
+=head1 バイト指向の正規表現
+
+/b 修飾子を付加した正規表現はバイト指向の働きをします。
+
+  --------------------------------------------------------------------------------
+  処理前                  処理後
+  --------------------------------------------------------------------------------
+  /regexp/b               /(?:regexp)@Esjis::matched/
+  m/regexp/b              m/(?:regexp)@Esjis::matched/
+  ?regexp?b               m?regexp@Esjis::matched?
+  m?regexp?b              m?regexp@Esjis::matched?
+  s/regexp//b             ($_ =~ m/(\G[\x00-\xFF]*?)(?:regexp)@Esjis::matched/) ?
+                          eval{ Esjis::s_matched(); local $^W=0; my $__r=qq//; $_="${1}$__r$'"; 1 } :
+                          undef
+  split(/regexp/b)        split(qr/regexp/)
+  split(m/regexp/b)       split(qr/regexp/)
+  split(qr/regexp/b)      split(qr/regexp/)
+  qr/regexp/b             qr/(?:regexp)@Esjis::matched/
+  --------------------------------------------------------------------------------
+
 =head1 文字クラスのエスケープ
 
 過去のperlとの互換性を保つために文字クラスは以下のように再定義されています。
 
-  ---------------------------------------------------------------------------
+  ---------------------------------------------------------------
   escape        class
-  ---------------------------------------------------------------------------
-   .            (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x0A])
-                (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])     (/s 修飾子あり)
+  ---------------------------------------------------------------
+   .            @{Esjis::dot}
+                @{Esjis::dot_s}    (/s 修飾子あり)
   \d            [0-9]
   \s            [\x09\x0A\x0C\x0D\x20]
   \w            [0-9A-Z_a-z]
-  \D            (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC0-9])
-  \S            (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x0A\x0C\x0D\x20])
-  \W            (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC0-9A-Z_a-z])
+  \D            @{Esjis::eD}
+  \S            @{Esjis::eS}
+  \W            @{Esjis::eW}
   \h            [\x09\x20]
   \v            [\x0C\x0A\x0D]
-  \H            (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x20])
-  \V            (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x0C\x0A\x0D])
+  \H            @{Esjis::eH}
+  \V            @{Esjis::eV}
   \C            [\x00-\xFF]
   \X            X (ただの英字、X です)
-  \R            (?:\x0D\x0A|[\x0A\x0D])
-  \N            (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x0A])
-  ---------------------------------------------------------------------------
+  \R            @{Esjis::eR}
+  \N            @{Esjis::eN}
+  ---------------------------------------------------------------
 
 同様に POSIX スタイルの文字クラスも再定義されています。
 
-  ---------------------------------------------------------------------------
+  ---------------------------------------------------------------
   escape        class
-  ---------------------------------------------------------------------------
+  ---------------------------------------------------------------
   [:alnum:]     [\x30-\x39\x41-\x5A\x61-\x7A]
   [:alpha:]     [\x41-\x5A\x61-\x7A]
   [:ascii:]     [\x00-\x7F]
@@ -325,94 +413,67 @@ http://mail.pm.org/pipermail/tokyo-pm/1999-September/001854.html
                 [\x41-\x5A\x61-\x7A]     (/i 修飾子あり)
   [:word:]      [\x30-\x39\x41-\x5A\x5F\x61-\x7A]
   [:xdigit:]    [\x30-\x39\x41-\x46\x61-\x66]
-  [:^alnum:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x5A\x61-\x7A])
-  [:^alpha:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x41-\x5A\x61-\x7A])
-  [:^ascii:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x00-\x7F])
-  [:^blank:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x20])
-  [:^cntrl:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x00-\x1F\x7F])
-  [:^digit:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39])
-  [:^graph:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x21-\x7F])
-  [:^lower:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x61-\x7A])
-                (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])           (/i 修飾子あり)
-  [:^print:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x20-\x7F])
-  [:^punct:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x21-\x2F\x3A-\x3F\x40\x5B-\x5F\x60\x7B-\x7E])
-  [:^space:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x0A\x0B\x0C\x0D\x20])
-  [:^upper:]    (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x41-\x5A])
-                (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])           (/i 修飾子あり)
-  [:^word:]     (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x5A\x5F\x61-\x7A])
-  [:^xdigit:]   (?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x46\x61-\x66])
-  ---------------------------------------------------------------------------
+  [:^alnum:]    @{Esjis::not_alnum}
+  [:^alpha:]    @{Esjis::not_alpha}
+  [:^ascii:]    @{Esjis::not_ascii}
+  [:^blank:]    @{Esjis::not_blank}
+  [:^cntrl:]    @{Esjis::not_cntrl}
+  [:^digit:]    @{Esjis::not_digit}
+  [:^graph:]    @{Esjis::not_graph}
+  [:^lower:]    @{Esjis::not_lower}
+                @{Esjis::not_lower_i}    (/i 修飾子あり)
+  [:^print:]    @{Esjis::not_print}
+  [:^punct:]    @{Esjis::not_punct}
+  [:^space:]    @{Esjis::not_space}
+  [:^upper:]    @{Esjis::not_upper}
+                @{Esjis::not_upper_i}    (/i 修飾子あり)
+  [:^word:]     @{Esjis::not_word}
+  [:^xdigit:]   @{Esjis::not_xdigit}
+  ---------------------------------------------------------------
 
 同様に \b と \B も過去のperlとの互換性を保つために再定義されています。
 
-  ---------------------------------------------------------------------------
-  escape        class
-  ---------------------------------------------------------------------------
-  \b            (?:\A(?=[0-9A-Z_a-z])|(?<=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF])(?=[0-9A-Z_a-z])|(?<=[0-9A-Z_a-z])(?=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF]|\z))
-  \B            (?:(?<=[0-9A-Z_a-z])(?=[0-9A-Z_a-z])|(?<=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF])(?=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF]))
-  ---------------------------------------------------------------------------
+  ---------------------------------------------------------------
+  escape      class
+  ---------------------------------------------------------------
+  \b          @{Esjis::eb}
+  \B          @{Esjis::eB}
+  ---------------------------------------------------------------
 
-=head1 組込み関数のエスケープ
+ファイル Esjis.pm の中で以下のように定義されています。
 
-このソフトウェアによって関数名の先頭に 'Esjis::' が書き加わりエスケープされます。
-Esjis::* 関数は Esjis.pm が提供します。
-
-  ---------------------------------
-  処理前      処理後
-  ---------------------------------
-  length      length
-  substr      substr
-  pos         pos
-  split       Esjis::split
-  tr///       Esjis::tr
-  tr///b      tr///
-  tr///B      tr///
-  y///        Esjis::tr
-  y///b       tr///
-  y///B       tr///
-  chop        Esjis::chop
-  index       Esjis::index
-  rindex      Esjis::rindex
-  lc          Esjis::lc
-  lcfirst     Esjis::lcfirst
-  uc          Esjis::uc
-  ucfirst     Esjis::ucfirst
-  chr         Esjis::chr
-  glob        Esjis::glob
-  lstat       Esjis::lstat
-  opendir     Esjis::opendir
-  stat        Esjis::stat
-  unlink      Esjis::unlink
-  chdir       Esjis::chdir
-  do          Esjis::do
-  require     Esjis::require
-  ---------------------------------
-
-  ------------------------------------------------------------------------------------------------------------------------
-  処理前                   処理後
-  ------------------------------------------------------------------------------------------------------------------------
-  use Perl::Module;        BEGIN { Esjis::require 'Perl/Module.pm'; Perl::Module->import() if Perl::Module->can('import'); }
-  use Perl::Module @list;  BEGIN { Esjis::require 'Perl/Module.pm'; Perl::Module->import(@list) if Perl::Module->can('import'); }
-  use Perl::Module ();     BEGIN { Esjis::require 'Perl/Module.pm'; }
-  no Perl::Module;         BEGIN { Esjis::require 'Perl/Module.pm'; Perl::Module->unimport() if Perl::Module->can('unimport'); }
-  no Perl::Module @list;   BEGIN { Esjis::require 'Perl/Module.pm'; Perl::Module->unimport(@list) if Perl::Module->can('unimport'); }
-  no Perl::Module ();      BEGIN { Esjis::require 'Perl/Module.pm'; }
-  ------------------------------------------------------------------------------------------------------------------------
-
-=head1 bytes::* 関数のアンエスケープ
-
-このソフトウェアによって bytes::* 関数の先頭の 'bytes::' が取り除かれます。
-
-  ------------------------------------
-  処理前           処理後
-  ------------------------------------
-  bytes::chr       chr
-  bytes::index     index
-  bytes::length    length
-  bytes::ord       ord
-  bytes::rindex    rindex
-  bytes::substr    substr
-  ------------------------------------
+  ---------------------------------------------------------------------------------------------------------------------------------------------------------
+  class                    Definition
+  ---------------------------------------------------------------------------------------------------------------------------------------------------------
+  @{Esjis::anchor}         qr{\G(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])*?}
+  @{Esjis::dot}            qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x0A])}
+  @{Esjis::dot_s}          qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])}
+  @{Esjis::eD}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC0-9])}
+  @{Esjis::eS}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x0A\x0C\x0D\x20])}
+  @{Esjis::eW}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC0-9A-Z_a-z])}
+  @{Esjis::eH}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x20])}
+  @{Esjis::eV}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x0C\x0A\x0D])}
+  @{Esjis::eR}             qr{(?:\x0D\x0A|[\x0A\x0D])}
+  @{Esjis::eN}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x0A])}
+  @{Esjis::not_alnum}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x5A\x61-\x7A])}
+  @{Esjis::not_alpha}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x41-\x5A\x61-\x7A])}
+  @{Esjis::not_ascii}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x00-\x7F])}
+  @{Esjis::not_blank}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x20])}
+  @{Esjis::not_cntrl}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x00-\x1F\x7F])}
+  @{Esjis::not_digit}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39])}
+  @{Esjis::not_graph}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x21-\x7F])}
+  @{Esjis::not_lower}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x61-\x7A])}
+  @{Esjis::not_lower_i}    qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])}
+  @{Esjis::not_print}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x20-\x7F])}
+  @{Esjis::not_punct}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x21-\x2F\x3A-\x3F\x40\x5B-\x5F\x60\x7B-\x7E])}
+  @{Esjis::not_space}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x0A\x0B\x0C\x0D\x20])}
+  @{Esjis::not_upper}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x41-\x5A])}
+  @{Esjis::not_upper_i}    qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])}
+  @{Esjis::not_word}       qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x5A\x5F\x61-\x7A])}
+  @{Esjis::not_xdigit}     qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x46\x61-\x66])}
+  @{Esjis::eb}             qr{(?:\A(?=[0-9A-Z_a-z])|(?<=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF])(?=[0-9A-Z_a-z])|(?<=[0-9A-Z_a-z])(?=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF]|\z))}
+  @{Esjis::eB}             qr{(?:(?<=[0-9A-Z_a-z])(?=[0-9A-Z_a-z])|(?<=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF])(?=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF]))}
+  ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 =head1 \N, \p, \P, \X のアンエスケープ
 
@@ -434,41 +495,88 @@ Esjis::* 関数は Esjis.pm が提供します。
   \X               X
   ------------------------------------
 
+=head1 組込み関数のエスケープ
+
+このソフトウェアによって関数名の先頭に 'Esjis::' が書き加わりエスケープされます。
+Esjis::* 関数は Esjis.pm が提供します。
+
+  --------------------------------------------
+  処理前      処理後            動作
+  --------------------------------------------
+  length      length            バイト指向
+  substr      substr            バイト指向
+  pos         pos               バイト指向
+  split       Esjis::split      文字指向
+  tr///       Esjis::tr         文字指向
+  tr///b      tr///             バイト指向
+  tr///B      tr///             バイト指向
+  y///        Esjis::tr         文字指向
+  y///b       tr///             バイト指向
+  y///B       tr///             バイト指向
+  chop        Esjis::chop       文字指向
+  index       Esjis::index      文字指向
+  rindex      Esjis::rindex     文字指向
+  lc          Esjis::lc         文字指向
+  lcfirst     Esjis::lcfirst    文字指向
+  uc          Esjis::uc         文字指向
+  ucfirst     Esjis::ucfirst    文字指向
+  chr         Esjis::chr        文字指向
+  glob        Esjis::glob       文字指向
+  lstat       Esjis::lstat      文字指向
+  opendir     Esjis::opendir    文字指向
+  stat        Esjis::stat       文字指向
+  unlink      Esjis::unlink     文字指向
+  chdir       Esjis::chdir      文字指向
+  do          Esjis::do         文字指向
+  require     Esjis::require    文字指向
+  --------------------------------------------
+
+  ------------------------------------------------------------------------------------------------------------------------
+  処理前                   処理後
+  ------------------------------------------------------------------------------------------------------------------------
+  use Perl::Module;        BEGIN { Esjis::require 'Perl/Module.pm'; Perl::Module->import() if Perl::Module->can('import'); }
+  use Perl::Module @list;  BEGIN { Esjis::require 'Perl/Module.pm'; Perl::Module->import(@list) if Perl::Module->can('import'); }
+  use Perl::Module ();     BEGIN { Esjis::require 'Perl/Module.pm'; }
+  no Perl::Module;         BEGIN { Esjis::require 'Perl/Module.pm'; Perl::Module->unimport() if Perl::Module->can('unimport'); }
+  no Perl::Module @list;   BEGIN { Esjis::require 'Perl/Module.pm'; Perl::Module->unimport(@list) if Perl::Module->can('unimport'); }
+  no Perl::Module ();      BEGIN { Esjis::require 'Perl/Module.pm'; }
+  ------------------------------------------------------------------------------------------------------------------------
+
 =head1 ファイルテスト演算子のエスケープ
 
 このソフトウェアによって演算子の '-' は 'Esjis::' に書き換わります。
 
-  ---------------------------------
-  処理前      処理後
-  ---------------------------------
-  -r          Esjis::r
-  -w          Esjis::w
-  -x          Esjis::x
-  -o          Esjis::o
-  -R          Esjis::R
-  -W          Esjis::W
-  -X          Esjis::X
-  -O          Esjis::O
-  -e          Esjis::e
-  -z          Esjis::z
-  -f          Esjis::f
-  -d          Esjis::d
-  -l          Esjis::l
-  -p          Esjis::p
-  -S          Esjis::S
-  -b          Esjis::b
-  -c          Esjis::c
-  -t          -t
-  -u          Esjis::u
-  -g          Esjis::g
-  -k          Esjis::k
-  -T          Esjis::T
-  -B          Esjis::B
-  -s          Esjis::s
-  -M          Esjis::M
-  -A          Esjis::A
-  -C          Esjis::C
-  ---------------------------------
+  -------------------------------------------------------------------------------
+  処理前    処理後      説明
+  -------------------------------------------------------------------------------
+  -r        Esjis::r    実効 uid/gid で読み出し可
+  -w        Esjis::w    実効 uid/gid で書き込み可
+  -x        Esjis::x    実効 uid/gid で実行可
+  -o        Esjis::o    実効 uid が所有
+  -R        Esjis::R    実 uid/gid で読み出し可
+  -W        Esjis::W    実 uid/gid で書き込み可
+  -X        Esjis::X    実 uid/gid で実行可
+  -O        Esjis::O    実 uid/gid が所有
+  -e        Esjis::e    ファイルが存在する
+  -z        Esjis::z    ファイルの長さが 0 である
+  -f        Esjis::f    普通のファイルである
+  -d        Esjis::d    ディレクトリである
+  -l        Esjis::l    シンボリックリンクである
+  -p        Esjis::p    名前付きパイプ(FIFO)である
+  -S        Esjis::S    ソケットである
+  -b        Esjis::b    ブロックスペシャルファイルである
+  -c        Esjis::c    キャラクタスペシャルファイルである
+  -t        -t          ファイルハンドルが tty に対してオープンされている
+  -u        Esjis::u    setuid ビットがセットされている
+  -g        Esjis::g    setgid ビットがセットされている
+  -k        Esjis::k    sticky ビットがセットされている
+  -T        Esjis::T    テキストファイルである
+  -B        Esjis::B    バイナリファイルである(-T とは逆の意味)
+  -s        Esjis::s    ファイルの長さが 0 ではない(長さをバイト単位で返す)
+  -M        Esjis::M    (実行開始時を基準とする)修正されてからの日数
+  -A        Esjis::A    (実行開始時を基準とする)最後にアクセスされてからの日数
+  -C        Esjis::C    (実行開始時を基準とする)inode が変更されてからの日数
+  -------------------------------------------------------------------------------
 
 perl5.00503 を使用している場合でもファイルテスト演算子は「積み重ねる」ことが
 できます。
@@ -534,16 +642,6 @@ perl5.00503 を使用している場合でもファイルテスト演算子は「積み重ねる」ことが
 
     Sjis::reverse(@list) はリストコンテキストでは @list の要素を逆順に並べた
     リスト値を返します。
-    これを利用して、降順の数列を発生させることもできます。
-
-    for (Sjis::reverse(1 .. 10)) { ... }
-
-    @list としてハッシュを渡した場合、そのハッシュはフラットなリストに変換されま
-    す。このことを利用すれば、reverse を使ってハッシュを逆向きにする(値からキーを
-    ひけるようにする)ことができます(ただし、すべての値がユニークであることが前提
-    です)。
-
-    %barfoo = Sjis::reverse(%foobar);
 
     スカラーコンテキストでは @list のすべての要素を連結した上で、ShiftJIS の
     文字単位で逆順にしたものを返します。
@@ -607,12 +705,12 @@ perl5.00503 を使用している場合でもファイルテスト演算子は「積み重ねる」ことが
     $index = Sjis::index($string,$substring);
 
     Sjis::index は、ShiftJIS 文字列 $string の中に含まれる、もう1つの ShiftJIS 文
-    字列 $substr を探します。$string の中で、$substr が最初に出現する位置を文字単位
-    で数えて返します。$start が指定されている場合、$string の先頭から $start 個の
-    文字をスキップした位置から、$substr を探し始めます。位置は 0 をベースにとして
-    数えます。$substr が見つからなければ、Sjis::index 関数はベースより 1 だけ小さい
-    値 -1 を返します。Sjis::index を使って、文字列全体を調べるには、次のようにし
-    ます。
+    字列 $substring を探します。$string の中で、$substring が最初に出現する位置を
+    文字単位で数えて返します。$start が指定されている場合、$string の先頭から $start
+    個の文字をスキップした位置から、$substring を探し始めます。位置は 0 をベースとし
+    て数えます。$substring が見つからなければ、Sjis::index 関数はベースより 1 だけ
+    小さい値 -1 を返します。Sjis::index を使って、文字列全体を調べるには、次のように
+    します。
 
     $pos = -1;
     while (($pos = Sjis::index($string, $lookfor, $pos)) > -1) {
@@ -626,11 +724,11 @@ perl5.00503 を使用している場合でもファイルテスト演算子は「積み重ねる」ことが
     $rindex = Sjis::rindex($string,$substring);
 
     Sjis::rindex は Sjis::index と似ていますが、ShiftJIS 文字列 $string の中で、
-    部分文字列 $substr が最後に出現する位置を文字単位で数えて返します(つまり
-    reverse Sjis::index です)。$substr が見つからなければ、-1 を返します。$position
-    によって、値として返すことが許される、最も右よりの位置を指定することができます。
-    Sjis::rindex を使って、文字列全体を末尾から先頭に向かって調べるには、次のよう
-    にします。
+    部分文字列 $substring が最後に出現する位置を文字単位で数えて返します(つまり
+    reverse Sjis::index です)。$substring が見つからなければ、-1 を返します。
+    $position によって、値として返すことが許される、最も右よりの位置を指定すること
+    ができます。Sjis::rindex を使って、文字列全体を末尾から先頭に向かって調べるに
+    は、次のようにします。
 
     $pos = Sjis::length($string);
     while (($pos = Sjis::rindex($string, $lookfor, $pos)) >= 0) {
@@ -639,6 +737,144 @@ perl5.00503 を使用している場合でもファイルテスト演算子は「積み重ねる」ことが
     }
 
 =back
+
+=head1 バイト指向の関数
+
+=over 2
+
+=item * CORE::chop
+
+    $byte = CORE::chop($string);
+    $byte = CORE::chop(@list);
+    $byte = CORE::chop;
+
+    文字列変数あるいはバイト列変数の最後のバイトを切り落とし、そのバイトを値として
+    返します。CORE::chop 演算子は、主に入力レコードの末尾から改行文字を取り除くのに
+    用いられ、置換演算子を使う(s/\n$//)よりも効率的です。もしやりたいことがそれだけ
+    ならば、chomp を使うほうがより安全です。なぜなら、CORE::chop は末尾にあるバイト
+    を無条件で取り除くのに対して、chomp は取り除くものを選んで取り除くからです。
+
+    リテラルを CORE::chop することはできません --- CORE::chop できるのは変数だけで
+    す。
+
+    引数として変数のリスト @list を与えると、リストの各文字列の最後のバイトが切り
+    落とされます:
+
+    @lines = `cat myfile`;
+    CORE::chop @lines;
+
+    代入式を含め、左辺値ならばどんなものでも CORE::chop することができます:
+
+    CORE::chop($cwd = `pwd`);
+    CORE::chop($answer = <STDIN>);
+
+    上の2行は、次の例とは違った動作をします:
+
+    $answer = CORE::chop($tmp = <STDIN>); # 誤り
+
+    このコードでは、CORE::chop は、($tmpに入っている)残された文字列ではなく、切り
+    落としたバイトを返すので、$answer には改行文字がセットされてしまいます。意図し
+    た結果を得るための方法の1つは、substr を使うことです:
+
+    $answer = substr <STDIN>, 0, -1;
+
+    しかし、次のように書くのが普通です:
+
+    CORE::chop($answer = <STDIN>);
+
+    最も一般的なケースでは、substr を使って、CORE::chop を書き換えることができます:
+
+    $last_byte = CORE::chop($var);
+    $last_byte = substr($var, -1, 1, ""); # 同じこと
+
+    これらが等価であることを理解してしまえば、まとめて CORE::chop を行うことができ
+    ます。2個以上のバイトをまとめて切り落とすには、substr を左辺値として使い、それに
+    空文字列を代入します。次のコードは $caravan の最後の5バイトを取り除きます:
+
+    substr($caravan, -5) = "";
+
+    ここでは substr に負の値を与えることによって、(先頭からではなく)末尾からのオ
+    フセットを指定しています。削除したバイトを保存したければ、4引数の substr を使っ
+    て5バイトを CORE::chop します:
+
+    $tail = substr($caravan, -5, 5, "");
+
+    引数を省略すると、変数 $_ が対象となります。
+
+=item * CORE::ord
+
+    $ord = CORE::ord($expr);
+
+    CORE::ord($expr) は "use Sjis qw(ord);" の記述の有無に関わらず、常に $expr
+    の先頭のバイト値を返します。$expr が省略された場合は $_ が対象となります。
+    この関数は常に符号なしの値を返します。
+
+    符号付きの値が必要であれば、unpack('C',$expr) を使います。また全てのバイト値
+    をリストとして必要であれば unpack('C',$expr) を代わりに使います。
+
+=item * CORE::reverse
+
+    @reverse = CORE::reverse(@list);
+    $reverse = CORE::reverse(@list);
+
+    CORE::reverse(@list) はリストコンテキストでは @list の要素を逆順に並べた
+    リスト値を返します。
+
+    スカラーコンテキストでは "use Sjis qw(ord);" の記述の有無に関わらず、 @list
+    のすべての要素を連結した上で、バイト単位で逆順にしたものを返します。
+
+=item * CORE::index
+
+    $index = CORE::index($string,$substring,$start);
+    $index = CORE::index($string,$substring);
+
+    CORE::index は、バイト列 $string の中に含まれる、もう1つのバイト列 $substring
+    を探します。$string の中で、$substring が最初に出現する位置をバイト単位で数えて
+    返します。$start が指定されている場合、$string の先頭から $start バイト分スキッ
+    プした位置から、$substring を探し始めます。位置は 0 をベースにして数えます。
+    $substring が見つからなければ、CORE::index 関数はベースより 1 だけ小さい値 -1
+    を返します。CORE::index を使って、バイト列全体を調べるには、次のようにします。
+
+    $pos = -1;
+    while (($pos = CORE::index($string, $lookfor, $pos)) > -1) {
+        print "Found at $pos\n";
+        $pos++;
+    }
+
+=item * CORE::rindex
+
+    $rindex = CORE::rindex($string,$substring,$position);
+    $rindex = CORE::rindex($string,$substring);
+
+    CORE::rindex は CORE::index と似ていますが、バイト列 $string の中で、部分バイト
+    列 $substring が最後に出現する位置をバイト単位で数えて返します(つまり
+    reverse CORE::index です)。$substring が見つからなければ、-1 を返します。
+    $position によって、値として返すことが許される、最も右よりの位置を指定すること
+    ができます。CORE::rindex を使って、バイト列全体を末尾から先頭に向かって調べる
+    には、次のようにします。
+
+    $pos = CORE::length($string);
+    while (($pos = CORE::rindex($string, $lookfor, $pos)) >= 0) {
+        print "Found at $pos\n";
+        $pos--;
+    }
+
+=back
+
+=head1 bytes::* 関数のアンエスケープ
+
+このソフトウェアによって bytes::* 関数の先頭の 'bytes::' が取り除かれます。
+
+  -----------------------------------------
+  処理前           処理後    動作
+  -----------------------------------------
+  bytes::chr       chr       バイト指向
+  bytes::index     index     バイト指向
+  bytes::length    length    バイト指向
+  bytes::ord       ord       バイト指向
+  bytes::rindex    rindex    バイト指向
+  bytes::substr    substr    バイト指向
+  -----------------------------------------
 
 =head1 組込みの標準モジュールのエスケープ
 
@@ -790,7 +1026,13 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
 
 =head1 バグと制限事項
 
-バグ報告、パッチを歓迎します。
+このソフトウェアは、私の能力を尽くして、テストして照合しました。そうであっても、多く
+の正規表現を含むソフトウェアは、ある程度のバグを飼うことをまぬがれることができません。
+よって、もしあなたのスクリプトではなくて、Sjisソフトウェアのバグを見つけたのなら、
+最小限のテストコードに切り詰めた上で、作者まで報告して頂けると助かります。
+
+あるいはもっと有用なツールにするためのよいアイディアがあったなら、皆と共有して頂ける
+とありがたいです。
 
 =over 2
 
@@ -819,13 +1061,6 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
     chdir does not work with chr(0x5C) at end of path
     http://bugs.activestate.com/show_bug.cgi?id=81839
 
-=item * 後読み言明
-
-    後読み言明(例えば (?<=[A-Z]))が直前の二バイト文字の第二バイトに誤ってマッチ
-    することには対処されていません。
-    例えば、'アイウ' =~ /(?<=[A-Z])([アイウ])/ を実行するとマッチして $1 は 'イ'
-    になりますが、これは正しくありません。
-
 =item * 左辺値としての Sjis::substr
 
     Sjis::substr は CORE::substr とは異なり、左辺値として扱うことができません。
@@ -834,62 +1069,56 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
     
     Sjis::substr($string, 13, 4, "JPerl");
 
-=item * 特殊変数 $` と $& は機能しません
+=item * 特殊変数 $` と $& を使うときは /( 正規表現全体をキャプチャ )/ する必要があります
 
-    なぜならば、
+    なぜならば、以下のように変換され、$1 を利用するためです。
  
-      'AAABBBCCC' =~ /BBB/;
- 
-    というスクリプトをスケープすると正規表現の先頭にマルチバイトアンカーリング
-    処理のための記述が追加され、
- 
-      'AAABBBCCC' =~ /\G(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])*?(?:BBB)@Esjis::m_matched/;
- 
-    その部分も $& に含まれてしまうからです。
-    上記の実行結果は以下のようになります。 
-      $' は ''       ('AAA' を期待)
-      $& は 'AAABBB' ('BBB' を期待)
-      $` は 'CCC'
- 
-    解決方法
-    スクリプトの記述を
- 
-      'AAABBBCCC' =~ /(BBB)/;
- 
-    のようにして、正規表現全体を ( ... ) で囲んでキャプチャします。
-    エスケープ後のスクリプトは
- 
-      'AAABBBCCC' =~ /\G(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])*?(?:(BBB))@Esjis::m_matched/;
- 
-    のようになるので、実行後、
- 
-      $1 は 'BBB'
- 
-    になり、$& の代わりに使用することができます。
-
- あるいは以下の方法もあります。
-
-  -------------------------------------------------
-  変数   代替法
-  -------------------------------------------------
-  $`     substr(対象文字列, 0, $-[0])
-  $&     substr(対象文字列, $-[0], $+[0], - $-[0])
-  $'     substr(対象文字列, $+[0])
-  -------------------------------------------------
-  「詳説 正規表現 第2版 P.349 7.9.3.4 マッチ前コピーを回避する」より
+    -------------------------------------------------------------------------------------------
+    処理前          処理後               実行される内容
+    -------------------------------------------------------------------------------------------
+    $`              Esjis::PREMATCH()    CORE::substr($&,0,CORE::length($&)-CORE::length($1))
+    $PREMATCH       Esjis::PREMATCH()    CORE::substr($&,0,CORE::length($&)-CORE::length($1))
+    ${^PREMATCH}    Esjis::PREMATCH()    CORE::substr($&,0,CORE::length($&)-CORE::length($1))
+    $&              Esjis::MATCH()       $1
+    $MATCH          Esjis::MATCH()       $1
+    ${^MATCH}       Esjis::MATCH()       $1
+    $'              Esjis::POSTMATCH()   $'
+    $POSTMATCH      Esjis::POSTMATCH()   $'
+    ${^POSTMATCH}   Esjis::POSTMATCH()   $'
+    -------------------------------------------------------------------------------------------
 
 =item * 正規表現を適用する文字列の長さの上限
 
-    上記のとおり、エスケープ後の正規表現にはマルチバイトアンカーリング処理のた
-    めの記述が追加されますが、その中に含まれる \G の制約を受けます。
-    perl5.006, perl5.008, perl5.010, perl5.012, perl5.014 で実行した場合、対象
-    文字列の32,767バイトを超える位置でのマッチすべきところでマッチしません。
-    なおかつ、その際にエラーも警告も出力されません。
+    前述のとおり、エスケープ後の正規表現にはマルチバイトアンカーリング処理のた
+    めの記述 @{Esjis::anchor} が追加されますが、その中に含まれる \G の制約を受
+    けます。perl5.006, perl5.008, perl5.010, perl5.012, perl5.014 で実行した場
+    合、対象文字列の32,767バイトを超える位置でのマッチすべきところでマッチしま
+    せん。なおかつ、その際にエラーも警告も出力されません。
 
     参考リンク
     Bug #89792
     \G can't treat over 32,767 octets
     http://bugs.activestate.com/show_bug.cgi?id=89792
+
+=item * ??, m?? 内の制限
+
+    ?? または m?? の内部でマルチバイト文字に対して {n,m} {n,} {n} * + などの量指
+    定子を付けたい場合は、その文字を ( ) で囲んで記述する必要があります。その結果、
+    $1,$2,$3,... はずれてしまうため、その記述を修正する必要があります。
+    なお ?? または m?? はデリミタが ? なので、(?: ) や量指定子の ? {n,m}? {n,}?
+    {n}? は記述することができません。
+
+=item * 後読み言明
+
+    後読み言明(例えば (?<=[A-Z]))が直前の二バイト文字の第二バイトに誤ってマッチ
+    することには対処されていません。
+    例えば、'アイウ' =~ /(?<=[A-Z])([アイウ])/ を実行するとマッチして $1 は 'イ'
+    になりますが、これは正しくありません。
+
+=item * 展開すると空になる正規表現中の変数
+
+    空のリテラル文字列とは異なり、正規表現中に展開された変数の値が空文字列であっ
+    ても、直前に成功した正規表現は使われません。
 
 =item * 正規表現の修飾子 /a /d /l /u
 
@@ -1478,8 +1707,18 @@ Unicode サポートが perl に導入される以前は、eq 演算子は、2つのスカラー変数によっ
 です。自分で作ったスクリプトはそのデバッグの前に UTF8 フラグについてデバッグしなけ
 ればなりません。
 
-そこで昔の方法に戻すことによって、どのように解決されるのか Programming Perl, 3rd ed.
-(邦訳 プログラミングPerl 第3版) の402ページをもう一度引用しましょう。
+  このソフトウェアによる情報処理モデル
+ 
+    +--------------------------------------------+
+    |       Text strings as Binary strings       |
+    |       Binary strings as Text strings       |
+    +--------------------------------------------+
+    |              Not UTF8 Flagged              |
+    +--------------------------------------------+
+
+そこで、昔の方法に戻すことによってどのように解決されるのか、ほこりにまみれた古い
+Programming Perl, 3rd ed. (邦訳 プログラミングPerl 第3版) の402ページをもう一度
+ひもといてみましょう・・・。
 
 理想的には、以下の5つのゴールを実現しようと考えています。
 
@@ -1567,8 +1806,8 @@ Unicode サポートが perl に導入される以前は、eq 演算子は、2つのスカラー変数によっ
     あり続けるべきである。
 
     JPerl は Perl 言語を分岐させないようにするために、インタプリタを分岐させました。
-    でも Perl コアチームはインタプリタの分岐を望んでいないのでしょう。結果的にPerl
-    言語が分岐することになり、コミュニティは縮小を余儀なくされました。
+    でも Perl コアチームはインタプリタの分岐を望んでいないのでしょう。結果的にゴー
+    ル4とはうらはらにPerl言語が分岐することになり、コミュニティは縮小しました。
 
     バイト指向の perl はすでにバイナリデータを扱うことができるため、文字指向の
     perl を別立てで作成する必要はありません。またこのソフトウェアは、単なるアプリ
@@ -1590,7 +1829,7 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
 簡単な仕事を簡単にできるように設計されていました。このソフトウェアは当時のような
 プログラミング環境を提供します。
 
-=head1 参考文献
+=head1 参考文献、リンク
 
  プログラミングPerl 改訂版
  By Larry Wall, Tom Christiansen, Randal L. Schwartz, 近藤 嘉雪 訳
@@ -1613,12 +1852,26 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
  ISBN 4-87311-097-1
  http://www.oreilly.co.jp/books/4873110971/
 
+ The Perl Language Reference Manual (for Perl version 5.12.1)
+ by Larry Wall and others
+ Paperback (6"x9"), 724 pages
+ Retail Price: $39.95 (pound 29.95 in UK)
+ ISBN-13: 978-1-906966-02-7
+ http://www.network-theory.co.uk/perl/language/
+
+ Perl Pocket Reference, 5th Edition
+ By Johan Vromans
+ Publisher: O'Reilly Media
+ Released: July 2011
+ Pages: 102
+ http://shop.oreilly.com/product/0636920018476.do
+
  Programming Perl, 4th Edition
  By: Tom Christiansen, brian d foy, Larry Wall, Jon Orwant
  Publisher: O'Reilly Media
  Formats: Print, Ebook, Safari Books Online
- Released: February 2012
- Pages: 1054
+ Released: March 2012
+ Pages: 1130
  Print ISBN: 978-0-596-00492-7 | ISBN 10: 0-596-00492-3
  Ebook ISBN: 978-1-4493-9890-3 | ISBN 10: 1-4493-9890-1
  http://shop.oreilly.com/product/9780596004927.do
@@ -1748,86 +2001,6 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
  YAMAGAKI Norio, マルチバイト処理向け文字列照合用有限オートマトン生成システム
  http://www.wipo.int/pctdb/ja/wo.jsp?WO=2009116646&IA=JP2009055515
 
- 関連ソフトウェア
- http://search.cpan.org/dist/jacode/
- http://search.cpan.org/dist/Char/
-
- BackPAN
- http://backpan.perl.org/authors/id/I/IN/INA/
-
-=head1 謝辞
-
-このソフトウェアは、以下の方々の作成したソフトウェアおよび文書のおかげにより作成
-されました。全ての方に感謝いたします。
-
- 山下 良蔵さん, シフトJISのデザインの話
- ttp://furukawablog.spaces.live.com/Blog/cns!1pmWgsL289nm7Shn7cS0jHzA!2225.entry (リンク切れ)
- ttp://shino.tumblr.com/post/116166805/1981-us-jis
- (先頭に 'h' を付加してアクセスしてください)
- http://www.wdic.org/w/WDIC/%E3%82%B7%E3%83%95%E3%83%88JIS
-
- Larry Wall, Perl
- http://www.perl.org/
-
- 歌代 和正さん, jcode.pl
- ftp://ftp.iij.ad.jp/pub/IIJ/dist/utashiro/perl/
- http://log.utashiro.com/pub/2006/07/jkondo_a580.html
-
- Jeffrey E. F. Friedl, Mastering Regular Expressions
- http://regex.info/
-
- 貞廣 知行さん, Shift-JISテキストを正しく扱う
- http://homepage1.nifty.com/nomenclator/perl/shiftjis.htm
-
- まつもと ゆきひろさん, Ruby on Perl(s)
- http://www.rubyist.net/~matz/slides/yapc2006/
-
- 藤岡 和夫さん, jperlユーザーのために
- http://homepage1.nifty.com/kazuf/jperl.html
-
- Bruce., Unicode in Perl
- http://www.rakunet.org/tsnet/TSabc/18/546.html
-
- 和泉 宏明さん, WindowsでPerl 5.8/5.10を使うモンじゃない
- http://www.aritia.jp/hizumi/perl/perlwin.html
-
- 塚本 牧生さん, Perlメモ/Windowsでのファイルパス
- http://digit.que.ne.jp/work/wiki.cgi?Perl%E3%83%A1%E3%83%A2%2FWindows%E3%81%A7%E3%81%AE%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%83%91%E3%82%B9
-
- chaichanPaPaさん, シフトJIS漢字のファイル名にマッチしてみる
- http://d.hatena.ne.jp/chaichanPaPa/20080802/1217660826
-
- 鈴木 紀夫さん, Jperl
- http://homepage2.nifty.com/kipp/perl/jperl/
-
- 渡辺 博文さん, Jperl
- http://www.cpan.org/src/5.0/jperl/
- http://search.cpan.org/~watanabe/
- ftp://ftp.oreilly.co.jp/pcjp98/watanabe/jperlconf.ppt
-
- Chuck Houpt, 野津 美智子さん, MacJPerl
- http://habilis.net/macjperl/index.j.html
-
- 石垣 憲一さん, Pod-PerldocJp, モダンPerlの世界へようこそ
- http://search.cpan.org/dist/Pod-PerldocJp/
- http://gihyo.jp/dev/serial/01/modern-perl/0031
- http://gihyo.jp/dev/serial/01/modern-perl/0032
- http://gihyo.jp/dev/serial/01/modern-perl/0033
-
- 小飼 弾さん, Encode モジュール
- http://search.cpan.org/dist/Encode/
- http://www.archive.org/details/YAPCAsia2006TokyoPerl58andUnicodeMythsFactsandChanges (動画)
- http://yapc.g.hatena.ne.jp/jkondo/ (音声)
-
- Juerd, Perl Unicode Advice
- http://juerd.nl/site.plp/perluniadvice
-
- daily dayflower, 2008-06-25 perluniadvice
- http://d.hatena.ne.jp/dayflower/20080625/1214374293
-
- Jesse Vincent, Compatibility is a virtue
- http://www.nntp.perl.org/group/perl.perl5.porters/2010/05/msg159825.html
-
  Tokyo-pm 保存書庫
  http://mail.pm.org/pipermail/tokyo-pm/
  http://mail.pm.org/pipermail/tokyo-pm/1999-September/001844.html
@@ -1847,6 +2020,162 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
  http://blade.nagaokaut.ac.jp/cgi-bin/scat.rb/ruby/ruby-list/12392
  http://blade.nagaokaut.ac.jp/cgi-bin/scat.rb/ruby/ruby-list/12393
  http://blade.nagaokaut.ac.jp/cgi-bin/scat.rb/ruby/ruby-list/19156
+
+ 関連ソフトウェア
+ http://search.cpan.org/dist/jacode/
+ http://search.cpan.org/dist/Char/
+
+ BackPAN
+ http://backpan.perl.org/authors/id/I/IN/INA/
+
+=head1 謝辞
+
+残念ながら、感謝するすべての人をここに書くことができません。そうだからといって、それ
+を理由にして以下の方々への感謝は省略するわけにはいかないでしょう。
+
+ 山下 良蔵さん, シフトJISのデザインの話
+ ttp://furukawablog.spaces.live.com/Blog/cns!1pmWgsL289nm7Shn7cS0jHzA!2225.entry (リンク切れ)
+ ttp://shino.tumblr.com/post/116166805/1981-us-jis
+ (先頭に 'h' を付加してアクセスしてください)
+ http://www.wdic.org/w/WDIC/%E3%82%B7%E3%83%95%E3%83%88JIS
+ 
+ 日本語情報処理を行う際、いまもってシフトJISほど実用的な符号化方式はありません。
+ 最大の利点はいわゆる半角カタカナと共存できることです。過去の資産を現在に継承できる
+ ということは、現在の資産を未来へ継承できることを示唆しています。
+ 
+ 1981年の時点で、そこまで考えていた山下さんはハッカーと呼ぶにふさわしいでしょう。
+
+ Larry Wall さん, Perl
+ http://www.perl.org/
+ 
+ Perl が正規表現によってバイナリデータを扱えることで、このソフトウェアが成立してい
+ ます。バージョン間の互換性の高さにも助けられました。正規表現のメタ文字や各種クォー
+ トのデリミタは、解決すべき対象である一方で、解決する際の手段としても役立ちます。
+ もし Perl がなければ、問題も存在せず、またそれを解決する喜びもない退屈な人生を送
+ るところでした。
+ 
+ だから Larry Wall さんにはとっても感謝しています！
+
+ 歌代 和正さん, jcode.pl
+ ftp://ftp.iij.ad.jp/pub/IIJ/dist/utashiro/perl/
+ http://log.utashiro.com/pub/2006/07/jkondo_a580.html
+ 
+ 最初に Perl に出会ったのは歌代さんの書かれた UNIX MAGAZINE の記事でした。ファイル
+ テスト演算子 -T、-B の機能を実現するコードは記事に書かれたものをほぼそのまま使って
+ います。また日本語情報処理を執筆されたあの Ken Lunde さんの先生でもあるし、Jeffrey
+ E. F. Friedl さんの詳説正規表現の監訳もされていて、このソフトウェアの周囲には必ず
+ 歌代さんが登場します。
+ 
+ Tokyo.pm のメーリングリストでは、新しい機能を実現するために新たに実装をする場合でも、
+ 過去に作られたソフトウェアと同一のインタフェースにするという、よいアイディアを教わ
+ りました。
+ 
+ 先ほど周囲と言いましたが、実はそれは当然のことで、このソフトウェアは jcode.pl の
+ ソースをもとにして作成されたからです。だから何をどう考えても歌代さんなしで、このソ
+ フトウェアが生まれることはなかったのです。
+
+ Jeffrey E. F. Friedl さん, 詳説正規表現
+ http://regex.info/
+ 
+ 詳説正規表現(第2版)をはじめて読んだとき、何が書いてあるのか全く理解できず、てっきり
+ 英語版を買ってしまったのではないかと疑ったほどでした。しかしながら P.340 Matching
+ Nested Constructs with Embedded Code が自分が必要としているコードだと気づいたときは
+ とても嬉しかったのを覚えています(よく見たら英語版でした)。
+ 
+ そんなわけでネストした括弧を処理できるのは、文枝(Fumie)さんのおかげです。
+ (私の感謝が伝わりますように...。)
+
+ Ken Lunde さん, 日本語情報処理、CJKV日中韓越情報処理
+ http://www.fukkan.com/vote.php3?no=4293
+ http://www.oreilly.co.jp/books/4873111080/
+ 
+ 「日本語情報処理」を読んで文字集合規格と符号化方式を学び、文字化けについて理解が深
+ まりました。文字化けの原因のひとつとして「利用者の意思と異なる、符号化方式の変換」
+ が挙げられます。それを防ぐために、このソフトウェアは符号化方式を変換せずに情報処理
+ を行います。
+ 
+ Appendix W: Perl Code Examples の中の CJKV Encoding Templates、Multiple-Byte
+ Anchoring、Multiple-Byte Processing がとても参考になりました。
+
+ 貞廣 知行さん, Shift-JISテキストを正しく扱う
+ http://homepage1.nifty.com/nomenclator/perl/shiftjis.htm
+ 
+ 「Shift-JISテキストを正しく扱う」で、PerlでシフトJISを扱うときのノウハウを教えて
+ 頂き、ありがとうございます。このサイトの内容をもとに、スクリプト中のリテラル文字列
+ の「ソ」を「ソ\」に変換するフィルタプログラムを作るところから始め、例外を少しずつ
+ 書き加えていくことでこのソフトウェアが作られていきました。
+
+ まつもと ゆきひろさん, Ruby on Perl(s)
+ http://www.rubyist.net/~matz/slides/yapc2006/
+ 
+ YAPC::Asia 2006 Tokyo "Ruby on Perl(s)" で「CSIは不可能じゃない」ことを分かりやす
+ く教えてもらいました。今度 Ruby 版を作りますのでよろしくお願いします。
+
+ 藤岡 和夫さん, jperlユーザーのために
+ http://homepage1.nifty.com/kazuf/jperl.html
+ 
+ ver.0.71 を作成する際、私が直接利用できない環境でのテストのために60回ものメールの
+ やり取りをし、丁寧にデバッグに付き合って頂きました。ありがとうございました。
+
+ Bruce. さん, Unicode in Perl
+ http://www.rakunet.org/tsnet/TSabc/18/546.html
+
+ 和泉 宏明さん, WindowsでPerl 5.8/5.10を使うモンじゃない
+ http://www.aritia.jp/hizumi/perl/perlwin.html
+
+ 塚本 牧生さん, Perlメモ/Windowsでのファイルパス
+ http://digit.que.ne.jp/work/wiki.cgi?Perl%E3%83%A1%E3%83%A2%2FWindows%E3%81%A7%E3%81%AE%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%83%91%E3%82%B9
+
+ chaichanPaPaさん, シフトJIS漢字のファイル名にマッチしてみる
+ http://d.hatena.ne.jp/chaichanPaPa/20080802/1217660826
+
+ 鈴木 紀夫さん, Jperl
+ http://homepage2.nifty.com/kipp/perl/jperl/
+
+ 渡辺 博文さん, Jperl
+ http://www.cpan.org/src/5.0/jperl/
+ http://search.cpan.org/~watanabe/
+ ftp://ftp.oreilly.co.jp/pcjp98/watanabe/jperlconf.ppt
+ 
+ The Perl Confernce Japan (1998)でJperl開発の経緯を聞かせてもらいました。JPerl から
+ は、日本語対応版の Perl はどのようなものが使いやすいのかを教わりました。tr///b も
+ ord も reverse もみんな JPerl の動作を真似しました(おかげでテストプログラムまで
+ もらうことができました)。
+ 
+ 私も渡辺さんのときと同じく誰かが書くんじゃないかと(今も)待ち続けているわけですが、
+ 待っている間に Perl でプロトタイプを作っておきました。待つのは楽しいことです。
+
+ Chuck Houpt さん, 野津 美智子さん, MacJPerl
+ http://habilis.net/macjperl/index.j.html
+
+ 石垣 憲一さん, Pod-PerldocJp, モダンPerlの世界へようこそ
+ http://search.cpan.org/dist/Pod-PerldocJp/
+ http://gihyo.jp/dev/serial/01/modern-perl/0031
+ http://gihyo.jp/dev/serial/01/modern-perl/0032
+ http://gihyo.jp/dev/serial/01/modern-perl/0033
+ 
+ 「モダンPerlの世界へようこそ」の連載がとても参考になります。特に第31回から第33回は
+ JPerl に関連した内容で、技術的にも歴史的にもとても緻密な記事です。
+ 
+ このソフトウェアがモダンPerlへの架け橋として役立てば幸いです。
+
+ 小飼 弾さん, Encode モジュール
+ http://search.cpan.org/dist/Encode/
+ http://www.archive.org/details/YAPCAsia2006TokyoPerl58andUnicodeMythsFactsandChanges (動画)
+ http://yapc.g.hatena.ne.jp/jkondo/ (音声)
+ 
+ YAPC::Asia 2006 Tokyo "Perl5.8 and Unicode: Myths, Facts and Changes" で Perl5.8
+ での変更点を詳しく教えてもらいました。CPAN の face icon はこのスライドに出てくる
+ Perl5.6 = a city without bridges の画像からヒントを得ています。
+
+ Juerd さん, Perl Unicode Advice
+ http://juerd.nl/site.plp/perluniadvice
+
+ daily dayflower さん, 2008-06-25 perluniadvice
+ http://d.hatena.ne.jp/dayflower/20080625/1214374293
+
+ Jesse Vincent さん, Compatibility is a virtue
+ http://www.nntp.perl.org/group/perl.perl5.porters/2010/05/msg159825.html
 
 =cut
 
