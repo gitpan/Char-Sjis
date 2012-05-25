@@ -4,6 +4,7 @@ die "This file is not encoded in ShiftJIS.\n" if q{あ} ne "\x82\xa0";
 # 一般的なファイル名と chr(0x5C) で終わるファイル名のファイルテストの結果が一致することの確認
 
 use Char::Sjis;
+$| = 1;
 print "1..51\n";
 
 my $__FILE__ = __FILE__;

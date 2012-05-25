@@ -21,16 +21,27 @@ Sjis-JA - Source code filter to escape ShiftJIS (Japanese document)
 
       ※ no Sjis; は利用できません。
 
-    コマンドプロンプトで以下のように実行する
-      perl     ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl55   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl56   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl58   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl510  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl512  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl514  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl516  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl64   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+    コマンドプロンプトで以下のいずれかで実行する
+      perl      ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      perl5     ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      perl55    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      perl56    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      perl58    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      perl510   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      perl512   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      perl514   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      perl516   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      perl64    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      aperl58   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      aperl510  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      aperl512  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      aperl514  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      aperl516  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      sperl58   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      sperl510  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      sperl512  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      sperl514  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      sperl516  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
 
       ? * を使ってワイルドカードの指定ができます
       ' ～ ' を使ってクォートすることができます
@@ -53,10 +64,17 @@ Sjis-JA - Source code filter to escape ShiftJIS (Japanese document)
       Sjis::index(...);
       Sjis::rindex(...);
       CORE::chop(...);
+      CORE::ord(...);
+      CORE::reverse(...);
+      CORE::index(...);
+      CORE::rindex(...);
 
   ● Perl5.6 エミュレーション(perl5.005の場合)
       use warnings;
       use warnings::register;
+
+  ● Perl5.16 エミュレーション
+      use feature qw(fc);
 
   ● 以下はダミー関数として
       utf8::upgrade(...);
@@ -177,9 +195,6 @@ http://mail.pm.org/pipermail/tokyo-pm/1999-September/001854.html
    make test
    make install
 
-   もしシステムに strict.pm がない場合は付属の strict.pm_ を strict.pm にリネーム
-   して使用してください。
-
 =head1 インストール方法(makeを使わない場合)
 
    perl pMakefile.pl         --- pMakefile.pl が pmake.bat を生成します
@@ -196,9 +211,6 @@ http://mail.pm.org/pipermail/tokyo-pm/1999-September/001854.html
    perl516  pmake.bat install --- perl5.016 環境にインストールします
    perl64   pmake.bat install --- perl64    環境にインストールします
 
-   もしシステムに strict.pm がない場合は付属の strict.pm_ を strict.pm にリネーム
-   して使用してください。
-
    pmake.bat dist             --- CPAN 配布用パッケージを作ります
    pmake.bat ptar.bat         --- ptar.bat を作成します
 
@@ -208,6 +220,7 @@ http://mail.pm.org/pipermail/tokyo-pm/1999-September/001854.html
    Char/Esjis.pm         --- Sjis.pm のランタイムルーチン
    Sjis.pm               --- Char/Sjis.pm の別名(機能は同じです)
    Esjis.pm              --- Char/Esjis.pm の別名(機能は同じです)
+   perl5.bat             --- 環境変数 PATH の設定なしに perl5    を探して実行する
    perl55.bat            --- 環境変数 PATH の設定なしに perl5.5  を探して実行する
    perl56.bat            --- 環境変数 PATH の設定なしに perl5.6  を探して実行する
    perl58.bat            --- 環境変数 PATH の設定なしに perl5.8  を探して実行する
@@ -216,9 +229,21 @@ http://mail.pm.org/pipermail/tokyo-pm/1999-September/001854.html
    perl514.bat           --- 環境変数 PATH の設定なしに perl5.14 を探して実行する
    perl516.bat           --- 環境変数 PATH の設定なしに perl5.16 を探して実行する
    perl64.bat            --- 環境変数 PATH の設定なしに perl64   を探して実行する
+   aperl58.bat           --- 環境変数 PATH の設定なしに ActivePerl 5.8  を探して実行する
+   aperl510.bat          --- 環境変数 PATH の設定なしに ActivePerl 5.10 を探して実行する
+   aperl512.bat          --- 環境変数 PATH の設定なしに ActivePerl 5.12 を探して実行する
+   aperl514.bat          --- 環境変数 PATH の設定なしに ActivePerl 5.14 を探して実行する
+   aperl516.bat          --- 環境変数 PATH の設定なしに ActivePerl 5.16 を探して実行する
+   sperl58.bat           --- 環境変数 PATH の設定なしに Strawberry Perl 5.8  を探して実行する
+   sperl510.bat          --- 環境変数 PATH の設定なしに Strawberry Perl 5.10 を探して実行する
+   sperl512.bat          --- 環境変数 PATH の設定なしに Strawberry Perl 5.12 を探して実行する
+   sperl514.bat          --- 環境変数 PATH の設定なしに Strawberry Perl 5.14 を探して実行する
+   sperl516.bat          --- 環境変数 PATH の設定なしに Strawberry Perl 5.16 を探して実行する
+
    strict.pm_            --- ダミーの strict.pm
    warnings.pm_          --- warnings.pm の簡易版
    warnings/register.pm_ --- warnings/register.pm の簡易版
+   feature.pm_           --- ダミーの feature.pm
 
 =head1 エスケープによる上位互換性の確保
 
@@ -383,7 +408,7 @@ Sjis.pm は /i 修飾子の代わりに Esjis::ignorecase() の呼出しを書き加えます。
   \S            @{Esjis::eS}
   \W            @{Esjis::eW}
   \h            [\x09\x20]
-  \v            [\x0C\x0A\x0D]
+  \v            [\x0A\x0B\x0C\x0D]
   \H            @{Esjis::eH}
   \V            @{Esjis::eV}
   \C            [\x00-\xFF]
@@ -452,7 +477,7 @@ Sjis.pm は /i 修飾子の代わりに Esjis::ignorecase() の呼出しを書き加えます。
   @{Esjis::eS}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x0A\x0C\x0D\x20])}
   @{Esjis::eW}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC0-9A-Z_a-z])}
   @{Esjis::eH}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x20])}
-  @{Esjis::eV}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x0C\x0A\x0D])}
+  @{Esjis::eV}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x0A\x0B\x0C\x0D])}
   @{Esjis::eR}             qr{(?:\x0D\x0A|[\x0A\x0D])}
   @{Esjis::eN}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x0A])}
   @{Esjis::not_alnum}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x5A\x61-\x7A])}
@@ -520,6 +545,7 @@ Esjis::* 関数は Esjis.pm が提供します。
   lcfirst     Esjis::lcfirst    文字指向
   uc          Esjis::uc         文字指向
   ucfirst     Esjis::ucfirst    文字指向
+  fc          Esjis::fc         文字指向
   chr         Esjis::chr        文字指向
   glob        Esjis::glob       文字指向
   lstat       Esjis::lstat      文字指向
@@ -655,8 +681,13 @@ perl5.00503 を使用している場合でもファイルテスト演算子は「積み重ねる」ことが
     $length = Sjis::length($string);
     $length = Sjis::length();
 
-    Sjis::length($string) はスカラー値 $string の長さを ShiftJIS の文字数で返
-    します。$string を省略した場合は $_ の文字数を返します。
+    Sjis::length($string) はスカラー値 $string の長さを ShiftJIS の文字数(プログ
+    ラマから見える文字)で返します。$string を省略した場合は $_ の文字数を返しま
+    す。
+
+    配列や連想配列(ハッシュ)の大きさを知りたい場合には、Sjis::length は使えま
+    せん。配列の大きさを知るには scalar @array、連想配列に入っているキー/値のペ
+    アの個数を知るには scalar keys %hash とします。
 
     文字数ではなくバイト単位での長さを調べるには、いままで通り
 
@@ -701,12 +732,12 @@ perl5.00503 を使用している場合でもファイルテスト演算子は「積み重ねる」ことが
 
 =item * Sjis::index
 
-    $index = Sjis::index($string,$substring,$start);
+    $index = Sjis::index($string,$substring,$offset);
     $index = Sjis::index($string,$substring);
 
     Sjis::index は、ShiftJIS 文字列 $string の中に含まれる、もう1つの ShiftJIS 文
     字列 $substring を探します。$string の中で、$substring が最初に出現する位置を
-    文字単位で数えて返します。$start が指定されている場合、$string の先頭から $start
+    文字単位で数えて返します。$offset が指定されている場合、$string の先頭から $offset
     個の文字をスキップした位置から、$substring を探し始めます。位置は 0 をベースとし
     て数えます。$substring が見つからなければ、Sjis::index 関数はベースより 1 だけ
     小さい値 -1 を返します。Sjis::index を使って、文字列全体を調べるには、次のように
@@ -720,13 +751,13 @@ perl5.00503 を使用している場合でもファイルテスト演算子は「積み重ねる」ことが
 
 =item * Sjis::rindex
 
-    $rindex = Sjis::rindex($string,$substring,$position);
+    $rindex = Sjis::rindex($string,$substring,$offset);
     $rindex = Sjis::rindex($string,$substring);
 
     Sjis::rindex は Sjis::index と似ていますが、ShiftJIS 文字列 $string の中で、
     部分文字列 $substring が最後に出現する位置を文字単位で数えて返します(つまり
     reverse Sjis::index です)。$substring が見つからなければ、-1 を返します。
-    $position によって、値として返すことが許される、最も右よりの位置を指定すること
+    $offset によって、値として返すことが許される、最も右よりの位置を指定すること
     ができます。Sjis::rindex を使って、文字列全体を末尾から先頭に向かって調べるに
     は、次のようにします。
 
@@ -809,8 +840,8 @@ perl5.00503 を使用している場合でもファイルテスト演算子は「積み重ねる」ことが
     の先頭のバイト値を返します。$expr が省略された場合は $_ が対象となります。
     この関数は常に符号なしの値を返します。
 
-    符号付きの値が必要であれば、unpack('C',$expr) を使います。また全てのバイト値
-    をリストとして必要であれば unpack('C',$expr) を代わりに使います。
+    符号付きの値が必要であれば、unpack('c',$expr) を使います。また全てのバイト値
+    をリストとして必要であれば unpack('C*',$expr) を代わりに使います。
 
 =item * CORE::reverse
 
@@ -825,12 +856,12 @@ perl5.00503 を使用している場合でもファイルテスト演算子は「積み重ねる」ことが
 
 =item * CORE::index
 
-    $index = CORE::index($string,$substring,$start);
+    $index = CORE::index($string,$substring,$offset);
     $index = CORE::index($string,$substring);
 
     CORE::index は、バイト列 $string の中に含まれる、もう1つのバイト列 $substring
     を探します。$string の中で、$substring が最初に出現する位置をバイト単位で数えて
-    返します。$start が指定されている場合、$string の先頭から $start バイト分スキッ
+    返します。$offset が指定されている場合、$string の先頭から $offset バイト分スキッ
     プした位置から、$substring を探し始めます。位置は 0 をベースにして数えます。
     $substring が見つからなければ、CORE::index 関数はベースより 1 だけ小さい値 -1
     を返します。CORE::index を使って、バイト列全体を調べるには、次のようにします。
@@ -843,13 +874,13 @@ perl5.00503 を使用している場合でもファイルテスト演算子は「積み重ねる」ことが
 
 =item * CORE::rindex
 
-    $rindex = CORE::rindex($string,$substring,$position);
+    $rindex = CORE::rindex($string,$substring,$offset);
     $rindex = CORE::rindex($string,$substring);
 
     CORE::rindex は CORE::index と似ていますが、バイト列 $string の中で、部分バイト
     列 $substring が最後に出現する位置をバイト単位で数えて返します(つまり
     reverse CORE::index です)。$substring が見つからなければ、-1 を返します。
-    $position によって、値として返すことが許される、最も右よりの位置を指定すること
+    $offset によって、値として返すことが許される、最も右よりの位置を指定すること
     ができます。CORE::rindex を使って、バイト列全体を末尾から先頭に向かって調べる
     には、次のようにします。
 
@@ -887,12 +918,6 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
 
 標準モジュールのファイルを /Perl/site/lib/Sjis にコピーして 'use utf8;' を
 'use Sjis;' に書き換えます。必要に応じてその他の書換えを行ってください。
-
-=head1 perl5.005 による Perl5.6 エミュレーション
-
-  perl5.005 にて warnings プラグマをエミュレートします。
-  同梱の warnings.pm_ を warnings.pm に、warnings/register.pm_ を
-  warnings/register.pm にファイル名を変更して使用できます。
 
 =head1 無視するプラグマおよびモジュール
 
@@ -935,6 +960,17 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
 
   utf8 プラグマ、bytes プラグマはコメントアウトされます。同ファイルで提供されて
   いる関数の代わりとして Esjis.pm がダミー関数を提供します。
+
+=head1 perl5.005 による Perl5.6 エミュレーション
+
+  perl5.005 にて warnings プラグマをエミュレートします。
+  同梱の warnings.pm_ を warnings.pm に、warnings/register.pm_ を
+  warnings/register.pm にファイル名を変更して使用できます。
+
+=head1 perl5.005 による Perl5.16 エミュレーション
+
+  perl5.005 にて feature プラグマをエミュレートします。
+  同梱の feature.pm_ を feature.pm にファイル名を変更して使用できます。
 
 =over 2
 
@@ -1100,6 +1136,11 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
     \G can't treat over 32,767 octets
     http://bugs.activestate.com/show_bug.cgi?id=89792
 
+=item * 展開すると空になる正規表現中の変数
+
+    空のリテラル文字列とは異なり、正規表現中に展開された変数の値が空文字列であっ
+    ても、直前に成功した正規表現は使われません。
+
 =item * ??, m?? 内の制限
 
     ?? または m?? の内部でマルチバイト文字に対して {n,m} {n,} {n} * + などの量指
@@ -1114,11 +1155,6 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
     することには対処されていません。
     例えば、'アイウ' =~ /(?<=[A-Z])([アイウ])/ を実行するとマッチして $1 は 'イ'
     になりますが、これは正しくありません。
-
-=item * 展開すると空になる正規表現中の変数
-
-    空のリテラル文字列とは異なり、正規表現中に展開された変数の値が空文字列であっ
-    ても、直前に成功した正規表現は使われません。
 
 =item * 正規表現の修飾子 /a /d /l /u
 
@@ -2040,10 +2076,16 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
  http://www.wdic.org/w/WDIC/%E3%82%B7%E3%83%95%E3%83%88JIS
  
  日本語情報処理を行う際、いまもってシフトJISほど実用的な符号化方式はありません。
- 最大の利点はいわゆる半角カタカナと共存できることです。過去の資産を現在に継承できる
- ということは、現在の資産を未来へ継承できることを示唆しています。
+ その理由は3つあると思います。
  
- 1981年の時点で、そこまで考えていた山下さんはハッカーと呼ぶにふさわしいでしょう。
+ 1. 既存の半角カタカナのデータとそのまま共存できる。過去の資産を現在に継承できると
+   いうことは、現在の資産を未来へ継承できることを示唆しています。
+ 2. codepoint と grapheme の単位が一致する。このおかげでシステムを作るひとと使うひと
+   の間で齟齬が発生しません。
+ 3. メモリ上の占有幅と表示・印字上の占有幅が一致する。この工夫が画面設計、帳票設計、
+   それにカーソルの移動処理に役立ちます。
+ 
+ 1981年の時点で、ここまで考えていた山下さんはハッカーと呼ぶにふさわしいでしょう。
 
  Larry Wall さん, Perl
  http://www.perl.org/
@@ -2089,10 +2131,11 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
  http://www.fukkan.com/vote.php3?no=4293
  http://www.oreilly.co.jp/books/4873111080/
  
- 「日本語情報処理」を読んで文字集合規格と符号化方式を学び、文字化けについて理解が深
- まりました。文字化けの原因のひとつとして「利用者の意思と異なる、符号化方式の変換」
- が挙げられます。それを防ぐために、このソフトウェアは符号化方式を変換せずに情報処理
- を行います。
+ 「日本語情報処理」「CJKV日中韓越情報処理」を読んで文字集合規格と符号化方式を学び、
+ 文字化けについて理解が深まりました。文字化けの原因のひとつとして「利用者の意思と異
+ なる、符号化方式の変換(が行われてしまう)」が挙げられます。それを防ぐために、この
+ ソフトウェアは符号化方式を変換せずに情報処理を行います。あなたの意思がどうであった
+ としても、その意思と異なる変換がされることはありません。
  
  Appendix W: Perl Code Examples の中の CJKV Encoding Templates、Multiple-Byte
  Anchoring、Multiple-Byte Processing がとても参考になりました。
@@ -2109,7 +2152,7 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
  http://www.rubyist.net/~matz/slides/yapc2006/
  
  YAPC::Asia 2006 Tokyo "Ruby on Perl(s)" で「CSIは不可能じゃない」ことを分かりやす
- く教えてもらいました。今度 Ruby 版を作りますのでよろしくお願いします。
+ く教えてもらいました。今度 Ruby 版を作ることになったら、よろしくお願いします。
 
  藤岡 和夫さん, jperlユーザーのために
  http://homepage1.nifty.com/kazuf/jperl.html
