@@ -1086,8 +1086,8 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
     perl5.006 または perl5.00800 の場合で文字コード(0x5C)で終わるディレクトリ
     を指定して実行するには jacode.pl ライブラリが必要です。
 
-    perl5.008001以降, perl5.010, perl5.012, perl5.014 にて文字コード(0x5C)で
-    終わるディレクトリを指定して実行するとき、Win32 モジュールの
+    perl5.008001以降, perl5.010, perl5.012, perl5.014, perl5.016 にて文字コード
+    (0x5C)で終わるディレクトリを指定して実行するとき、Win32 モジュールの
     Win32::GetShortPathName() によって短い名前を取得できた場合は chdir() が
     成功します。ただし、chdir() 後のカレントディレクトリは
     Win32::GetShortPathName() によって取得した短い名前になります。
@@ -1127,9 +1127,9 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
 
     前述のとおり、エスケープ後の正規表現にはマルチバイトアンカーリング処理のた
     めの記述 @{Esjis::anchor} が追加されますが、その中に含まれる \G の制約を受
-    けます。perl5.006, perl5.008, perl5.010, perl5.012, perl5.014 で実行した場
-    合、対象文字列の32,767バイトを超える位置でのマッチすべきところでマッチしま
-    せん。なおかつ、その際にエラーも警告も出力されません。
+    けます。perl5.006, perl5.008, perl5.010, perl5.012, perl5.014, perl5.016 で
+    実行した場合、対象文字列の32,767バイトを超える位置でのマッチすべきところで
+    マッチしません。なおかつ、その際にエラーも警告も出力されません。
 
     参考リンク
     Bug #89792
@@ -1946,6 +1946,13 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
  424ページ
  ISBN978-4-87311-427-9
  http://www.oreilly.co.jp/books/9784873114279/
+
+ 初めてのPerl 第6版
+ Randal L. Schwartz, brian d foy, Tom Phoenix 著, 近藤 嘉雪 訳
+ 2012年07月 発行
+ 488ページ
+ ISBN978-4-87311-567-2
+ http://www.oreilly.co.jp/books/9784873115672/
 
  Perlリソースキット - UNIX版
  Futato, Irving, Jepson, Patwardhan, Siever 共著, イエローレーベル 山本 浩 訳
