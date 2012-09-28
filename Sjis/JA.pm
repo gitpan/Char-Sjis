@@ -7,88 +7,19 @@ __END__
 
 =head1 ソフトウェア名称
 
-Sjis-JA - Source code filter to escape ShiftJIS (Japanese document)
+Sjis-JA - Source code filter for ShiftJIS script (Japanese document)
 
-=head1 概要
-
-  ● 使い方: A
+=head1 初めてのJPerl
 
     スクリプト ShiftJIS_script.pl の中に以下を記述して...
       use Sjis;
-      use Sjis version;          --- Sjis.pm のバージョンチェックを行う場合
-      use Sjis qw(ord reverse);  --- ord, reverse の拡張機能を使う場合
-      use Sjis version qw(ord reverse);
-
-      ※ no Sjis; は利用できません。
-
-    コマンドプロンプトで以下のいずれかで実行する
-      perl      ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl5     ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl55    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl56    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl58    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl510   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl512   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl514   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl516   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl64    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      aperl58   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      aperl510  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      aperl512  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      aperl514  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      aperl516  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      sperl58   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      sperl510  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      sperl512  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      sperl514  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      sperl516  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-
-      ? * を使ってワイルドカードの指定ができます
-      ' ～ ' を使ってクォートすることができます
-
-  ● 使い方: B
 
     コマンドプロンプトで以下のように実行する
+      perl ShiftJIS_script.pl argv1 argv2 ...
 
-      C:\>perl  Sjis.pm  ShiftJIS_script.pl  >  Escaped_script.pl.e
-      C:\>perl  Escaped_script.pl.e
-
-      ShiftJIS_script.pl  --- ShiftJIS で書かれたスクリプト
-      Escaped_script.pl.e --- エスケープされたスクリプト
-
-  ● 使える関数
-      Sjis::ord(...);
-      Sjis::reverse(...);
-      Sjis::length(...);
-      Sjis::substr(...);
-      Sjis::index(...);
-      Sjis::rindex(...);
-      CORE::chop(...);
-      CORE::ord(...);
-      CORE::reverse(...);
-      CORE::index(...);
-      CORE::rindex(...);
-
-  ● Perl5.6 エミュレーション(perl5.005の場合)
-      use warnings;
-      use warnings::register;
-
-  ● Perl5.16 エミュレーション
-      use feature qw(fc);
-
-  ● 以下はダミー関数として
-      utf8::upgrade(...);
-      utf8::downgrade(...);
-      utf8::encode(...);
-      utf8::decode(...);
-      utf8::is_utf8(...);
-      utf8::valid(...);
-      bytes::chr(...);
-      bytes::index(...);
-      bytes::length(...);
-      bytes::ord(...);
-      bytes::rindex(...);
-      bytes::substr(...);
+    スクリプトを ShiftJIS で記述することができ、正規表現をはじめとする perl の
+    各種機能は ShiftJIS に対応するようになります。
+    関数 length が扱う長さの単位はバイトのままで、UTF8フラグは使用しません。
 
 =head1 要約
 
@@ -205,11 +136,7 @@ http://mail.pm.org/pipermail/tokyo-pm/1999-September/001854.html
    perl55   pmake.bat install --- perl5.005 環境にインストールします
    perl56   pmake.bat install --- perl5.006 環境にインストールします
    perl58   pmake.bat install --- perl5.008 環境にインストールします
-   perl510  pmake.bat install --- perl5.010 環境にインストールします
-   perl512  pmake.bat install --- perl5.012 環境にインストールします
-   perl514  pmake.bat install --- perl5.014 環境にインストールします
-   perl516  pmake.bat install --- perl5.016 環境にインストールします
-   perl64   pmake.bat install --- perl64    環境にインストールします
+   (以下同じ)
 
    pmake.bat dist             --- CPAN 配布用パッケージを作ります
    pmake.bat ptar.bat         --- ptar.bat を作成します
@@ -229,21 +156,134 @@ http://mail.pm.org/pipermail/tokyo-pm/1999-September/001854.html
    perl514.bat           --- 環境変数 PATH の設定なしに perl5.14 を探して実行する
    perl516.bat           --- 環境変数 PATH の設定なしに perl5.16 を探して実行する
    perl64.bat            --- 環境変数 PATH の設定なしに perl64   を探して実行する
+   perl64512.bat         --- 環境変数 PATH の設定なしに perl5.12 (64ビット版) を探して実行する
+   perl64514.bat         --- 環境変数 PATH の設定なしに perl5.14 (64ビット版) を探して実行する
+   perl64516.bat         --- 環境変数 PATH の設定なしに perl5.16 (64ビット版) を探して実行する
    aperl58.bat           --- 環境変数 PATH の設定なしに ActivePerl 5.8  を探して実行する
    aperl510.bat          --- 環境変数 PATH の設定なしに ActivePerl 5.10 を探して実行する
    aperl512.bat          --- 環境変数 PATH の設定なしに ActivePerl 5.12 を探して実行する
    aperl514.bat          --- 環境変数 PATH の設定なしに ActivePerl 5.14 を探して実行する
    aperl516.bat          --- 環境変数 PATH の設定なしに ActivePerl 5.16 を探して実行する
+   aperl64512.bat        --- 環境変数 PATH の設定なしに ActivePerl 5.12 (64ビット版) を探して実行する
+   aperl64514.bat        --- 環境変数 PATH の設定なしに ActivePerl 5.14 (64ビット版) を探して実行する
+   aperl64516.bat        --- 環境変数 PATH の設定なしに ActivePerl 5.16 (64ビット版) を探して実行する
    sperl58.bat           --- 環境変数 PATH の設定なしに Strawberry Perl 5.8  を探して実行する
    sperl510.bat          --- 環境変数 PATH の設定なしに Strawberry Perl 5.10 を探して実行する
    sperl512.bat          --- 環境変数 PATH の設定なしに Strawberry Perl 5.12 を探して実行する
    sperl514.bat          --- 環境変数 PATH の設定なしに Strawberry Perl 5.14 を探して実行する
    sperl516.bat          --- 環境変数 PATH の設定なしに Strawberry Perl 5.16 を探して実行する
-
+   sperl64512.bat        --- 環境変数 PATH の設定なしに Strawberry Perl perl5.12 (64ビット版) を探して実行する
+   sperl64514.bat        --- 環境変数 PATH の設定なしに Strawberry Perl perl5.14 (64ビット版) を探して実行する
+   sperl64516.bat        --- 環境変数 PATH の設定なしに Strawberry Perl perl5.16 (64ビット版) を探して実行する
    strict.pm_            --- ダミーの strict.pm
    warnings.pm_          --- warnings.pm の簡易版
    warnings/register.pm_ --- warnings/register.pm の簡易版
    feature.pm_           --- ダミーの feature.pm
+
+=head1 続・初めてのJPerl
+
+  ● 使い方(その1)
+
+    1. スクリプト ShiftJIS_script.pl の中に以下のいずれかを記述して...
+
+      use Sjis;
+      use Sjis ver.sion;         --- Sjis.pm のバージョンが ver.sion 以上なら実行可
+      use Sjis ver.sion.0;       --- Sjis.pm のバージョンが ver.sion でなければ die する
+      use Sjis qw(ord reverse);  --- ord, reverse の拡張機能を使う場合
+      use Sjis ver.sion qw(ord reverse);
+      use Sjis ver.sion.0 qw(ord reverse);
+
+      ※ no Sjis; は利用できません。
+
+    2. コマンドプロンプトで以下のいずれかで実行する
+
+      PATH に設定されているディレクトリの perl を実行する場合
+      perl        ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+
+      Strawberry Perl, ActivePerl の順に有無を調べて先に見つかった perl を実行
+      perl55      ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      perl56      ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      perl58      ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      perl510     ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      perl512     ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      perl514     ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      perl516     ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      perl64512   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      perl64514   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      perl64516   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+
+      ActivePerl を使用する場合
+      aperl58     ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      aperl510    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      aperl512    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      aperl514    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      aperl516    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      aperl64512  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      aperl64514  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      aperl64516  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+
+      Strawberry Perl を使用する場合
+      sperl58     ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      sperl510    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      sperl512    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      sperl514    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      sperl516    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      sperl64512  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      sperl64514  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      sperl64516  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+
+      よく使う perl を perl5.bat に設定して使う場合
+      perl5       ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+
+      64ビット版の perl を実行する場合
+      perl64      ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+
+      ? * を使ってワイルドカードの指定ができます
+      ' ～ ' を使ってクォートすることができます
+
+  ● 使い方(その2)
+
+    コマンドプロンプトで以下のように実行する
+
+      C:\>perl  Sjis.pm  ShiftJIS_script.pl  >  Escaped_script.pl.e
+      C:\>perl  Escaped_script.pl.e
+
+      ShiftJIS_script.pl  --- ShiftJIS で書かれたスクリプト
+      Escaped_script.pl.e --- エスケープされたスクリプト
+
+  ● 使える関数
+      Sjis::ord(...);
+      Sjis::reverse(...);
+      Sjis::length(...);
+      Sjis::substr(...);
+      Sjis::index(...);
+      Sjis::rindex(...);
+      CORE::chop(...);
+      CORE::ord(...);
+      CORE::reverse(...);
+      CORE::index(...);
+      CORE::rindex(...);
+
+  ● Perl5.6 エミュレーション(perl5.005の場合)
+      use warnings;
+      use warnings::register;
+
+  ● Perl5.16 エミュレーション
+      use feature qw(fc);
+
+  ● 以下はダミー関数として用意されている
+      utf8::upgrade(...);
+      utf8::downgrade(...);
+      utf8::encode(...);
+      utf8::decode(...);
+      utf8::is_utf8(...);
+      utf8::valid(...);
+      bytes::chr(...);
+      bytes::index(...);
+      bytes::length(...);
+      bytes::ord(...);
+      bytes::rindex(...);
+      bytes::substr(...);
 
 =head1 エスケープによる上位互換性の確保
 
@@ -314,7 +354,7 @@ Sjis.pm は正規表現の先頭にマルチバイトアンカーリング処理を付け足します。
   --------------------------------------------------------------------------------
   処理前                  処理後
   --------------------------------------------------------------------------------
-  m/regexp/               m/@{Esjis::anchor}(?:regexp).../
+  m/regexp/               m/${Esjis::anchor}(?:regexp).../
   --------------------------------------------------------------------------------
 
 =head1 第2オクテットのエスケープ処理
@@ -338,8 +378,8 @@ Sjis.pm はマルチバイト文字への量指定子、およびマルチバイト文字のカスタム文字クラ
   --------------------------------------------------------------------------------
   m/...MULTIOCT+.../      m/...(?:MULTIOCT)+.../
   m/...[AN-EM].../        m/...(?:A[N-Z]|[B-D][A-Z]|E[A-M]).../
-  m/...\D.../             m/...@{Esjis::eD}.../
-  m/...[[:^digit:]].../   m/...@{Esjis::not_digit}.../
+  m/...\D.../             m/...${Esjis::eD}.../
+  m/...[[:^digit:]].../   m/...${Esjis::not_digit}.../
   --------------------------------------------------------------------------------
 
 =head1 Esjis::ignorecase() の呼び出し
@@ -359,17 +399,23 @@ Sjis.pm は /i 修飾子の代わりに Esjis::ignorecase() の呼出しを書き加えます。
   --------------------------------------------------------------------------------
   処理前                  処理後
   --------------------------------------------------------------------------------
-  /regexp/                / 上記参照 @Esjis::matched/
-  m/regexp/               m/ 上記参照 @Esjis::matched/
-  ?regexp?                m? 上記参照 @Esjis::matched?
-  m?regexp?               m? 上記参照 @Esjis::matched?
-  s/regexp//              ($_ =~ m/ 上記参照 @Esjis::matched/) ?
-                          eval{ Esjis::s_matched(); local $^W=0; my $__r=qq//; $_="${1}$__r$'"; 1 } :
+  /regexp/                / 上記参照 $Esjis::matched/
+  m/regexp/               m/ 上記参照 $Esjis::matched/
+  ?regexp?                m? 上記参照 $Esjis::matched?
+  m?regexp?               m? 上記参照 $Esjis::matched?
+ 
+  $_ =~                   ($_ =~ m/ 上記参照 $Esjis::matched/) ?
+  s/regexp/replacement/   eval{ Esjis::s_matched(); local $^W=0; my $__r=qq/replacement/; $_="${1}$__r$'"; 1 } :
                           undef
+ 
+  $_ !~                   ($_ !~ m/ 上記参照 $Esjis::matched/) ?
+  s/regexp/replacement/   1 :
+                          eval{ Esjis::s_matched(); local $^W=0; my $__r=qq/replacement/; $_="${1}$__r$'"; undef }
+ 
   split(/regexp/)         Esjis::split(qr/regexp/)
   split(m/regexp/)        Esjis::split(qr/regexp/)
   split(qr/regexp/)       Esjis::split(qr/regexp/)
-  qr/regexp/              qr/ 上記参照 @Esjis::matched/
+  qr/regexp/              qr/ 上記参照 $Esjis::matched/
   --------------------------------------------------------------------------------
 
 =head1 バイト指向の正規表現
@@ -379,17 +425,23 @@ Sjis.pm は /i 修飾子の代わりに Esjis::ignorecase() の呼出しを書き加えます。
   --------------------------------------------------------------------------------
   処理前                  処理後
   --------------------------------------------------------------------------------
-  /regexp/b               /(?:regexp)@Esjis::matched/
-  m/regexp/b              m/(?:regexp)@Esjis::matched/
-  ?regexp?b               m?regexp@Esjis::matched?
-  m?regexp?b              m?regexp@Esjis::matched?
-  s/regexp//b             ($_ =~ m/(\G[\x00-\xFF]*?)(?:regexp)@Esjis::matched/) ?
-                          eval{ Esjis::s_matched(); local $^W=0; my $__r=qq//; $_="${1}$__r$'"; 1 } :
+  /regexp/b               /(?:regexp)$Esjis::matched/
+  m/regexp/b              m/(?:regexp)$Esjis::matched/
+  ?regexp?b               m?regexp$Esjis::matched?
+  m?regexp?b              m?regexp$Esjis::matched?
+ 
+  $_ =~                   ($_ =~ m/(\G[\x00-\xFF]*?)(?:regexp)$Esjis::matched/) ?
+  s/regexp/replacement/b  eval{ Esjis::s_matched(); local $^W=0; my $__r=qq/replacement/; $_="${1}$__r$'"; 1 } :
                           undef
+ 
+  $_ !~                   ($_ !~ m/(\G[\x00-\xFF]*?)(?:regexp)$Esjis::matched/) ?
+  s/regexp/replacement/b  1 :
+                          eval{ Esjis::s_matched(); local $^W=0; my $__r=qq/replacement/; $_="${1}$__r$'"; undef }
+ 
   split(/regexp/b)        split(qr/regexp/)
   split(m/regexp/b)       split(qr/regexp/)
   split(qr/regexp/b)      split(qr/regexp/)
-  qr/regexp/b             qr/(?:regexp)@Esjis::matched/
+  qr/regexp/b             qr/(?:regexp)$Esjis::matched/
   --------------------------------------------------------------------------------
 
 =head1 文字クラスのエスケープ
@@ -399,22 +451,22 @@ Sjis.pm は /i 修飾子の代わりに Esjis::ignorecase() の呼出しを書き加えます。
   ---------------------------------------------------------------
   escape        class
   ---------------------------------------------------------------
-   .            @{Esjis::dot}
-                @{Esjis::dot_s}    (/s 修飾子あり)
+   .            ${Esjis::dot}
+                ${Esjis::dot_s}    (/s 修飾子あり)
   \d            [0-9]
   \s            [\x09\x0A\x0C\x0D\x20]
   \w            [0-9A-Z_a-z]
-  \D            @{Esjis::eD}
-  \S            @{Esjis::eS}
-  \W            @{Esjis::eW}
+  \D            ${Esjis::eD}
+  \S            ${Esjis::eS}
+  \W            ${Esjis::eW}
   \h            [\x09\x20]
   \v            [\x0A\x0B\x0C\x0D]
-  \H            @{Esjis::eH}
-  \V            @{Esjis::eV}
+  \H            ${Esjis::eH}
+  \V            ${Esjis::eV}
   \C            [\x00-\xFF]
   \X            X (ただの英字、X です)
-  \R            @{Esjis::eR}
-  \N            @{Esjis::eN}
+  \R            ${Esjis::eR}
+  \N            ${Esjis::eN}
   ---------------------------------------------------------------
 
 同様に POSIX スタイルの文字クラスも再定義されています。
@@ -438,22 +490,22 @@ Sjis.pm は /i 修飾子の代わりに Esjis::ignorecase() の呼出しを書き加えます。
                 [\x41-\x5A\x61-\x7A]     (/i 修飾子あり)
   [:word:]      [\x30-\x39\x41-\x5A\x5F\x61-\x7A]
   [:xdigit:]    [\x30-\x39\x41-\x46\x61-\x66]
-  [:^alnum:]    @{Esjis::not_alnum}
-  [:^alpha:]    @{Esjis::not_alpha}
-  [:^ascii:]    @{Esjis::not_ascii}
-  [:^blank:]    @{Esjis::not_blank}
-  [:^cntrl:]    @{Esjis::not_cntrl}
-  [:^digit:]    @{Esjis::not_digit}
-  [:^graph:]    @{Esjis::not_graph}
-  [:^lower:]    @{Esjis::not_lower}
-                @{Esjis::not_lower_i}    (/i 修飾子あり)
-  [:^print:]    @{Esjis::not_print}
-  [:^punct:]    @{Esjis::not_punct}
-  [:^space:]    @{Esjis::not_space}
-  [:^upper:]    @{Esjis::not_upper}
-                @{Esjis::not_upper_i}    (/i 修飾子あり)
-  [:^word:]     @{Esjis::not_word}
-  [:^xdigit:]   @{Esjis::not_xdigit}
+  [:^alnum:]    ${Esjis::not_alnum}
+  [:^alpha:]    ${Esjis::not_alpha}
+  [:^ascii:]    ${Esjis::not_ascii}
+  [:^blank:]    ${Esjis::not_blank}
+  [:^cntrl:]    ${Esjis::not_cntrl}
+  [:^digit:]    ${Esjis::not_digit}
+  [:^graph:]    ${Esjis::not_graph}
+  [:^lower:]    ${Esjis::not_lower}
+                ${Esjis::not_lower_i}    (/i 修飾子あり)
+  [:^print:]    ${Esjis::not_print}
+  [:^punct:]    ${Esjis::not_punct}
+  [:^space:]    ${Esjis::not_space}
+  [:^upper:]    ${Esjis::not_upper}
+                ${Esjis::not_upper_i}    (/i 修飾子あり)
+  [:^word:]     ${Esjis::not_word}
+  [:^xdigit:]   ${Esjis::not_xdigit}
   ---------------------------------------------------------------
 
 同様に \b と \B も過去のperlとの互換性を保つために再定義されています。
@@ -461,8 +513,8 @@ Sjis.pm は /i 修飾子の代わりに Esjis::ignorecase() の呼出しを書き加えます。
   ---------------------------------------------------------------
   escape      class
   ---------------------------------------------------------------
-  \b          @{Esjis::eb}
-  \B          @{Esjis::eB}
+  \b          ${Esjis::eb}
+  \B          ${Esjis::eB}
   ---------------------------------------------------------------
 
 ファイル Esjis.pm の中で以下のように定義されています。
@@ -470,34 +522,34 @@ Sjis.pm は /i 修飾子の代わりに Esjis::ignorecase() の呼出しを書き加えます。
   ---------------------------------------------------------------------------------------------------------------------------------------------------------
   class                    Definition
   ---------------------------------------------------------------------------------------------------------------------------------------------------------
-  @{Esjis::anchor}         qr{\G(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])*?}
-  @{Esjis::dot}            qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x0A])}
-  @{Esjis::dot_s}          qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])}
-  @{Esjis::eD}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC0-9])}
-  @{Esjis::eS}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x0A\x0C\x0D\x20])}
-  @{Esjis::eW}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC0-9A-Z_a-z])}
-  @{Esjis::eH}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x20])}
-  @{Esjis::eV}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x0A\x0B\x0C\x0D])}
-  @{Esjis::eR}             qr{(?:\x0D\x0A|[\x0A\x0D])}
-  @{Esjis::eN}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x0A])}
-  @{Esjis::not_alnum}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x5A\x61-\x7A])}
-  @{Esjis::not_alpha}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x41-\x5A\x61-\x7A])}
-  @{Esjis::not_ascii}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x00-\x7F])}
-  @{Esjis::not_blank}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x20])}
-  @{Esjis::not_cntrl}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x00-\x1F\x7F])}
-  @{Esjis::not_digit}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39])}
-  @{Esjis::not_graph}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x21-\x7F])}
-  @{Esjis::not_lower}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x61-\x7A])}
-  @{Esjis::not_lower_i}    qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])}
-  @{Esjis::not_print}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x20-\x7F])}
-  @{Esjis::not_punct}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x21-\x2F\x3A-\x3F\x40\x5B-\x5F\x60\x7B-\x7E])}
-  @{Esjis::not_space}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x0A\x0B\x0C\x0D\x20])}
-  @{Esjis::not_upper}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x41-\x5A])}
-  @{Esjis::not_upper_i}    qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])}
-  @{Esjis::not_word}       qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x5A\x5F\x61-\x7A])}
-  @{Esjis::not_xdigit}     qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x46\x61-\x66])}
-  @{Esjis::eb}             qr{(?:\A(?=[0-9A-Z_a-z])|(?<=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF])(?=[0-9A-Z_a-z])|(?<=[0-9A-Z_a-z])(?=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF]|\z))}
-  @{Esjis::eB}             qr{(?:(?<=[0-9A-Z_a-z])(?=[0-9A-Z_a-z])|(?<=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF])(?=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF]))}
+  ${Esjis::anchor}         qr{\G(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])*?}
+  ${Esjis::dot}            qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x0A])}
+  ${Esjis::dot_s}          qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])}
+  ${Esjis::eD}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC0-9])}
+  ${Esjis::eS}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x0A\x0C\x0D\x20])}
+  ${Esjis::eW}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC0-9A-Z_a-z])}
+  ${Esjis::eH}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x20])}
+  ${Esjis::eV}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x0A\x0B\x0C\x0D])}
+  ${Esjis::eR}             qr{(?:\x0D\x0A|[\x0A\x0D])}
+  ${Esjis::eN}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x0A])}
+  ${Esjis::not_alnum}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x5A\x61-\x7A])}
+  ${Esjis::not_alpha}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x41-\x5A\x61-\x7A])}
+  ${Esjis::not_ascii}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x00-\x7F])}
+  ${Esjis::not_blank}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x20])}
+  ${Esjis::not_cntrl}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x00-\x1F\x7F])}
+  ${Esjis::not_digit}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39])}
+  ${Esjis::not_graph}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x21-\x7F])}
+  ${Esjis::not_lower}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x61-\x7A])}
+  ${Esjis::not_lower_i}    qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])}
+  ${Esjis::not_print}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x20-\x7F])}
+  ${Esjis::not_punct}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x21-\x2F\x3A-\x3F\x40\x5B-\x5F\x60\x7B-\x7E])}
+  ${Esjis::not_space}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x0A\x0B\x0C\x0D\x20])}
+  ${Esjis::not_upper}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x41-\x5A])}
+  ${Esjis::not_upper_i}    qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])}
+  ${Esjis::not_word}       qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x5A\x5F\x61-\x7A])}
+  ${Esjis::not_xdigit}     qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x46\x61-\x66])}
+  ${Esjis::eb}             qr{(?:\A(?=[0-9A-Z_a-z])|(?<=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF])(?=[0-9A-Z_a-z])|(?<=[0-9A-Z_a-z])(?=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF]|\z))}
+  ${Esjis::eB}             qr{(?:(?<=[0-9A-Z_a-z])(?=[0-9A-Z_a-z])|(?<=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF])(?=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF]))}
   ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 =head1 \N, \p, \P, \X のアンエスケープ
@@ -505,17 +557,22 @@ Sjis.pm は /i 修飾子の代わりに Esjis::ignorecase() の呼出しを書き加えます。
 このソフトウェアによって英数字の正規表現メタシンボル \N, \p, \P, \X の先頭の
 '\' が取り除かれます。この方法で抽象化の罠を避けることができます。
 
+アンエスケープ後に "{" をエスケープするようにした理由は、
+Deprecate literal unescaped "{" in regexes.
+http://perl5.git.perl.org/perl.git/commit/2a53d3314d380af5ab5283758219417c6dfa36e9
+によるものです。
+
   ------------------------------------
   処理前           処理後
   ------------------------------------
-  \N{CHARNAME}     N{CHARNAME}
-  \p{L}            p{L}
-  \p{^L}           p{^L}
-  \p{\^L}          p{\^L}
+  \N{CHARNAME}     N\{CHARNAME}
+  \p{L}            p\{L}
+  \p{^L}           p\{^L}
+  \p{\^L}          p\{\^L}
   \pL              pL
-  \P{L}            P{L}
-  \P{^L}           P{^L}
-  \P{\^L}          P{\^L}
+  \P{L}            P\{L}
+  \P{^L}           P\{^L}
+  \P{\^L}          P\{\^L}
   \PL              PL
   \X               X
   ------------------------------------
@@ -1126,7 +1183,7 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
 =item * 正規表現を適用する文字列の長さの上限
 
     前述のとおり、エスケープ後の正規表現にはマルチバイトアンカーリング処理のた
-    めの記述 @{Esjis::anchor} が追加されますが、その中に含まれる \G の制約を受
+    めの記述 ${Esjis::anchor} が追加されますが、その中に含まれる \G の制約を受
     けます。perl5.006, perl5.008, perl5.010, perl5.012, perl5.014, perl5.016 で
     実行した場合、対象文字列の32,767バイトを超える位置でのマッチすべきところで
     マッチしません。なおかつ、その際にエラーも警告も出力されません。
@@ -1865,7 +1922,35 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
 簡単な仕事を簡単にできるように設計されていました。このソフトウェアは当時のような
 プログラミング環境を提供します。
 
+=head1 初めてのPerlのあゆみ
+
+  コンピュータ科学者の中には(特に還元主義者たちは)否定する者もいるのだが、
+ 人間というものは変わった形の心を持っているものなのだ。心の形は平坦ではない
+ ので、ひどく歪めることなしには平らな面に写像することはできない。しかし過去
+ 20年以上にわたって、コンピュータ還元主義者たちは直交性の神殿に跪き、次いで
+ 立ち上がると、彼らの信奉する禁欲的な清廉さを誰かれとなく説いて回った。
+
+  彼らの熱烈だが見当違いの願望は、君たちの心を彼らの思考様式に合うように作り
+ 変えて、君たちの思考パターンをある種の超越次元の平原に押し込めることだった。
+ 平面に押し込まれるということは、まったく喜びのない存在になってしまうことに
+ 等しい。
+
+ --- 初めてのPerl xviii
+
+  もしこれを頭痛の種だと思うなら、その通りです。誰もこのような状況を好んで
+ いるわけではありません。でも、Perlは入力とエンコーディングの扱いに関して、
+ ベストを尽くしてくれます。もし歴史をリセットしてやり直せるのなら、その時には
+ こんなに多くの誤りを犯さないのですが。
+
+ --- 初めてのPerl 第6版
+
 =head1 参考文献、リンク
+
+ Perlプログラミング
+ Larry Wall, Randal L.Schwartz, 近藤 嘉雪 訳
+ 1993年2月 発行
+ ISBN 4-89052-384-7
+ http://www.context.co.jp/~cond/books/old-books.html
 
  プログラミングPerl 改訂版
  By Larry Wall, Tom Christiansen, Randal L. Schwartz, 近藤 嘉雪 訳
@@ -1959,6 +2044,19 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
  ISBN4-900900-65-6
  http://www.oreilly.co.jp/out/presuni/
 
+ まるごとPerl! Vol.1
+ 小飼 弾, 宮川達彦, 伊藤直也, 川合孝典, 水野貴明, 加藤 敦, 石垣憲一, 栗原由樹, まかまか, 池邉智洋, ma.la, 竹迫良範, ささだこういち, 可知豊, 秋山隆道, 久保元治, 滝澤隆史, 歌代和正 著
+ 2006年08月25日 発売
+ 232ページ
+ ISBN978-4-8443-2289-4
+ http://www.impressjapan.jp/books/2289
+
+ WEB+DB PRESS Vol.70
+ 2012年08月24日 発売
+ 200ページ
+ ISBN978-4-7741-5190-8
+ http://gihyo.jp/magazine/wdpress
+
  日本語情報処理
  Understanding Japanese Information Processing
  By Ken Lunde, 春遍 雀來, 鈴木 武生 訳
@@ -1996,17 +2094,45 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
  ISBN978-4-87311-450-7
  http://www.oreilly.co.jp/books/9784873114507/
 
- Perlプログラミング
- Larry Wall, Randal L.Schwartz, 近藤 嘉雪 訳
- 1993年2月発行
- ISBN 4-89052-384-7
- http://www.context.co.jp/~cond/books/old-books.html
-
  JIS漢字字典
  芝野 耕司 編著
  1456 頁
  ISBN 4-542-20129-5
  http://www.webstore.jsa.or.jp/lib/lib.asp?fn=/manual/mnl01_12.htm
+
+ インターネット時代の文字コード
+ 小林 龍生, 安岡 孝一, 戸村 哲, 三上 喜貴 編
+ 285 項
+ ISBN 4-320-12038-8
+ http://www.kyoritsu-pub.co.jp/bookdetail/9784320120389
+
+ 文字符号の歴史―欧米と日本編―
+ 安岡 孝一, 安岡 素子 著
+ 2006年2月10日 発行
+ 288ページ
+ ISBN 4-320-12102-7
+ http://www.kyoritsu-pub.co.jp/bookdetail/9784320121027
+
+ 文字符号の歴史 アジア編
+ 三上 喜貴 著
+ 2002年3月20日 発行
+ 377ページ
+ ISBN 4-320-12040-X
+ http://www.amazon.co.jp/gp/product/432012040X
+
+ Unicode標準入門
+ トニー・グラハム 著, 乾 和志, 海老塚 徹 訳, 関口 正裕 監修
+ 2001年5月29日 発行
+ 455ページ
+ ISBN 4-7981-0030-7
+ http://www.seshop.com/product/detail/2276/
+
+ UnicodeによるJIS X 0213実装入門
+ 田丸 健三郎 著
+ 2008年8月25日 発行
+ 200ページ
+ ISBN 978-4-89100-608-2
+ http://ec.nikkeibp.co.jp/item/books/A04500.html
 
  UNIX MAGAZINE
  1993年8月号
@@ -2022,8 +2148,8 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
 
  Macintoshデータ活用術
  石田 豊 著
- 230ページ
  1995年2月 発行
+ 230ページ
  ISBN 4-89563-408-6
 
  MPWプログラミング講座
