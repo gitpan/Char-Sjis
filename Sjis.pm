@@ -27,9 +27,9 @@ BEGIN {
 # (and so on)
 
 BEGIN { eval q{ use vars qw($VERSION) } }
-$VERSION = sprintf '%d.%02d', q$Revision: 0.83 $ =~ /(\d+)/oxmsg;
+$VERSION = sprintf '%d.%02d', q$Revision: 0.84 $ =~ /(\d+)/oxmsg;
 
-use Esjis;
+BEGIN { require Esjis; }
 
 # poor Symbol.pm - substitute of real Symbol.pm
 BEGIN {
@@ -65,16 +65,6 @@ sub LOCK_SH() {1}
 sub LOCK_EX() {2}
 sub LOCK_UN() {8}
 sub LOCK_NB() {4}
-
-# P.707 29.2.33. exec
-# in Chapter 29: Functions
-# of ISBN 0-596-00027-8 Programming Perl Third Edition.
-
-# P.855 exec
-# in Chapter 27: Functions
-# of ISBN 978-0-596-00492-7 Programming Perl 4th Edition.
-
-$| = 1;
 
 sub import() {}
 sub unimport() {}
@@ -266,7 +256,7 @@ if (not Esjis::e("$filename.e")) {
     if (eval q{ use Fcntl qw(O_WRONLY O_APPEND O_CREAT); 1 } and CORE::sysopen($fh,"$filename.e",&O_WRONLY|&O_APPEND|&O_CREAT)) {
     }
     else {
-        open($fh, ">>$filename.e") or die __FILE__, ": Can't write open file: $filename.e";
+        Esjis::_open_a($fh, "$filename.e") or die __FILE__, ": Can't write open file: $filename.e";
     }
 
     if (0) {
@@ -327,19 +317,8 @@ if (not Esjis::e("$filename.e")) {
     close($fh) or die __FILE__, ": Can't close file: $filename.e";
 }
 
-# P.565 23.1.2. Cleaning Up Your Environment
-# in Chapter 23: Security
-# of ISBN 0-596-00027-8 Programming Perl Third Edition.
-
-# P.656 Cleaning Up Your Environment
-# in Chapter 20: Security
-# of ISBN 978-0-596-00492-7 Programming Perl 4th Edition.
-
-# local $ENV{'PATH'} = '.';
-local @ENV{qw(IFS CDPATH ENV BASH_ENV)}; # Make %ENV safer
-
 my $fh = gensym();
-open($fh, "$filename.e") or die __FILE__, ": Can't read open file: $filename.e";
+Esjis::_open_r($fh, "$filename.e") or die __FILE__, ": Can't read open file: $filename.e";
 
 if (0) {
 }
@@ -366,6 +345,30 @@ if ($^W) {
     push @switch, '-w';
 }
 
+# P.707 29.2.33. exec
+# in Chapter 29: Functions
+# of ISBN 0-596-00027-8 Programming Perl Third Edition.
+#
+# If there is more than one argument in LIST, or if LIST is an array with more
+# than one value, the system shell will never be used. This also bypasses any
+# shell processing of the command. The presence or absence of metacharacters in
+# the arguments doesn't affect this list-triggered behavior, which makes it the
+# preferred from in security-conscious programs that do not with to expose
+# themselves to potential shell escapes.
+# Environment variable PERL5SHELL(Microsoft ports only) will never be used, too.
+
+# P.855 exec
+# in Chapter 27: Functions
+# of ISBN 978-0-596-00492-7 Programming Perl 4th Edition.
+#
+# If there is more than one argument in LIST, or if LIST is an array with more
+# than one value, the system shell will never be used. This also bypasses any
+# shell processing of the command. The presence or absence of metacharacters in
+# the arguments doesn't affect this list-triggered behavior, which makes it the
+# preferred from in security-conscious programs that do not wish to expose
+# themselves to injection attacks via shell escapes.
+# Environment variable PERL5SHELL(Microsoft ports only) will never be used, too.
+
 # P.489 #! and Quoting on Non-Unix Systems
 # in Chapter 19: The Command-Line Interface
 # of ISBN 0-596-00027-8 Programming Perl Third Edition.
@@ -376,11 +379,11 @@ if ($^W) {
 
 # DOS-like system
 if ($^O =~ /\A (?: MSWin32 | NetWare | symbian | dos ) \z/oxms) {
-    exit system
+    exit Esjis::_systemx
         _escapeshellcmd_MSWin32($^X),
 
-# -I switch can not treat space included path
-#       (map { '-I' . _escapeshellcmd_MSWin32($_) } @INC),
+    # -I switch can not treat space included path
+    #   (map { '-I' . _escapeshellcmd_MSWin32($_) } @INC),
         (map { '-I' .                         $_  } @INC),
 
         @switch,
@@ -390,7 +393,7 @@ if ($^O =~ /\A (?: MSWin32 | NetWare | symbian | dos ) \z/oxms) {
 
 # MacOS system
 elsif ($^O eq 'MacOS') {
-    my $system = system
+    my $system = Esjis::_systemx
         _escapeshellcmd_MacOS($^X),
         (map { '-I' . _escapeshellcmd_MacOS($_) } @INC),
         @switch,
@@ -405,7 +408,7 @@ elsif ($^O eq 'MacOS') {
 
 # UNIX-like system
 else {
-    exit system
+    exit Esjis::_systemx
         _escapeshellcmd($^X),
         (map { '-I' . _escapeshellcmd($_) } @INC),
         @switch,
@@ -416,7 +419,9 @@ else {
 # escape shell command line on DOS-like system
 sub _escapeshellcmd_MSWin32 {
     my($word) = @_;
-    if ($word =~ / $anchor [ ] /oxms) {
+    if ($word =~ / [ ] /oxms) {
+
+        # both DOS-like and UNIX-like shell quote
         return qq{"$word"};
     }
     else {
@@ -427,14 +432,12 @@ sub _escapeshellcmd_MSWin32 {
 # escape shell command line on Mac OS
 sub _escapeshellcmd_MacOS {
     my($word) = @_;
-    $word =~ s/(["`{\xB6])/\xB6$1/g;
-    return qq{"$word"};
+    return $word;
 }
 
 # escape shell command line on UNIX-like system
 sub _escapeshellcmd {
     my($word) = @_;
-    $word =~ s/([\t\n\r\x20!"#\$%&'()*+;<=>?\[\\\]^`{|}~\x7F\xFF])/\\$1/g;
     return $word;
 }
 
@@ -453,7 +456,7 @@ sub Sjis::escape_script {
 
     # read ShiftJIS script
     my $fh = gensym();
-    open($fh, $script) or die __FILE__, ": Can't open file: $script";
+    Esjis::_open_r($fh, $script) or die __FILE__, ": Can't open file: $script";
     local $/ = undef; # slurp mode
     $_ = <$fh>;
     close($fh) or die __FILE__, ": Can't close file: $script";
@@ -4929,6 +4932,11 @@ sub e_sub {
                 $variable,                                                                    # 19
                 $variable,                                                                    # 20
                     $variable_basename,                                                       # 21
+
+# Binary "!~" is just like "=~" except the return value is negated in the logical sense.
+# It returns false if the match succeeds, and true if it fails.
+# (and so on)
+
                 ($bind_operator =~ / !~ /oxms) ? '!' : '',                                    # 22
                     $variable_basename,                                                       # 23
             );
@@ -5568,7 +5576,7 @@ sub e_use_noimport {
     my $fh = gensym();
     for my $realfilename (_realfilename($expr)) {
 
-        if (open($fh, $realfilename)) {
+        if (Esjis::_open_r($fh, $realfilename)) {
             local $/ = undef; # slurp mode
             my $script = <$fh>;
             close($fh) or die __FILE__, ": Can't close file: $realfilename";
@@ -5594,7 +5602,7 @@ sub e_no_nounimport {
     my $fh = gensym();
     for my $realfilename (_realfilename($expr)) {
 
-        if (open($fh, $realfilename)) {
+        if (Esjis::_open_r($fh, $realfilename)) {
             local $/ = undef; # slurp mode
             my $script = <$fh>;
             close($fh) or die __FILE__, ": Can't close file: $realfilename";
@@ -5620,7 +5628,7 @@ sub e_use_noparam {
     my $fh = gensym();
     for my $realfilename (_realfilename($expr)) {
 
-        if (open($fh, $realfilename)) {
+        if (Esjis::_open_r($fh, $realfilename)) {
             local $/ = undef; # slurp mode
             my $script = <$fh>;
             close($fh) or die __FILE__, ": Can't close file: $realfilename";
@@ -5657,7 +5665,7 @@ sub e_no_noparam {
     my $fh = gensym();
     for my $realfilename (_realfilename($expr)) {
 
-        if (open($fh, $realfilename)) {
+        if (Esjis::_open_r($fh, $realfilename)) {
             local $/ = undef; # slurp mode
             my $script = <$fh>;
             close($fh) or die __FILE__, ": Can't close file: $realfilename";
@@ -5683,7 +5691,7 @@ sub e_use {
     my $fh = gensym();
     for my $realfilename (_realfilename($expr)) {
 
-        if (open($fh, $realfilename)) {
+        if (Esjis::_open_r($fh, $realfilename)) {
             local $/ = undef; # slurp mode
             my $script = <$fh>;
             close($fh) or die __FILE__, ": Can't close file: $realfilename";
@@ -5709,7 +5717,7 @@ sub e_no {
     my $fh = gensym();
     for my $realfilename (_realfilename($expr)) {
 
-        if (open($fh, $realfilename)) {
+        if (Esjis::_open_r($fh, $realfilename)) {
             local $/ = undef; # slurp mode
             my $script = <$fh>;
             close($fh) or die __FILE__, ": Can't close file: $realfilename";
@@ -5765,6 +5773,18 @@ __END__
 
 Sjis - Source code filter to escape ShiftJIS script
 
+=head1 Install and Usage
+
+There are two steps there:
+
+=over 2
+
+=item * You'll have to download Sjis.pm and Esjis.pm and put it in your perl lib directory.
+
+=item * You'll need to write "use Sjis;" at head of the script.
+
+=back
+
 =head1 SYNOPSIS
 
   use Sjis;
@@ -5794,6 +5814,8 @@ Sjis - Source code filter to escape ShiftJIS script
     Sjis::substr(...);
     Sjis::index(...);
     Sjis::rindex(...);
+    <*>
+    glob(...);
     CORE::chop(...);
     CORE::ord(...);
     CORE::reverse(...);
@@ -5823,24 +5845,25 @@ Sjis - Source code filter to escape ShiftJIS script
 
 =head1 ABSTRACT
 
-Let's start with a bit of history: jperl 4.019+1.3 introduced ShiftJIS support.
-You could apply chop() and regexps even to complex CJK characters.
+Sjis software is "middleware" between perl interpreter and your Perl script
+written by ShiftJIS.
 
-JPerl in CPAN Perl Ports (Binary Distributions)
+Perl is optimized for problems which are about 90% working with text and about
+10% everything else. But this "text" means US-ASCII text, and popular ShiftJIS
+is contained in "everything else."
 
-said before,
+Please be not disappointed.
 
-  As of Perl 5.8.0 it is suggested that instead of JPerl (which is
-  based on a quite old release of Perl) you should just use Perl 5.8.0,
-  since it can do all that JPerl did, and more.
+The string of Perl3 or later can treat binary data. That is, the string of
+Perl3 or later can treat ShiftJIS.
 
-But was it really so?
+Perl is designed to make the easy jobs easy, without making the hard jobs
+impossible. Sjis software is Perl program designed to make the "easy jobs easy".
 
-In this country, ShiftJIS is widely used on mainframe I/O, the personal computer,
-and the cellular phone. This software treats ShiftJIS directly, but doesn't treat
-Latin-1. Therefore, this software doesn't use UTF8 flag.
-
-Shall we escape from the encode problem?
+By "use Sjis;", it automatically interpret your script as ShiftJIS. The various
+functions of perl including a regular expression can treat ShiftJIS now.
+The function length treats length per byte. This software does not use UTF8
+flag.
 
 =head1 Yet Another Future Of
 
@@ -5898,7 +5921,7 @@ I learned the following things from the successful software.
 
 =back
 
-Let's make yet another future by JPerl's future.
+I am excited about this software and its future --- I hope you are too.
 
 =head1 JRE: JPerl Runtime Environment
 
@@ -5917,7 +5940,7 @@ computer intermediate language commonly referred to as Perl byteorientedcode.
 This language conceptually represents the instruction set of a byte-oriented,
 capability architecture.
 
-=head1 Basic Idea Of Source Code Filter
+=head1 Basic Idea of Source Code Filter
 
 I discovered this mail again recently.
 
@@ -5944,6 +5967,51 @@ save as: SJIS.pm
   1;
 
 I am glad that I could confirm my idea is not so wrong.
+
+=head1 Command-line Wildcard Expansion on DOS-like Systems
+
+The default command shells on DOS-like systems (COMMAND.COM or cmd.exe) do not
+expand wildcard arguments supplied to programs. Instead, import() of Esjis.pm
+works well.
+
+   in Esjis.pm
+   #
+   # @ARGV wildcard globbing
+   #
+   sub import() {
+
+       if ($^O =~ /\A (?: MSWin32 | NetWare | symbian | dos ) \z/oxms) {
+           my @argv = ();
+           for (@ARGV) {
+
+               # has space
+               if (/\A (?:$q_char)*? [ ] /oxms) {
+                   if (my @glob = Esjis::glob(qq{"$_"})) {
+                       push @argv, @glob;
+                   }
+                   else {
+                       push @argv, $_;
+                   }
+               }
+
+               # has wildcard metachar
+               elsif (/\A (?:$q_char)*? [*?] /oxms) {
+                   if (my @glob = Esjis::glob($_)) {
+                       push @argv, @glob;
+                   }
+                   else {
+                       push @argv, $_;
+                   }
+               }
+
+               # no wildcard globbing
+               else {
+                   push @argv, $_;
+               }
+           }
+           @ARGV = @argv;
+       }
+   }
 
 =head1 Software Composition
 
@@ -5982,7 +6050,7 @@ I am glad that I could confirm my idea is not so wrong.
    warnings/register.pm_ --- poor warnings/register.pm
    feature.pm_           --- dummy feature.pm
 
-=head1 Upper Compatibility By Escaping
+=head1 Upper Compatibility by Escaping
 
 This software adds the function by 'Escaping' it always, and nothing of the
 past is broken. Therefore, 'Possible job' never becomes 'Impossible job'.
@@ -6044,7 +6112,7 @@ Insert chr(0x5c) before  @  [  \  ]  ^  `  {  |  and  }  in multiple-octet of
   in the perl     "`/"    [83] [5c]
   -----------------------------------------
 
-=head1 Multiple-Octet Anchoring Of Regular Expression (Sjis.pm provides)
+=head1 Multiple-Octet Anchoring of Regular Expression (Sjis.pm provides)
 
 Sjis.pm applies multiple-octet anchoring at beginning of regular expression.
 
@@ -6075,8 +6143,8 @@ from classic Perl character class shortcuts and POSIX-style character classes.
   --------------------------------------------------------------------------------
   m/...MULTIOCT+.../      m/...(?:MULTIOCT)+.../
   m/...[AN-EM].../        m/...(?:A[N-Z]|[B-D][A-Z]|E[A-M]).../
-  m/...\D.../             m/...${Esjis::eD}.../
-  m/...[[:^digit:]].../   m/...${Esjis::not_digit}.../
+  m/...\D.../             m/...(?:${Esjis::eD}).../
+  m/...[[:^digit:]].../   m/...(?:${Esjis::not_digit}).../
   --------------------------------------------------------------------------------
 
 =head1 Calling 'Esjis::ignorecase()' (Sjis.pm provides)
@@ -6249,7 +6317,7 @@ Definitions in Esjis.pm.
   ${Esjis::eB}             qr{(?:(?<=[0-9A-Z_a-z])(?=[0-9A-Z_a-z])|(?<=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF])(?=[\x00-\x2F\x40\x5B-\x5E\x60\x7B-\xFF]))}
   ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-=head1 Un-Escaping \ Of \N, \p, \P and \X (Sjis.pm provides)
+=head1 Un-Escaping \ of \N, \p, \P and \X (Sjis.pm provides)
 
 Sjis.pm removes '\' at head of alphanumeric regexp metasymbols \N, \p, \P
 and \X. By this method, you can avoid the trap of the abstraction.
@@ -6325,37 +6393,61 @@ functions.
 
 Insert 'Esjis::' instead of '-' of operator.
 
+  Available in MSWin32, MacOS, and UNIX-like systems
   --------------------------------------------------------------------------
   Before   After      Meaning
   --------------------------------------------------------------------------
-  -r       Esjis::r   File is readable by effective uid/gid
-  -w       Esjis::w   File is writable by effective uid/gid
-  -x       Esjis::x   File is executable by effective uid/gid
-  -o       Esjis::o   File is owned by effective uid
-  -R       Esjis::R   File is readable by real uid/gid
-  -W       Esjis::W   File is writable by real uid/gid
-  -X       Esjis::X   File is executable by real uid/gid
-  -O       Esjis::O   File is owned by real uid
-  -e       Esjis::e   File exists
-  -z       Esjis::z   File has zero size
-  -f       Esjis::f   File is a plain file
-  -d       Esjis::d   File is a directory
-  -l       Esjis::l   File is a symbolic link
-  -p       Esjis::p   File is a named pipe (FIFO)
-  -S       Esjis::S   File is a socket
-  -b       Esjis::b   File is a block special file
-  -c       Esjis::c   File is a character special file
-  -t       -t         Filehandle is opened to a tty
-  -u       Esjis::u   File has setuid bit set
-  -g       Esjis::g   File has setgid bit set
-  -k       Esjis::k   File has sticky bit set
-  -T       Esjis::T   File is a text file
-  -B       Esjis::B   File is a binary file (opposite of -T)
-  -s       Esjis::s   File has nonzero size (returns size in bytes)
-  -M       Esjis::M   Age of file (at startup) in days since modification
-  -A       Esjis::A   Age of file (at startup) in days since last access
-  -C       Esjis::C   Age of file (at startup) in days since inode change
+  -r       Esjis::r   File or directory is readable by this (effective) user or group
+  -w       Esjis::w   File or directory is writable by this (effective) user or group
+  -e       Esjis::e   File or directory name exists
+  -x       Esjis::x   File or directory is executable by this (effective) user or group
+  -z       Esjis::z   File exists and has zero size (always false for directories)
+  -f       Esjis::f   Entry is a plain file
+  -d       Esjis::d   Entry is a directory
+  -t       -t         The filehandle is a TTY (as reported by the isatty() system function;
+                      filenames can't be tested by this test)
+  -T       Esjis::T   File looks like a "text" file
+  -B       Esjis::B   File looks like a "binary" file
+  -M       Esjis::M   Modification age (measured in days)
+  -A       Esjis::A   Access age (measured in days)
+  -C       Esjis::C   Inode-modification age (measured in days)
+  -s       Esjis::s   File or directory exists and has nonzero size
+                      (the value is the size in bytes)
   --------------------------------------------------------------------------
+  
+  Available in MacOS and UNIX-like systems
+  --------------------------------------------------------------------------
+  Before   After      Meaning
+  --------------------------------------------------------------------------
+  -R       Esjis::R   File or directory is readable by this real user or group
+  -W       Esjis::W   File or directory is writable by this real user or group
+  -X       Esjis::X   File or directory is executable by this real user or group
+  -l       Esjis::l   Entry is a symbolic link
+  -S       Esjis::S   Entry is a socket
+  --------------------------------------------------------------------------
+  
+  Not available in MSWin32 and MacOS
+  --------------------------------------------------------------------------
+  Before   After      Meaning
+  --------------------------------------------------------------------------
+  -o       Esjis::o   File or directory is owned by this (effective) user
+  -O       Esjis::O   File or directory is owned by this real user
+  -p       Esjis::p   Entry is a named pipe (a "fifo")
+  -b       Esjis::b   Entry is a block-special file (like a mountable disk)
+  -c       Esjis::c   Entry is a character-special file (like an I/O device)
+  -u       Esjis::u   File or directory is setuid
+  -g       Esjis::g   File or directory is setgid
+  -k       Esjis::k   File or directory has the sticky bit set
+  --------------------------------------------------------------------------
+
+-w only inspects the read-only file attribute (FILE_ATTRIBUTE_READONLY), which
+determines whether the directory can be deleted, not whether it can be written
+to. Directories always have read and write access unless denied by
+discretionary access control lists (DACLs). (MSWin32)
+-R, -W, -X, -O are indistinguishable from -r, -w, -x, -o. (MSWin32)
+-g, -k, -l, -u, -A are not particularly meaningful. (MSWin32)
+-x (or -X) determine if a file ends in one of the executable suffixes. -S is
+meaningless. (MSWin32)
 
 As of Perl 5.00503, as a form of purely syntactic sugar, you can stack file
 test operators, in a way that -w -x $file is equivalent to -x $file && -w _ .
@@ -6406,7 +6498,7 @@ oriented function. See 'Character-Oriented Functions'.
 
 =over 2
 
-=item * Order Of Character
+=item * Ordinal Value of Character
 
   $ord = Sjis::ord($string);
 
@@ -6417,7 +6509,10 @@ oriented function. See 'Character-Oriented Functions'.
   If you import ord "use Sjis qw(ord);", ord of your script will be rewritten in
   Sjis::ord. Sjis::ord is not compatible with ord of JPerl.
 
-=item * Reverse List Or String
+  Even if you do not know this function, there is no problem. This function can
+  be created with a unpack function as before.
+
+=item * Reverse List or String
 
   @reverse = Sjis::reverse(@list);
   $reverse = Sjis::reverse(@list);
@@ -6432,7 +6527,14 @@ oriented function. See 'Character-Oriented Functions'.
   rewritten in Sjis::reverse. Sjis::reverse is not compatible with reverse of
   JPerl.
 
-=item * Length By ShiftJIS Character
+  Even if you do not know this function, there is no problem. This function can
+  be created with
+
+  $rev = join('', reverse(split(//, $jstring)));
+
+  as before.
+
+=item * Length by ShiftJIS Character
 
   $length = Sjis::length($string);
   $length = Sjis::length();
@@ -6449,7 +6551,14 @@ oriented function. See 'Character-Oriented Functions'.
 
   $bytes = length($string);
 
-=item * Substr By ShiftJIS Character
+  Even if you do not know this function, there is no problem. This function can
+  be created with
+
+  $len = split(//, $jstring);
+
+  as before.
+
+=item * Substr by ShiftJIS Character
 
   $substr = Sjis::substr($string,$offset,$length,$replacement);
   $substr = Sjis::substr($string,$offset,$length);
@@ -6486,7 +6595,7 @@ oriented function. See 'Character-Oriented Functions'.
 
   Sjis::substr($var, -1, 1, "Curly");
 
-=item * Index By ShiftJIS Character
+=item * Index by ShiftJIS Character
 
   $index = Sjis::index($string,$substring,$offset);
   $index = Sjis::index($string,$substring);
@@ -6504,7 +6613,10 @@ oriented function. See 'Character-Oriented Functions'.
       $pos++;
   }
 
-=item * Rindex By ShiftJIS Character
+  This function is realizable with a regular expression as before. There is no
+  problem even if you do not know this function.
+
+=item * Rindex by ShiftJIS Character
 
   $rindex = Sjis::rindex($string,$substring,$offset);
   $rindex = Sjis::rindex($string,$substring);
@@ -6520,6 +6632,24 @@ oriented function. See 'Character-Oriented Functions'.
       print "Found at $pos\n";
       $pos--;
   }
+
+  This function is realizable with a regular expression as before. There is no
+  problem even if you do not know this function.
+
+=item * Filename Globbing
+
+  @glob = glob($expr);
+  $glob = glob($expr);
+  @glob = glob;
+  $glob = glob;
+  @glob = <*>;
+  $glob = <*>;
+
+  Performs filename expansion (globbing) on $expr, returning the next successive
+  name on each call. If $expr is omitted, $_ is globbed instead.
+
+  This operator is implemented via the Esjis::glob() function. See Esjis::glob of
+  Esjis.pm for details.
 
 =back
 
@@ -6586,7 +6716,7 @@ oriented function. See 'Character-Oriented Functions'.
 
   If no argument is given, the function chops the $_ variable.
 
-=item * Order Of Byte
+=item * Ordinal Value of Byte
 
   $ord = CORE::ord($expr);
 
@@ -6597,7 +6727,7 @@ oriented function. See 'Character-Oriented Functions'.
   If you want a signed value, use unpack('c',$expr). If you want all the bytes of
   the string converted to a list of numbers, use unpack('C*',$expr) instead.
 
-=item * Reverse List Or Byte String
+=item * Reverse List or Byte String
 
   @reverse = CORE::reverse(@list);
   $reverse = CORE::reverse(@list);
@@ -6609,7 +6739,7 @@ oriented function. See 'Character-Oriented Functions'.
   returns the reverse of that resulting string, byte by byte, regardless of
   "use Sjis qw(reverse);" exists or not.
 
-=item * Index By Byte String
+=item * Index by Byte String
 
   $index = CORE::index($string,$substring,$offset);
   $index = CORE::index($string,$substring);
@@ -6626,7 +6756,7 @@ oriented function. See 'Character-Oriented Functions'.
       $pos++;
   }
 
-=item * Rindex By Byte String
+=item * Rindex by Byte String
 
   $rindex = CORE::rindex($string,$substring,$offset);
   $rindex = CORE::rindex($string,$substring);
@@ -6672,7 +6802,7 @@ You need copy built-in standard module to /Perl/site/lib/Sjis and change
 
 Back to and see 'Escaping Your Script'. Enjoy hacking!!
 
-=head1 Ignore Pragmas And Modules
+=head1 Ignore Pragmas and Modules
 
   -----------------------------------------------------------
   Before                    After
@@ -6791,20 +6921,20 @@ Back to and see 'Escaping Your Script'. Enjoy hacking!!
  
  (The value '1' doesn't have the meaning)
 
-=head1 Perl5.6 Emulation On perl5.005
+=head1 Perl5.6 Emulation on perl5.005
 
   Using warnings pragma on perl5.00503 by rename files.
 
   warnings.pm_ --> warnings.pm
   warnings/register.pm_ --> warnings/register.pm
 
-=head1 Perl5.16 Emulation On perl5.005
+=head1 Perl5.16 Emulation
 
-  Using feature pragma on perl5.00503 by rename files.
+  Using feature pragma by rename files.
 
   feature.pm_ --> feature.pm
 
-=head1 MacJPerl On The MacOS
+=head1 MacJPerl on The MacOS
 
  The functions of MacJPerl was mimicked referring to the books and web.
  It is welcome if there is a bug report.
@@ -6815,7 +6945,7 @@ Back to and see 'Escaping Your Script'. Enjoy hacking!!
  3. ToolServer
  4. MPW(Macintosh Programmer's Workshop)
 
-=head1 BUGS AND LIMITATIONS
+=head1 BUGS, LIMITATIONS, and COMPATIBILITY
 
 I have tested and verified this software using the best of my ability.
 However, a software containing much regular expression is bound to contain
@@ -6829,6 +6959,12 @@ make this a more useful tool, please let everyone share it.
 =item * format
 
 Function "format" can't handle multiple-octet code same as original Perl.
+
+=item * cloister of regular expression
+
+The cloister (?s) and (?i) of a regular expression will not be implemented for
+the time being. Cloister (?s) can be substituted with the .(dot) and \N on /s
+modifier. Cloister (?i) can be substituted with \F...\E.
 
 =item * chdir
 
@@ -6850,7 +6986,7 @@ Bug #81839
 chdir does not work with chr(0x5C) at end of path
 http://bugs.activestate.com/show_bug.cgi?id=81839
 
-=item * Sjis::substr As Lvalue
+=item * Sjis::substr as Lvalue
 
 Sjis::substr differs from CORE::substr, and cannot be used as a lvalue.
 To change part of a string, you can use the optional fourth argument which is the
@@ -6858,7 +6994,7 @@ replacement string.
 
 Sjis::substr($string, 13, 4, "JPerl");
 
-=item * Special Variables $` And $& Need /( Capture All )/
+=item * Special Variables $` and $& need /( Capture All )/
 
   Because $` and $& use $1.
 
@@ -6876,7 +7012,7 @@ Sjis::substr($string, 13, 4, "JPerl");
   ${^POSTMATCH}   Esjis::POSTMATCH()   $'
   -------------------------------------------------------------------------------------------
 
-=item * Limitation Of Regular Expression
+=item * Limitation of Regular Expression
 
 This software has limitation from \G in multibyte anchoring. On perl5.006,
 perl5.008, perl5.010, perl5.012, perl5.014 and perl5.016 it doesn't match in
@@ -6888,12 +7024,12 @@ Bug #89792
 \G can't treat over 32,767 octets
 http://bugs.activestate.com/show_bug.cgi?id=89792
 
-=item * Empty Variable In Regular Expression
+=item * Empty Variable in Regular Expression
 
 Unlike literal null string, an interpolated variable evaluated to the empty string
 can't use the most recent pattern from a previous successful regular expression.
 
-=item * Limitation Of ?? and m??
+=item * Limitation of ?? and m??
 
 Multibyte character needs ( ) which is before {n,m} {n,} {n} * and + in ?? or m??.
 As a result, you need to rewrite a script about $1,$2,$3,... You cannot use (?: )
@@ -6904,11 +7040,17 @@ As a result, you need to rewrite a script about $1,$2,$3,... You cannot use (?: 
 The look-behind assertion like (?<=[A-Z]) is not prevented from matching trail
 octet of the previous multiple-octet code.
 
-=item * Modifier /a /d /l And /u Of Regular Expression
+=item * Modifier /a /d /l and /u of Regular Expression
 
 The concept of this software is not to use two or more encoding methods at the
 same time. Therefore, modifier /a /d /l and /u are not supported.
 \d means [0-9] always.
+
+=item * ${^WIN32_SLOPPY_STAT} is ignored
+
+Even if ${^WIN32_SLOPPY_STAT} is set to a true value, file test functions Esjis::*(),
+Esjis::lstat(), and Esjis::stat() on Microsoft Windows open the file for the path
+which has chr(0x5c) at end.
 
 =back
 
@@ -7075,7 +7217,7 @@ Back when Programming Perl, 3rd ed. was written, UTF8 flag was not born
 and Perl is designed to make the easy jobs easy. This software provide
 programming environment like at that time.
 
-=head1 Words Of Learning Perl
+=head1 Words of Learning Perl
 
    Some computer scientists (the reductionists, in particular) would
   like to deny it, but people have funny-shaped minds. Mental geography
@@ -7272,6 +7414,7 @@ I am thankful to all persons.
 
  SADAHIRO Tomoyuki, The right way of using Shift_JIS
  http://homepage1.nifty.com/nomenclator/perl/shiftjis.htm
+ http://search.cpan.org/~sadahiro/
 
  Yukihiro "Matz" Matsumoto, YAPC::Asia2006 Ruby on Perl(s)
  http://www.rubyist.net/~matz/slides/yapc2006/

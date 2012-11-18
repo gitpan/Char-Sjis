@@ -5,42 +5,44 @@ __END__
 
 =encoding Shift_JIS
 
-=head1 ソフトウェア名称
+=head1 NAME
 
-Sjis-JA - Source code filter for ShiftJIS script (Japanese document)
-
-=head1 初めてのJPerl
-
-    スクリプト ShiftJIS_script.pl の中に以下を記述して...
-      use Sjis;
-
-    コマンドプロンプトで以下のように実行する
-      perl ShiftJIS_script.pl argv1 argv2 ...
-
-    スクリプトを ShiftJIS で記述することができ、正規表現をはじめとする perl の
-    各種機能は ShiftJIS に対応するようになります。
-    関数 length が扱う長さの単位はバイトのままで、UTF8フラグは使用しません。
+Sjis-JA - 日本語のドキュメント
 
 =head1 要約
 
-これまでの歴史からはじめましょう。ShiftJIS のサポートは jperl 4.019+1.3 から始
-まりました。これによって chop() などの関数や正規表現を複雑な日本の文字に対して
-適用できるようになりました。
+スクリプト ShiftJIS_script.pl の中に以下を記述して...
+  use Sjis;
 
-Perl5.8 以降は Encode モジュールによってマルチリンガル処理がサポートされたため、
-jperl は不要になったと言われていました。
+コマンドプロンプトで以下のように実行する
+  perl ShiftJIS_script.pl argv1 argv2 ...
 
-ですが、それは本当のことだったでしょうか？
+Sjisソフトウェアは、perlインタプリタと ShiftJIS によって書かれたあなたの Perl
+スクリプトの間に位置するミドルウェアです。
 
-日本国内において、汎用大型コンピュータの入出力、パーソナルコンピュータの内部コー
-ドおよび入出力、さらには携帯電話に至るまで、ShiftJIS を基本とした文字コード
-が広く使われています。このソフトウェアはその ShiftJIS を直接扱います。そして
-Latin-1 を扱いません。そのため UTF8 フラグは使いません。
-このソフトウェアは Shift_JIS, Windows-31J, CP932, MacJapanese, SJIS(R90),
-Shift_JISX0213, Shift_JIS-2004 などいわゆる ShiftJIS の亜種を扱うことができます。
-この文書ではこれらを総称して ShiftJIS という語で表しています(「_」がない)。
+Perl は、テキスト処理が90%、それ以外の処理が10%で構成される問題に向けて最適化さ
+れています。でもこの "テキスト" とは US-ASCII のことで、ShiftJIS は "それ以外
+の処理" に含まれます。
 
-あなたもエンコードの問題からエスケープしませんか？
+がっかりする必要はありません。
+
+Perl3 以降の文字列はバイナリデータを扱うことができます。つまり Perl3 以降の文字
+列は ShiftJIS を扱うことができるのです。
+
+Perl は簡単なことは簡単に、難しいこともそれなりに出来る言語として設計されまし
+た。Sjisソフトウェアは簡単なことを簡単に行うようにするためのプログラムです。
+
+"use Sjis;" によって、スクリプトを ShiftJIS で記述することができるようになり、
+正規表現をはじめとする perl の各種機能は ShiftJIS に対応するようになります。
+関数 length が扱う長さの単位はバイトのままで、UTF8フラグは使用しません。
+
+=head1 この文書の表記のぶれについて
+
+いわゆるシフトJISに対する名称について、この文書では ShiftJIS としたりシフトJIS
+としたり Shift-JIS としたりしていますが、意味するものは同じだと考えてください。
+これらを記述する際に参照した資料があった場合、概ねそのままの表記を残しています。
+それらを変更しないほうがよいと思ったため、この文書全体としては統一されていませ
+ん。あらかじめご了承ください。
 
 =head1 もうひとつの未来(みらい)
 
@@ -78,7 +80,7 @@ ftp://ftp.oreilly.co.jp/pcjp98/watanabe/jperlconf.ppt
 
 =item * jcode.pl のような最大限の移植性
 
-=item * JPerl のようにシフトJISをそのまま扱い、UTF8フラグを使わない
+=item * JPerl のようにShiftJISをそのまま扱い、UTF8フラグを使わない
 
 =item * Encode モジュールのように Perl は1つのインタプリタのまま
 
@@ -88,7 +90,8 @@ ftp://ftp.oreilly.co.jp/pcjp98/watanabe/jperlconf.ppt
 
 =back
 
-さあ、JPerl の未来によってもうひとつの未来を作りましょう。
+このソフトウェアとその未来について考えると胸がどきどきします。みなさんだってそう
+でしょう？
 
 =head1 基本的な仕組み
 
@@ -120,6 +123,10 @@ http://mail.pm.org/pipermail/tokyo-pm/1999-September/001854.html
 ただし、Filter::Util::Call を利用していない点、Perl の構文を解析して必要に応じて
 エスケープする点が異なります。
 
+=head1 インストール方法(簡単な方法)
+
+   CPAN から Sjis.pm と Esjis.pm をダウンロードし Perl の lib ディレクトリに格納します。
+
 =head1 インストール方法(makeを使う場合)
 
    perl Makefile.PL
@@ -128,7 +135,7 @@ http://mail.pm.org/pipermail/tokyo-pm/1999-September/001854.html
 
 =head1 インストール方法(makeを使わない場合)
 
-   perl pMakefile.pl         --- pMakefile.pl が pmake.bat を生成します
+   perl pMakefile.pl          --- pMakefile.pl が pmake.bat を生成します
    pmake.bat
    pmake.bat test
 
@@ -179,6 +186,51 @@ http://mail.pm.org/pipermail/tokyo-pm/1999-September/001854.html
    warnings.pm_          --- warnings.pm の簡易版
    warnings/register.pm_ --- warnings/register.pm の簡易版
    feature.pm_           --- ダミーの feature.pm
+
+=head1 DOS風システムにおけるコマンドラインのワイルドカード展開
+
+DOS風システムの標準シェル(COMMAND.COM および cmd.exe)は、起動するプログラムへ渡す
+パラメータのワイルドカード展開を行いません。その代わりとして Esjis.pm 内の import()
+関数がワイルドカード展開を行うようになっています。
+
+   参考 Esjis.pm から抜粋
+   #
+   # @ARGV wildcard globbing
+   #
+   sub import() {
+
+       if ($^O =~ /\A (?: MSWin32 | NetWare | symbian | dos ) \z/oxms) {
+           my @argv = ();
+           for (@ARGV) {
+
+               # has space
+               if (/\A (?:$q_char)*? [ ] /oxms) {
+                   if (my @glob = Esjis::glob(qq{"$_"})) {
+                       push @argv, @glob;
+                   }
+                   else {
+                       push @argv, $_;
+                   }
+               }
+
+               # has wildcard metachar
+               elsif (/\A (?:$q_char)*? [*?] /oxms) {
+                   if (my @glob = Esjis::glob($_)) {
+                       push @argv, @glob;
+                   }
+                   else {
+                       push @argv, $_;
+                   }
+               }
+
+               # no wildcard globbing
+               else {
+                   push @argv, $_;
+               }
+           }
+           @ARGV = @argv;
+       }
+   }
 
 =head1 続・初めてのJPerl
 
@@ -378,8 +430,8 @@ Sjis.pm はマルチバイト文字への量指定子、およびマルチバイト文字のカスタム文字クラ
   --------------------------------------------------------------------------------
   m/...MULTIOCT+.../      m/...(?:MULTIOCT)+.../
   m/...[AN-EM].../        m/...(?:A[N-Z]|[B-D][A-Z]|E[A-M]).../
-  m/...\D.../             m/...${Esjis::eD}.../
-  m/...[[:^digit:]].../   m/...${Esjis::not_digit}.../
+  m/...\D.../             m/...(?:${Esjis::eD}).../
+  m/...[[:^digit:]].../   m/...(?:${Esjis::not_digit}).../
   --------------------------------------------------------------------------------
 
 =head1 Esjis::ignorecase() の呼び出し
@@ -629,36 +681,51 @@ Esjis::* 関数は Esjis.pm が提供します。
 
 このソフトウェアによって演算子の '-' は 'Esjis::' に書き換わります。
 
+  MSWin32, MacOS および UNIX風のシステムで利用可能な演算子
   -------------------------------------------------------------------------------
   処理前    処理後      説明
   -------------------------------------------------------------------------------
-  -r        Esjis::r    実効 uid/gid で読み出し可
-  -w        Esjis::w    実効 uid/gid で書き込み可
-  -x        Esjis::x    実効 uid/gid で実行可
-  -o        Esjis::o    実効 uid が所有
-  -R        Esjis::R    実 uid/gid で読み出し可
-  -W        Esjis::W    実 uid/gid で書き込み可
-  -X        Esjis::X    実 uid/gid で実行可
-  -O        Esjis::O    実 uid/gid が所有
-  -e        Esjis::e    ファイルが存在する
-  -z        Esjis::z    ファイルの長さが 0 である
-  -f        Esjis::f    普通のファイルである
-  -d        Esjis::d    ディレクトリである
-  -l        Esjis::l    シンボリックリンクである
-  -p        Esjis::p    名前付きパイプ(FIFO)である
-  -S        Esjis::S    ソケットである
-  -b        Esjis::b    ブロックスペシャルファイルである
-  -c        Esjis::c    キャラクタスペシャルファイルである
-  -t        -t          ファイルハンドルが tty に対してオープンされている
-  -u        Esjis::u    setuid ビットがセットされている
-  -g        Esjis::g    setgid ビットがセットされている
-  -k        Esjis::k    sticky ビットがセットされている
-  -T        Esjis::T    テキストファイルである
-  -B        Esjis::B    バイナリファイルである(-T とは逆の意味)
-  -s        Esjis::s    ファイルの長さが 0 ではない(長さをバイト単位で返す)
-  -M        Esjis::M    (実行開始時を基準とする)修正されてからの日数
-  -A        Esjis::A    (実行開始時を基準とする)最後にアクセスされてからの日数
-  -C        Esjis::C    (実行開始時を基準とする)inode が変更されてからの日数
+  -r        Esjis::r    ファイルやディレクトリがこの(実効)ユーザまたはグループから読み出し可能
+  -w        Esjis::w    ファイルやディレクトリがこの(実効)ユーザまたはグループから書き込み可能
+  -e        Esjis::e    ファイルやディレクトリ名が存在する
+  -x        Esjis::x    ファイルやディレクトリがこの(実効)ユーザまたはグループから実行可能
+  -z        Esjis::z    ファイルが存在していて大きさが0である(ディレクトリに対しては常に偽になる)
+  -f        Esjis::f    エントリは普通のファイルである
+  -d        Esjis::d    エントリはディレクトリである
+  -t        -t          このファイルハンドルはTTYである(isatty()システム関数の結果で判定する。
+                        このテストはファイル名には適用できない)
+  -T        Esjis::T    このファイルは「テキスト」ファイルのようである
+  -B        Esjis::B    このファイルは「バイナリ」ファイルのようである
+  -M        Esjis::M    最後に変更されてからの日数
+  -A        Esjis::A    最後にアクセスされてからの日数
+  -C        Esjis::C    最後に iノード(inode) が変更されてからの日数
+  -s        Esjis::s    ファイルやディレクトリが存在していて大きさが 0 でない
+                        (バイト単位で表わしたファイルの大きさが値になる)
+  -------------------------------------------------------------------------------
+  
+  MacOS および UNIX風のシステムで利用可能な演算子
+  -------------------------------------------------------------------------------
+  処理前    処理後      説明
+  -------------------------------------------------------------------------------
+  -R        Esjis::R    ファイルやディレクトリがこの実ユーザまたはグループから読み出し可能
+  -W        Esjis::W    ファイルやディレクトリがこの実ユーザまたはグループから書き込み可能
+  -X        Esjis::X    ファイルやディレクトリがこの実ユーザまたはグループから実行可能
+  -l        Esjis::l    エントリはシンボリックリンクである
+  -S        Esjis::S    エントリはソケットである
+  -------------------------------------------------------------------------------
+  
+  MSWin32, MacOS では利用出来ないファイルテスト演算子
+  -------------------------------------------------------------------------------
+  処理前    処理後      説明
+  -------------------------------------------------------------------------------
+  -o        Esjis::o    ファイルやディレクトリをこの(実効)ユーザが所有している
+  -O        Esjis::O    ファイルやディレクトリをこの実ユーザが所有している
+  -p        Esjis::p    エントリは名前付きパイプ(fifo)である
+  -b        Esjis::b    エントリはブロック特殊デバイスである(例えば、マウント可能なディスク)
+  -c        Esjis::c    エントリはキャラクタ特殊デバイスである(例えば、I/Oデバイス)
+  -u        Esjis::u    ファイルやディレクトリが setuid されている
+  -g        Esjis::g    ファイルやディレクトリが setgid されている
+  -k        Esjis::k    ファイルやディレクトリの sticky ビットがセットされている
   -------------------------------------------------------------------------------
 
 perl5.00503 を使用している場合でもファイルテスト演算子は「積み重ねる」ことが
@@ -718,6 +785,9 @@ perl5.00503 を使用している場合でもファイルテスト演算子は「積み重ねる」ことが
     換わるようになります。ord が Sjis::ord の動作をするのは JPerl と非互換なの
     で明示的にインポートした場合のみ書き換わります。
 
+    もしこの関数を知らなくとも問題はありません。これまで通り、この関数は
+    unpack() 関数で実現できます。
+
 =item * Sjis::reverse
 
     @reverse = Sjis::reverse(@list);
@@ -732,6 +802,12 @@ perl5.00503 を使用している場合でもファイルテスト演算子は「積み重ねる」ことが
     "use Sjis qw(reverse);" によってスクリプト中に記述した reverse は
     Sjis::reverse に書き換わるようになります。reverse が Sjis::reverse の動作を
     するのは JPerl と非互換なので明示的にインポートした場合のみ書き換わります。
+
+    もしこの関数を知らなくとも問題はありません。これまで通り、この関数は
+
+    $rev = join('', reverse(split(//, $jstring)));
+
+    で実現できます。
 
 =item * Sjis::length
 
@@ -751,6 +827,12 @@ perl5.00503 を使用している場合でもファイルテスト演算子は「積み重ねる」ことが
     $bytes = length($string);
 
     のようにします。
+
+    もしこの関数を知らなくとも問題はありません。これまで通り、この関数は
+
+    $len = split(//, $jstring);
+
+    で実現できます。
 
 =item * Sjis::substr
 
@@ -806,6 +888,9 @@ perl5.00503 を使用している場合でもファイルテスト演算子は「積み重ねる」ことが
         $pos++;
     }
 
+    これまで通り、この機能は正規表現で実現できます。だからこの関数を知らなくても問
+    題はないでしょう。
+
 =item * Sjis::rindex
 
     $rindex = Sjis::rindex($string,$substring,$offset);
@@ -823,6 +908,66 @@ perl5.00503 を使用している場合でもファイルテスト演算子は「積み重ねる」ことが
         print "Found at $pos\n";
         $pos--;
     }
+
+    これまで通り、この機能は正規表現で実現できます。だからこの関数を知らなくても問
+    題はないでしょう。
+
+=item * ファイル名グロビング
+
+    @glob = glob($expr);
+    $glob = glob($expr);
+    @glob = glob;
+    $glob = glob;
+    @glob = <*>;
+    $glob = <*>;
+
+    この演算子は Esjis::glob によって実装されています。Esjis::glob の詳細は以下の
+    通りです。
+
+    @glob = Esjis::glob($string);
+    @glob = Esjis::glob_;
+
+    この関数は、$stringの値に対して、DOS風シェルと同じようなファイル名展開を行って
+    得られた結果を返します。$string が省略されたときは代わりに $_ が使われます。
+    この関数は Sjisソフトウェア内部で <*> および glob 演算子を実装している関数です。
+    MSWin32環境にて $string が chr(0x5c) で終了している場合でも動作します。
+
+    使いやすくするために glob関数は、UNIX風ではなく、DOS風の展開を行うようになって
+    います。アスタリスク("*")は、任意の文字を任意個(0個でもよい)並べたものにマッチ
+    します。クエスチョン記号("?")は、任意の文字1個または0個にマッチします。ティル
+    デ("~")はホームディレクトリ名に展開されます。例えば、"~/.*rc" は現在のユーザの
+    "rc" ファイルすべてにマッチするし、"~jane/Mail/*" はJaneのメールファイルすべて
+    にマッチします。
+
+    ASCIIの英字の大文字と小文字は区別されず、同じものとして扱われます。バックスラッ
+    シュとスラッシュはどちらもディレクトリセパレータとして扱われます。ダブルクォート
+    文字列の中でバックスラッシュ1つ(\)を表わすためには2つの \、(つまり \\ )を記述す
+    る必要があります。
+
+    空白文字を含む可能性のあるファイル名をグロブしたい場合には、$stringをダブル
+    クォートで囲む必要があります。なぜなら、glob 関数は、空白文字を特別扱いして複数
+    のパターンの区切り(例えば<*.c *.h>)と解釈してしまうからです。
+    例えば、"e" の後ろに空白文字、その後ろに "f" が続くファイル名のグロビングを行う
+    には以下のように記述します。
+
+    @spacies = <"*e f*">;
+    @spacies = Esjis::glob('"*e f*"');
+    @spacies = Esjis::glob(q("*e f*"));
+
+    変数を利用する場合は以下のようにします。
+
+    @spacies = Esjis::glob("'*${var}e f*'");
+    @spacies = Esjis::glob(qq("*${var}e f*"));
+
+    スクリプトを今後もDOS風のOSで実行するのであれば、
+
+    # 相対パスで取得する場合
+    @relpath_file = split(/\n/,`dir /b wildcard\\here*.txt 2>NUL`);
+
+    # 絶対パスで取得する場合
+    @abspath_file = split(/\n/,`dir /s /b wildcard\\here*.txt 2>NUL`);
+
+    と記述してもよいでしょう。
 
 =back
 
@@ -1024,9 +1169,9 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
   同梱の warnings.pm_ を warnings.pm に、warnings/register.pm_ を
   warnings/register.pm にファイル名を変更して使用できます。
 
-=head1 perl5.005 による Perl5.16 エミュレーション
+=head1 Perl5.16 エミュレーション
 
-  perl5.005 にて feature プラグマをエミュレートします。
+  feature プラグマをエミュレートします。
   同梱の feature.pm_ を feature.pm にファイル名を変更して使用できます。
 
 =over 2
@@ -1117,7 +1262,7 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
  3. ToolServer
  4. MPW(Macintosh Programmer's Workshop)
 
-=head1 バグと制限事項
+=head1 バグと制限事項と互換性
 
 このソフトウェアは、私の能力を尽くして、テストして照合しました。そうであっても、多く
 の正規表現を含むソフトウェアは、ある程度のバグを飼うことをまぬがれることができません。
@@ -1132,6 +1277,12 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
 =item * format
 
     オリジナルの Perl と機能が同じです(ShiftJIS に対応していません)。
+
+=item * 正規表現のクロイスタ
+
+    正規表現のクロイスタ (?s) と (?i) は当面、実装されないでしょう。
+    クロイスタ (?s) は /s 修飾子と .(ドット) と \N で代用できます。
+    クロイスタ (?i) は \F ～ \E で工夫して記述しないといけません。
 
 =item * chdir
 
@@ -1218,6 +1369,12 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
     このソフトウェアのコンセプトは複数の符号化方式を同時に利用しないようにする
     ことです。従って修飾子 /a /d /l /u をサポートしません。
     \d は昔も今も [0-9] を意味します。
+
+=item * 無視される ${^WIN32_SLOPPY_STAT} の値
+
+    Microsoft Windows 上で chr(0x5c) で終わるパスを指定してファイルテスト(演算子)、
+    あるいは lstat()、stat() を実行すると、${^WIN32_SLOPPY_STAT} に真の値が設定され
+    ている場合でもそのファイルをオープンして調べます。
 
 =back
 
@@ -2158,6 +2315,13 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
  346ページ
  ISBN 4-7561-0963-2
 
+ セキュアWebプログラミングTips集
+ 佐名木 智貴 著
+ 2008年3月 発行
+ 421ページ
+ ISBN-10: 4883732568
+ ISBN-13: 978-4883732562
+
  長谷川 勇さん, 国際化正規表現ライブラリなど
  http://lc.linux.or.jp/lc2001/papers/dfa-i18n-paper.pdf
  http://lc.linux.or.jp/lc2002/papers/hasegawa0918h.pdf
@@ -2267,7 +2431,7 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
  「日本語情報処理」「CJKV日中韓越情報処理」を読んで文字集合規格と符号化方式を学び、
  文字化けについて理解が深まりました。文字化けの原因のひとつとして「利用者の意思と異
  なる、符号化方式の変換(が行われてしまう)」が挙げられます。それを防ぐために、この
- ソフトウェアは符号化方式を変換せずに情報処理を行います。あなたの意思がどうであった
+ ソフトウェアは符号化方式を変換せずに情報処理を行います。利用者の意思がどうであった
  としても、その意思と異なる変換がされることはありません。
  
  Appendix W: Perl Code Examples の中の CJKV Encoding Templates、Multiple-Byte
@@ -2276,7 +2440,7 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
  貞廣 知行さん, Shift-JISテキストを正しく扱う
  http://homepage1.nifty.com/nomenclator/perl/shiftjis.htm
  
- 「Shift-JISテキストを正しく扱う」で、PerlでシフトJISを扱うときのノウハウを教えて
+ 「Shift-JISテキストを正しく扱う」で、PerlでShiftJISを扱うときのノウハウを教えて
  頂き、ありがとうございます。このサイトの内容をもとに、スクリプト中のリテラル文字列
  の「ソ」を「ソ\」に変換するフィルタプログラムを作るところから始め、例外を少しずつ
  書き加えていくことでこのソフトウェアが作られていきました。
