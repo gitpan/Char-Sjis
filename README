@@ -8,23 +8,12 @@ SYNOPSIS
 
     In ShiftJIS_script.pl:
 
-      # CPAN formal style
-      use Char::Sjis;
-      use Char::Sjis ver.sion;
-      use Char::Sjis ver.sion.0;
-      use Char::Sjis qw(ord reverse);
-      use Char::Sjis ver.sion qw(ord reverse);
-      use Char::Sjis ver.sion.0 qw(ord reverse);
-
-      # casual style
-      use Sjis;
-      use Sjis ver.sion;
-      use Sjis ver.sion.0;
-      use Sjis qw(ord reverse);
-      use Sjis ver.sion qw(ord reverse);
-      use Sjis ver.sion.0 qw(ord reverse);
+      use Char::Sjis; # CPAN formal style
+         or
+      use Sjis; # casual style
 
     And on command prompt:
+
       perl  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
 
   Usage: B

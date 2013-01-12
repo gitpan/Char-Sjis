@@ -2,7 +2,6 @@
 die "This file is not encoded in ShiftJIS.\n" if q{‚ } ne "\x82\xa0";
 
 use Char::Sjis;
-use lib qw(./);
 print "1..1\n";
 
 my $__FILE__ = __FILE__;
@@ -27,6 +26,7 @@ close(FILE);
 
 # require
 eval {
+    unshift @INC, '.';
     require 'F‹@”\';
 };
 if ($@) {

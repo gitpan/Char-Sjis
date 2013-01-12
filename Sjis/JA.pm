@@ -7,14 +7,16 @@ __END__
 
 =head1 NAME
 
-Sjis-JA - “ú–{Œê‚ÌƒhƒLƒ…ƒƒ“ƒg
+Sjis-JA - JAPANESE DOCUMENT
 
 =head1 —v–ñ
 
 ƒXƒNƒŠƒvƒg ShiftJIS_script.pl ‚Ì’†‚ÉˆÈ‰º‚ğ‹Lq‚µ‚Ä...
+
   use Sjis;
 
 ƒRƒ}ƒ“ƒhƒvƒƒ“ƒvƒg‚ÅˆÈ‰º‚Ì‚æ‚¤‚ÉÀs‚·‚é
+
   perl ShiftJIS_script.pl argv1 argv2 ...
 
 Sjisƒ\ƒtƒgƒEƒFƒA‚ÍAperlƒCƒ“ƒ^ƒvƒŠƒ^‚Æ ShiftJIS ‚É‚æ‚Á‚Ä‘‚©‚ê‚½‚ ‚È‚½‚Ì Perl
@@ -232,18 +234,18 @@ DOS•—ƒVƒXƒeƒ€‚Ì•W€ƒVƒFƒ‹(COMMAND.COM ‚¨‚æ‚Ñ cmd.exe)‚ÍA‹N“®‚·‚éƒvƒƒOƒ‰ƒ€‚Ö“n‚
        }
    }
 
-=head1 ‘±E‰‚ß‚Ä‚ÌJPerl
+=head1 ‰‚ß‚Ä‚ÌJPerl
 
   œ g‚¢•û(‚»‚Ì1)
 
     1. ƒXƒNƒŠƒvƒg ShiftJIS_script.pl ‚Ì’†‚ÉˆÈ‰º‚Ì‚¢‚¸‚ê‚©‚ğ‹Lq‚µ‚Ä...
 
       use Sjis;
-      use Sjis ver.sion;         --- Sjis.pm ‚Ìƒo[ƒWƒ‡ƒ“‚ª ver.sion ˆÈã‚È‚çÀs‰Â
-      use Sjis ver.sion.0;       --- Sjis.pm ‚Ìƒo[ƒWƒ‡ƒ“‚ª ver.sion ‚Å‚È‚¯‚ê‚Î die ‚·‚é
-      use Sjis qw(ord reverse);  --- ord, reverse ‚ÌŠg’£‹@”\‚ğg‚¤ê‡
-      use Sjis ver.sion qw(ord reverse);
-      use Sjis ver.sion.0 qw(ord reverse);
+      use Sjis ver.sion;              --- Sjis.pm ‚Ìƒo[ƒWƒ‡ƒ“‚ª ver.sion ˆÈã‚È‚çÀs‰Â
+      use Sjis ver.sion.0;            --- Sjis.pm ‚Ìƒo[ƒWƒ‡ƒ“‚ª ver.sion ‚Å‚È‚¯‚ê‚Î die ‚·‚é
+      use Sjis qw(ord reverse getc);  --- ord, reverse, getc ‚ÌŠg’£‹@”\‚ğg‚¤ê‡
+      use Sjis ver.sion qw(ord reverse getc);
+      use Sjis ver.sion.0 qw(ord reverse getc);
 
       ¦ no Sjis; ‚Í—˜—p‚Å‚«‚Ü‚¹‚ñB
 
@@ -306,6 +308,7 @@ DOS•—ƒVƒXƒeƒ€‚Ì•W€ƒVƒFƒ‹(COMMAND.COM ‚¨‚æ‚Ñ cmd.exe)‚ÍA‹N“®‚·‚éƒvƒƒOƒ‰ƒ€‚Ö“n‚
   œ g‚¦‚éŠÖ”
       Sjis::ord(...);
       Sjis::reverse(...);
+      Sjis::getc(...);
       Sjis::length(...);
       Sjis::substr(...);
       Sjis::index(...);
@@ -313,6 +316,7 @@ DOS•—ƒVƒXƒeƒ€‚Ì•W€ƒVƒFƒ‹(COMMAND.COM ‚¨‚æ‚Ñ cmd.exe)‚ÍA‹N“®‚·‚éƒvƒƒOƒ‰ƒ€‚Ö“n‚
       CORE::chop(...);
       CORE::ord(...);
       CORE::reverse(...);
+      CORE::getc(...);
       CORE::index(...);
       CORE::rindex(...);
 
@@ -745,6 +749,7 @@ perl5.00503 ‚ğg—p‚µ‚Ä‚¢‚éê‡‚Å‚àƒtƒ@ƒCƒ‹ƒeƒXƒg‰‰Zq‚ÍuÏ‚İd‚Ë‚év‚±‚Æ‚ª
   ----------------------------------------------------
   ord       Sjis::ord
   reverse   Sjis::reverse
+  getc      Sjis::getc
   length    Sjis::length
   substr    Sjis::substr
   index     Sjis::index     ˆÈ‰º‚Ì‹Lq‚àQÆ‚Ì‚±‚Æ
@@ -808,6 +813,53 @@ perl5.00503 ‚ğg—p‚µ‚Ä‚¢‚éê‡‚Å‚àƒtƒ@ƒCƒ‹ƒeƒXƒg‰‰Zq‚ÍuÏ‚İd‚Ë‚év‚±‚Æ‚ª
     $rev = join('', reverse(split(//, $jstring)));
 
     ‚ÅÀŒ»‚Å‚«‚Ü‚·B
+
+=item * Sjis::getc
+
+    $getc = Sjis::getc(FILEHANDLE);
+    $getc = Sjis::getc($filehandle);
+    $getc = Sjis::getc;
+
+    FILEHANDLE ‚ÉŒ‹‚Ñ‚Â‚¯‚ç‚ê‚½“ü—Íƒtƒ@ƒCƒ‹‚©‚çAŸ‚Ì1•¶š‚ğ“Ç‚ñ‚Å•Ô‚µ‚Ü‚·B
+    end-of-file(ƒtƒ@ƒCƒ‹‚ÌI‚í‚è) ‚É‚È‚Á‚½‚©A‚ ‚é‚¢‚Í I/O ƒGƒ‰[‚ª”­¶‚µ‚½ê‡‚É
+    ‚ÍAundef ‚ğ•Ô‚µ‚Ü‚·BFILEHANDLE ‚ğÈ—ª‚·‚é‚ÆASTDIN ‚©‚ç“ü—Í‚µ‚Ü‚·B
+
+    ‚±‚ÌŠÖ”‚Í­‚µ’x‚¢‚à‚Ì‚ÌAƒL[ƒ{[ƒh‚©‚ç1•¶š‚ğ“ü—Í‚·‚éÛ‚É•Ö—˜‚Å‚· -- ƒL[ƒ{[
+    ƒh“ü—Í‚ğƒoƒbƒtƒ@ƒŠƒ“ƒO‚È‚µ‚Éİ’è‚Å‚«‚ê‚Î‚Å‚·‚ªB‚±‚ÌŠÖ”‚ÍA•W€I/Oƒ‰ƒCƒuƒ‰ƒŠ‚É
+    ‘Î‚µ‚ÄAƒoƒbƒtƒ@ƒŠƒ“ƒO‚È‚µ‚Å“ü—Í‚·‚é‚æ‚¤‚É—v‹‚µ‚Ü‚·Bc”O‚È‚±‚Æ‚ÉA•W€I/Oƒ‰ƒC
+    ƒuƒ‰ƒŠ‚ÍAƒIƒyƒŒ[ƒeƒBƒ“ƒOƒVƒXƒeƒ€‚É‘Î‚µ‚Äƒoƒbƒtƒ@ƒŠƒ“ƒO‚È‚µ‚ÅƒL[ƒ{[ƒh“ü—Í‚ğ
+    s‚¤‚æ‚¤‚É—v‹‚·‚é‚½‚ß‚ÌAˆÚA«‚Ì‚ ‚éè’i‚ğ—pˆÓ‚·‚é‚Ü‚Å‚É‚ÍA•W€‰»‚³‚ê‚Ä‚¢‚Ü‚¹
+    ‚ñB‚»‚ê‚É‚ÍA­X’mŒb‚ğ“­‚©‚¹‚ÄAƒIƒyƒŒ[ƒeƒBƒ“ƒOƒVƒXƒeƒ€‚ÉŒÅ—L‚Ì‚â‚è•û‚ğ‚·‚é
+    •K—v‚ª‚ ‚è‚Ü‚·BUnix ‚Å‚ÍAŸ‚Ì‚æ‚¤‚É‚·‚ê‚Î‚¤‚Ü‚­‚¢‚­‚Å‚µ‚å‚¤B
+
+    if ($BSD_STYLE) {
+        system "stty cbreak </dev/tty >/dev/tty 2>&1";
+    }
+    else {
+        system "stty", "-icanon", "eol", "\001";
+    }
+
+    $key = Sjis::getc;
+
+    if ($BSD_STYLE) {
+        system "stty -cbreak </dev/tty >/dev/tty 2>&1";
+    }
+    else {
+        system "stty", "icanon", "eol", "^@"; # ASCII NUL
+    }
+    print "\n";
+
+    ‚±‚ÌƒR[ƒh‚ÍA’[––‚©‚çŸ‚Éƒ^ƒCƒv‚³‚ê‚½•¶š‚ğ•Ï” $key ‚É“ü‚ê‚Ü‚·B‚ ‚È‚½‚ÌƒVƒXƒe
+    ƒ€‚Ì stty ƒvƒƒOƒ‰ƒ€‚É cbreak ƒIƒvƒVƒ‡ƒ“‚ª‚ ‚é‚È‚çAã‚ÌƒR[ƒh‚Ì‚¤‚¿A$BSD_STYLE
+    ‚ª^‚Ìê‡‚ÌƒR[ƒh‚ğg‚¤‚Æ—Ç‚¢‚Å‚µ‚å‚¤B‚»‚¤‚Å‚È‚¯‚ê‚ÎA$BSD_STYLE ‚ª‹U‚Ìê‡‚Ì
+    ƒR[ƒh‚ğg‚¦‚Î‚æ‚¢‚Å‚µ‚å‚¤B
+
+    "use Sjis qw(getc);" ‚É‚æ‚Á‚ÄƒXƒNƒŠƒvƒg’†‚É‹Lq‚µ‚½ getc ‚Í Sjis::getc ‚É‘‚«
+    Š·‚í‚é‚æ‚¤‚É‚È‚è‚Ü‚·Bgetc ‚ª Sjis::getc ‚Ì“®ì‚ğ‚·‚é‚Ì‚Í JPerl ‚Æ”ñŒİŠ·‚È‚Ì
+    ‚Å–¾¦“I‚ÉƒCƒ“ƒ|[ƒg‚µ‚½ê‡‚Ì‚İ‘‚«Š·‚í‚è‚Ü‚·B
+
+    ‚à‚µ‚±‚ÌŠÖ”‚ğ’m‚ç‚È‚­‚Æ‚à–â‘è‚Í‚ ‚è‚Ü‚¹‚ñB‚±‚ê‚Ü‚Å’Ê‚èA‚±‚ÌŠÖ”‚Í
+    CORE::getc ‚ğg‚Á‚ÄÀŒ»‚Å‚«‚Ü‚·B
 
 =item * Sjis::length
 
@@ -1055,6 +1107,46 @@ perl5.00503 ‚ğg—p‚µ‚Ä‚¢‚éê‡‚Å‚àƒtƒ@ƒCƒ‹ƒeƒXƒg‰‰Zq‚ÍuÏ‚İd‚Ë‚év‚±‚Æ‚ª
 
     ƒXƒJƒ‰[ƒRƒ“ƒeƒLƒXƒg‚Å‚Í "use Sjis qw(ord);" ‚Ì‹Lq‚Ì—L–³‚ÉŠÖ‚í‚ç‚¸A @list
     ‚Ì‚·‚×‚Ä‚Ì—v‘f‚ğ˜AŒ‹‚µ‚½ã‚ÅAƒoƒCƒg’PˆÊ‚Å‹t‡‚É‚µ‚½‚à‚Ì‚ğ•Ô‚µ‚Ü‚·B
+
+=item * CORE::getc
+
+    $getc = CORE::getc(FILEHANDLE);
+    $getc = CORE::getc($filehandle);
+    $getc = CORE::getc;
+
+    FILEHANDLE ‚ÉŒ‹‚Ñ‚Â‚¯‚ç‚ê‚½“ü—Íƒtƒ@ƒCƒ‹‚©‚çAŸ‚Ì1ƒoƒCƒg‚ğ“Ç‚ñ‚Å•Ô‚µ‚Ü‚·B
+    end-of-file(ƒtƒ@ƒCƒ‹‚ÌI‚í‚è) ‚É‚È‚Á‚½‚©A‚ ‚é‚¢‚Í I/O ƒGƒ‰[‚ª”­¶‚µ‚½ê‡‚É
+    ‚ÍAundef ‚ğ•Ô‚µ‚Ü‚·BFILEHANDLE ‚ğÈ—ª‚·‚é‚ÆASTDIN ‚©‚ç“ü—Í‚µ‚Ü‚·B
+
+    ‚±‚ÌŠÖ”‚Í­‚µ’x‚¢‚à‚Ì‚ÌAƒL[ƒ{[ƒh‚©‚ç1ƒoƒCƒg‚ğ“ü—Í‚·‚éÛ‚É•Ö—˜‚Å‚· -- ƒL[
+    ƒ{[ƒh“ü—Í‚ğƒoƒbƒtƒ@ƒŠƒ“ƒO‚È‚µ‚Éİ’è‚Å‚«‚ê‚Î‚Å‚·‚ªB‚±‚ÌŠÖ”‚ÍA•W€I/Oƒ‰ƒCƒu
+    ƒ‰ƒŠ‚É‘Î‚µ‚ÄAƒoƒbƒtƒ@ƒŠƒ“ƒO‚È‚µ‚Å“ü—Í‚·‚é‚æ‚¤‚É—v‹‚µ‚Ü‚·Bc”O‚È‚±‚Æ‚ÉA•W€
+    I/Oƒ‰ƒCƒuƒ‰ƒŠ‚ÍAƒIƒyƒŒ[ƒeƒBƒ“ƒOƒVƒXƒeƒ€‚É‘Î‚µ‚Äƒoƒbƒtƒ@ƒŠƒ“ƒO‚È‚µ‚ÅƒL[ƒ{[ƒh
+    “ü—Í‚ğs‚¤‚æ‚¤‚É—v‹‚·‚é‚½‚ß‚ÌAˆÚA«‚Ì‚ ‚éè’i‚ğ—pˆÓ‚·‚é‚Ü‚Å‚É‚ÍA•W€‰»‚³‚ê
+    ‚Ä‚¢‚Ü‚¹‚ñB‚»‚ê‚É‚ÍA­X’mŒb‚ğ“­‚©‚¹‚ÄAƒIƒyƒŒ[ƒeƒBƒ“ƒOƒVƒXƒeƒ€‚ÉŒÅ—L‚Ì‚â‚è
+    •û‚ğ‚·‚é•K—v‚ª‚ ‚è‚Ü‚·BUnix ‚Å‚ÍAŸ‚Ì‚æ‚¤‚É‚·‚ê‚Î‚¤‚Ü‚­‚¢‚­‚Å‚µ‚å‚¤B
+
+    if ($BSD_STYLE) {
+        system "stty cbreak </dev/tty >/dev/tty 2>&1";
+    }
+    else {
+        system "stty", "-icanon", "eol", "\001";
+    }
+
+    $key = CORE::getc;
+
+    if ($BSD_STYLE) {
+        system "stty -cbreak </dev/tty >/dev/tty 2>&1";
+    }
+    else {
+        system "stty", "icanon", "eol", "^@"; # ASCII NUL
+    }
+    print "\n";
+
+    ‚±‚ÌƒR[ƒh‚ÍA’[––‚©‚çŸ‚Éƒ^ƒCƒv‚³‚ê‚½1ƒoƒCƒg‚ğ•Ï” $key ‚É“ü‚ê‚Ü‚·B‚ ‚È‚½‚Ì
+    ƒVƒXƒeƒ€‚Ì stty ƒvƒƒOƒ‰ƒ€‚É cbreak ƒIƒvƒVƒ‡ƒ“‚ª‚ ‚é‚È‚çAã‚ÌƒR[ƒh‚Ì‚¤‚¿A
+    $BSD_STYLE ‚ª^‚Ìê‡‚ÌƒR[ƒh‚ğg‚¤‚Æ—Ç‚¢‚Å‚µ‚å‚¤B‚»‚¤‚Å‚È‚¯‚ê‚ÎA$BSD_STYLE
+    ‚ª‹U‚Ìê‡‚ÌƒR[ƒh‚ğg‚¦‚Î‚æ‚¢‚Å‚µ‚å‚¤B
 
 =item * CORE::index
 
@@ -1957,7 +2049,7 @@ Unicode ƒTƒ|[ƒg‚ª perl ‚É“±“ü‚³‚ê‚éˆÈ‘O‚ÍAeq ‰‰Zq‚ÍA2‚Â‚ÌƒXƒJƒ‰[•Ï”‚É‚æ‚Á
 ‚Å‚·B©•ª‚Åì‚Á‚½ƒXƒNƒŠƒvƒg‚Í‚»‚ÌƒfƒoƒbƒO‚Ì‘O‚É UTF8 ƒtƒ‰ƒO‚É‚Â‚¢‚ÄƒfƒoƒbƒO‚µ‚È‚¯
 ‚ê‚Î‚È‚è‚Ü‚¹‚ñB
 
-  ‚±‚Ìƒ\ƒtƒgƒEƒFƒA‚É‚æ‚éî•ñˆ—ƒ‚ƒfƒ‹
+  perl3 ˆÈ~A‚ ‚é‚¢‚Í‚±‚Ìƒ\ƒtƒgƒEƒFƒA‚É‚æ‚éî•ñˆ—ƒ‚ƒfƒ‹
  
     +--------------------------------------------+
     |       Text strings as Binary strings       |
@@ -2134,7 +2226,7 @@ Programming Perl, 3rd ed. ‚ª‘‚©‚ê‚½ ‚É‚ÍAUTF8 ƒtƒ‰ƒO‚Í¶‚Ü‚ê‚Ä‚¨‚ç‚¸APerl ‚Í
  by Larry Wall and others
  Paperback (6"x9"), 724 pages
  Retail Price: $39.95 (pound 29.95 in UK)
- ISBN-13: 978-1-906966-02-7
+ ISBN 13: 978-1-906966-02-7
  http://www.network-theory.co.uk/perl/language/
 
  Perl Pocket Reference, 5th Edition
@@ -2186,32 +2278,53 @@ Programming Perl, 3rd ed. ‚ª‘‚©‚ê‚½ ‚É‚ÍAUTF8 ƒtƒ‰ƒO‚Í¶‚Ü‚ê‚Ä‚¨‚ç‚¸APerl ‚Í
  Randal L. Schwartz, Tom Phoenix, brian d foy ’˜
  2009”N10Œ24“ú ”­”„
  424ƒy[ƒW
- ISBN978-4-87311-427-9
+ ISBN 978-4-87311-427-9
  http://www.oreilly.co.jp/books/9784873114279/
 
  ‰‚ß‚Ä‚ÌPerl ‘æ6”Å
  Randal L. Schwartz, brian d foy, Tom Phoenix ’˜, ‹ß“¡ ‰Ãá –ó
  2012”N07Œ ”­s
  488ƒy[ƒW
- ISBN978-4-87311-567-2
+ ISBN 978-4-87311-567-2
  http://www.oreilly.co.jp/books/9784873115672/
 
  PerlƒŠƒ\[ƒXƒLƒbƒg - UNIX”Å
  Futato, Irving, Jepson, Patwardhan, Siever ‹¤’˜, ƒCƒGƒ[ƒŒ[ƒxƒ‹ R–{ _ –ó
- ISBN4-900900-65-6
+ ISBN 4-900900-65-6
  http://www.oreilly.co.jp/out/presuni/
 
+ Perl‚Ì‘‚Ö‚æ‚¤‚±‚»
+ ‘O“cŒO, ¬R—Ti, Ä“¡–õ, •z{—Ll ‹¤’˜
+ 1993”N4Œ1“ú ”­s
+ 280ƒy[ƒW
+ ISBN 4-7819-0697-4
+ http://www.saiensu.co.jp/?page=book_details&ISBN=ISBN4-7819-0697-4
+ 
+ VPerl‚Ì‘‚Ö‚æ‚¤‚±‚» Perl5‘Î‰”Å
+ Ä“¡–õ, ¬R—Ti, ‘O“cŒO, •z{—Ll ‹¤’˜
+ 1996”N4Œ1“ú ”­s
+ 368ƒy[ƒW
+ ISBN 4-7819-0795-4
+ http://www.saiensu.co.jp/?page=book_details&ISBN=ISBN4-7819-0795-4
+ 
  ‚Ü‚é‚²‚ÆPerl! Vol.1
- ¬” ’e, ‹{ì’B•F, ˆÉ“¡’¼–ç, ì‡F“T, …–ì‹M–¾, ‰Á“¡ “Ö, ÎŠ_Œ›ˆê, ŒIŒ´—R÷, ‚Ü‚©‚Ü‚©, ’rç³’q—m, ma.la, ’|”——Ç”Í, ‚³‚³‚¾‚±‚¤‚¢‚¿, ‰Â’m–L, HR—²“¹, ‹v•ÛŒ³¡, ‘êàV—²j, ‰Ì‘ã˜a³ ’˜
+ ¬”’e, ‹{ì’B•F, ˆÉ“¡’¼–ç, ì‡F“T, …–ì‹M–¾, ‰Á“¡ “Ö, ÎŠ_Œ›ˆê, ŒIŒ´—R÷, ‚Ü‚©‚Ü‚©, ’rç³’q—m, ma.la, ’|”——Ç”Í, ‚³‚³‚¾‚±‚¤‚¢‚¿, ‰Â’m–L, HR—²“¹, ‹v•ÛŒ³¡, ‘êàV—²j, ‰Ì‘ã˜a³ ’˜
  2006”N08Œ25“ú ”­”„
  232ƒy[ƒW
- ISBN978-4-8443-2289-4
+ ISBN 978-4-8443-2289-4
  http://www.impressjapan.jp/books/2289
+
+ ƒ‚ƒ_ƒ“Perl“ü–å
+ –q‘å•ã’˜
+ 2009”N02Œ09“ú
+ 344ƒy[ƒW
+ ISBN 10: 4798119172 | ISBN 13: 978-4798119175
+ http://www.seshop.com/product/detail/10250/
 
  WEB+DB PRESS Vol.70
  2012”N08Œ24“ú ”­”„
  200ƒy[ƒW
- ISBN978-4-7741-5190-8
+ ISBN 978-4-7741-5190-8
  http://gihyo.jp/magazine/wdpress
 
  “ú–{Œêî•ñˆ—
@@ -2248,7 +2361,7 @@ Programming Perl, 3rd ed. ‚ª‘‚©‚ê‚½ ‚É‚ÍAUTF8 ƒtƒ‰ƒO‚Í¶‚Ü‚ê‚Ä‚¨‚ç‚¸APerl ‚Í
  Jan Goyvaerts, Steven Levithan ’˜, ’·”ö ‚O –ó
  2010”N04Œ ”­s
  552ƒy[ƒW
- ISBN978-4-87311-450-7
+ ISBN 978-4-87311-450-7
  http://www.oreilly.co.jp/books/9784873114507/
 
  JISŠ¿šš“T
@@ -2319,8 +2432,8 @@ Programming Perl, 3rd ed. ‚ª‘‚©‚ê‚½ ‚É‚ÍAUTF8 ƒtƒ‰ƒO‚Í¶‚Ü‚ê‚Ä‚¨‚ç‚¸APerl ‚Í
  ²–¼–Ø ’q‹M ’˜
  2008”N3Œ ”­s
  421ƒy[ƒW
- ISBN-10: 4883732568
- ISBN-13: 978-4883732562
+ ISBN 10: 4883732568
+ ISBN 13: 978-4883732562
 
  ’·’Jì —E‚³‚ñ, ‘Û‰»³‹K•\Œ»ƒ‰ƒCƒuƒ‰ƒŠ‚È‚Ç
  http://lc.linux.or.jp/lc2001/papers/dfa-i18n-paper.pdf
