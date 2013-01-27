@@ -199,7 +199,7 @@ DOS•—ƒVƒXƒeƒ€‚Ì•W€ƒVƒFƒ‹(COMMAND.COM ‚¨‚æ‚Ñ cmd.exe)‚ÍA‹N“®‚·‚éƒvƒƒOƒ‰ƒ€‚Ö“n‚
    #
    # @ARGV wildcard globbing
    #
-   sub import() {
+   sub import {
 
        if ($^O =~ /\A (?: MSWin32 | NetWare | symbian | dos ) \z/oxms) {
            my @argv = ();
@@ -1435,6 +1435,8 @@ Esjis.pm ‚Ìæ“ª‚Å "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" ‚ªs‚í‚êA
     Bug #89792
     \G can't treat over 32,767 octets
     http://bugs.activestate.com/show_bug.cgi?id=89792
+    [perl #116379] \G can't treat over 32767 octet
+    http://www.nntp.perl.org/group/perl.perl5.porters/2013/01/msg197320.html
 
 =item * “WŠJ‚·‚é‚Æ‹ó‚É‚È‚é³‹K•\Œ»’†‚Ì•Ï”
 
@@ -2611,6 +2613,9 @@ Programming Perl, 3rd ed. ‚ª‘‚©‚ê‚½ ‚É‚ÍAUTF8 ƒtƒ‰ƒO‚Í¶‚Ü‚ê‚Ä‚¨‚ç‚¸APerl ‚Í
  JPerl ‚ÉŠÖ˜A‚µ‚½“à—e‚ÅA‹Zp“I‚É‚à—ğj“I‚É‚à‚Æ‚Ä‚àãk–§‚È‹L–‚Å‚·B
  
  ‚±‚Ìƒ\ƒtƒgƒEƒFƒA‚ªƒ‚ƒ_ƒ“Perl‚Ö‚Ì‰Ë‚¯‹´‚Æ‚µ‚Ä–ğ—§‚Ä‚ÎK‚¢‚Å‚·B
+
+ “¡ Œá˜Y‚³‚ñ, Perl Hackers Hub ‘æ16‰ñ Perl“à•”\‘¢‚Ì[‰“‚É”—‚é(2)
+ http://gihyo.jp/dev/serial/01/perl-hackers-hub/001602
 
  ¬” ’e‚³‚ñ, Encode ƒ‚ƒWƒ…[ƒ‹
  http://search.cpan.org/dist/Encode/
