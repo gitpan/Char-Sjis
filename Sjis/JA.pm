@@ -192,7 +192,7 @@ http://mail.pm.org/pipermail/tokyo-pm/1999-September/001854.html
 =head1 DOS風システムにおけるコマンドラインのワイルドカード展開
 
 DOS風システムの標準シェル(COMMAND.COM および cmd.exe)は、起動するプログラムへ渡す
-パラメータのワイルドカード展開を行いません。その代わりとして Esjis.pm 内の import()
+パラメータのワイルドカード展開を行いません。その代わりとして Esjis.pm 内の import
 関数がワイルドカード展開を行うようになっています。
 
    参考 Esjis.pm から抜粋
@@ -1387,10 +1387,10 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
     を指定して実行するには jacode.pl ライブラリが必要です。
 
     perl5.008001以降, perl5.010, perl5.012, perl5.014, perl5.016 にて文字コード
-    (0x5C)で終わるディレクトリを指定して実行するとき、Win32 モジュールの
-    Win32::GetShortPathName() によって短い名前を取得できた場合は chdir() が
-    成功します。ただし、chdir() 後のカレントディレクトリは
-    Win32::GetShortPathName() によって取得した短い名前になります。
+    (0x5C)で終わるディレクトリを指定して実行するとき、COMMAND.COM あるいは
+    cmd.exe によって 8dot3name 形式の短い名前を取得できた場合は chdir() が成功
+    します。ただし、chdir() 後のカレントディレクトリの最終のサブディレクトリは
+    8dot3name 形式の短い名前になります。
 
     参考リンク
     Bug #81839
@@ -1432,11 +1432,24 @@ Esjis.pm の先頭で "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" が行われ、
     マッチしません。なおかつ、その際にエラーも警告も出力されません。
 
     参考リンク
-    Bug #89792
-    \G can't treat over 32,767 octets
+    
+    Bug #89792 \G can't treat over 32,767 octets
     http://bugs.activestate.com/show_bug.cgi?id=89792
+    
     [perl #116379] \G can't treat over 32767 octet
     http://www.nntp.perl.org/group/perl.perl5.porters/2013/01/msg197320.html
+    
+    perlre - Perl regular expressions
+    http://perldoc.perl.org/perlre.html
+    
+    regexp limit to 32767 is too small
+    http://markmail.org/message/vtdmaxsa6xqb7fcz
+    
+    regexp limit to 32767 is too small?
+    http://markmail.org/thread/bmmcshbtndbwr3j3
+    
+    perlre length limit
+    http://stackoverflow.com/questions/4592467/perlre-length-limit
 
 =item * 展開すると空になる正規表現中の変数
 
@@ -2437,6 +2450,19 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
  ISBN 10: 4883732568
  ISBN 13: 978-4883732562
 
+ Windows NTシェルスクリプト
+ Tim Hill 著, 光田秀 訳
+ 1998年10月6日 発行
+ 448ページ
+ ISBN 4-7973-0658-0
+ http://books-support.sbcr.jp/isbn/macmillan/ntwrkshp/index.htm
+
+ マイクロソフト公式解説書 Microsoft Windows コマンドライン活用ガイド
+ 2004年12月27日 発行
+ 500ページ
+ ISBN 4-89100-438-X
+ http://ec.nikkeibp.co.jp/item/books/587500.html
+
  長谷川 勇さん, 国際化正規表現ライブラリなど
  http://lc.linux.or.jp/lc2001/papers/dfa-i18n-paper.pdf
  http://lc.linux.or.jp/lc2002/papers/hasegawa0918h.pdf
@@ -2576,7 +2602,8 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
  http://www.rakunet.org/tsnet/TSabc/18/546.html
 
  和泉 宏明さん, WindowsでPerl 5.8/5.10を使うモンじゃない
- http://www.aritia.jp/hizumi/perl/perlwin.html
+ http://dl.dropbox.com/u/23756062/perlwin.html
+ https://sites.google.com/site/hiroa63iz/perlwin
 
  塚本 牧生さん, Perlメモ/Windowsでのファイルパス
  http://digit.que.ne.jp/work/wiki.cgi?Perl%E3%83%A1%E3%83%A2%2FWindows%E3%81%A7%E3%81%AE%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%83%91%E3%82%B9
