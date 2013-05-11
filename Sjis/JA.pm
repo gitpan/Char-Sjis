@@ -157,26 +157,33 @@ http://mail.pm.org/pipermail/tokyo-pm/1999-September/001854.html
    perl512.bat           --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É perl5.12 ‚ğ’T‚µ‚ÄÀs‚·‚é
    perl514.bat           --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É perl5.14 ‚ğ’T‚µ‚ÄÀs‚·‚é
    perl516.bat           --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É perl5.16 ‚ğ’T‚µ‚ÄÀs‚·‚é
+   perl518.bat           --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É perl5.18 ‚ğ’T‚µ‚ÄÀs‚·‚é
    perl64.bat            --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É perl64   ‚ğ’T‚µ‚ÄÀs‚·‚é
    perl64512.bat         --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É perl5.12 (64ƒrƒbƒg”Å) ‚ğ’T‚µ‚ÄÀs‚·‚é
    perl64514.bat         --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É perl5.14 (64ƒrƒbƒg”Å) ‚ğ’T‚µ‚ÄÀs‚·‚é
    perl64516.bat         --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É perl5.16 (64ƒrƒbƒg”Å) ‚ğ’T‚µ‚ÄÀs‚·‚é
+   perl64518.bat         --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É perl5.18 (64ƒrƒbƒg”Å) ‚ğ’T‚µ‚ÄÀs‚·‚é
    aperl58.bat           --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É ActivePerl 5.8  ‚ğ’T‚µ‚ÄÀs‚·‚é
    aperl510.bat          --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É ActivePerl 5.10 ‚ğ’T‚µ‚ÄÀs‚·‚é
    aperl512.bat          --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É ActivePerl 5.12 ‚ğ’T‚µ‚ÄÀs‚·‚é
    aperl514.bat          --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É ActivePerl 5.14 ‚ğ’T‚µ‚ÄÀs‚·‚é
    aperl516.bat          --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É ActivePerl 5.16 ‚ğ’T‚µ‚ÄÀs‚·‚é
+   aperl518.bat          --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É ActivePerl 5.18 ‚ğ’T‚µ‚ÄÀs‚·‚é
    aperl64512.bat        --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É ActivePerl 5.12 (64ƒrƒbƒg”Å) ‚ğ’T‚µ‚ÄÀs‚·‚é
    aperl64514.bat        --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É ActivePerl 5.14 (64ƒrƒbƒg”Å) ‚ğ’T‚µ‚ÄÀs‚·‚é
    aperl64516.bat        --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É ActivePerl 5.16 (64ƒrƒbƒg”Å) ‚ğ’T‚µ‚ÄÀs‚·‚é
+   aperl64518.bat        --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É ActivePerl 5.18 (64ƒrƒbƒg”Å) ‚ğ’T‚µ‚ÄÀs‚·‚é
    sperl58.bat           --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É Strawberry Perl 5.8  ‚ğ’T‚µ‚ÄÀs‚·‚é
    sperl510.bat          --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É Strawberry Perl 5.10 ‚ğ’T‚µ‚ÄÀs‚·‚é
    sperl512.bat          --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É Strawberry Perl 5.12 ‚ğ’T‚µ‚ÄÀs‚·‚é
    sperl514.bat          --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É Strawberry Perl 5.14 ‚ğ’T‚µ‚ÄÀs‚·‚é
    sperl516.bat          --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É Strawberry Perl 5.16 ‚ğ’T‚µ‚ÄÀs‚·‚é
+   sperl518.bat          --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É Strawberry Perl 5.18 ‚ğ’T‚µ‚ÄÀs‚·‚é
    sperl64512.bat        --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É Strawberry Perl perl5.12 (64ƒrƒbƒg”Å) ‚ğ’T‚µ‚ÄÀs‚·‚é
    sperl64514.bat        --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É Strawberry Perl perl5.14 (64ƒrƒbƒg”Å) ‚ğ’T‚µ‚ÄÀs‚·‚é
    sperl64516.bat        --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É Strawberry Perl perl5.16 (64ƒrƒbƒg”Å) ‚ğ’T‚µ‚ÄÀs‚·‚é
+   sperl64518.bat        --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É Strawberry Perl perl5.18 (64ƒrƒbƒg”Å) ‚ğ’T‚µ‚ÄÀs‚·‚é
+   cperl.bat             --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É Cygwin ‚Ì Perl ‚ğ’T‚µ‚ÄÀs‚·‚é
    strict.pm_            --- ƒ_ƒ~[‚Ì strict.pm
    warnings.pm_          --- warnings.pm ‚ÌŠÈˆÕ”Å
    warnings/register.pm_ --- warnings/register.pm ‚ÌŠÈˆÕ”Å
@@ -580,7 +587,7 @@ Sjis.pm ‚Í /i Cüq‚Ì‘ã‚í‚è‚É Esjis::ignorecase() ‚ÌŒÄo‚µ‚ğ‘‚«‰Á‚¦‚Ü‚·B
   class                    Definition
   ---------------------------------------------------------------------------------------------------------------------------------------------------------
   ${Esjis::anchor}         qr{\G(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])*?}
-                           32766ƒIƒNƒeƒbƒg‚ğ’´‚¦‚é•¶š—ñ‚ğˆµ‚¦‚é‚æ‚¤‚É‚·‚é‚½‚ßAActivePerl5.6ˆÈ~A‚Ü‚½‚ÍPerl5.10ˆÈ~‚Ìê‡‚ÍˆÈ‰º‚Ì‚æ‚¤‚É‚È‚è‚Ü‚·
+                           32766ƒIƒNƒeƒbƒg‚ğ’´‚¦‚é•¶š—ñ‚ğˆµ‚¦‚é‚æ‚¤‚É‚·‚é‚½‚ßAActivePerl5.6ˆÈ~(5.10.0ŠÜ‚Ş)A‚Ü‚½‚Í‚»‚Ì‘¼‚ÌPerl5.10.1ˆÈ~‚Ìê‡‚ÍˆÈ‰º‚Ì‚æ‚¤‚É‚È‚è‚Ü‚·
                            qr{\G(?(?=.{0,32766}\z)(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])*?|(?(?=[\x00-\x80\xA0-\xDF\xFD-\xFF]+\z).*?|(?:.*?[\x00-\x80\xA0-\xDF\xFD-\xFF](?:[^\x00-\x80\xA0-\xDF\xFD-\xFF]{2})*?)))}oxms;
   ${Esjis::dot}            qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x0A])}
   ${Esjis::dot_s}          qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])}
@@ -1522,9 +1529,9 @@ Esjis.pm ‚Ìæ“ª‚Å "BEGIN { unshift @INC, '/Perl/site/lib/Sjis' }" ‚ªs‚í‚êA
                                                                                                                                (?:.*?[\x00-\x80\xA0-\xDF\xFD-\xFF](?:[^\x00-\x80\xA0-\xDF\xFD-\xFF]{2})*?)  # ‚±‚ê‚ªƒ}ƒ‹ƒ`ƒoƒCƒgƒAƒ“ƒJ[ƒŠƒ“ƒO‚Ég‚í‚ê‚é
                                                                                                                                                                                                           ))}oxms
 
-MSWin32 ŠÂ‹«‚Ì ActivePerl ‚Ìƒo[ƒWƒ‡ƒ“ 5.6 ˆÈ~A‚ ‚é‚¢‚Í‚»‚Ì‘¼‚Ì Perl ‚Ìƒo[ƒWƒ‡ƒ“
-5.10 ˆÈ~‚Ìê‡‚É‚±‚Ìƒ}ƒ‹ƒ`ƒoƒCƒgƒAƒ“ƒJ[ƒŠƒ“ƒO‚ªg‚í‚ê‚Ü‚·B‚»‚êˆÈŠO‚Ìê‡‚ÍA‚±‚ê
-‚Ü‚Å‚Ç‚¨‚è
+MSWin32 ŠÂ‹«‚Ì ActivePerl ‚Ìƒo[ƒWƒ‡ƒ“ 5.6 ˆÈ~(Perl5.10.0‚àŠÜ‚İ‚Ü‚·)A‚ ‚é‚¢‚Í‚»‚Ì‘¼
+‚Ì Perl ‚Ìƒo[ƒWƒ‡ƒ“ 5.10.1 ˆÈ~‚Ìê‡‚É‚±‚Ìƒ}ƒ‹ƒ`ƒoƒCƒgƒAƒ“ƒJ[ƒŠƒ“ƒO‚ªg‚í‚ê‚Ü‚·B
+‚»‚êˆÈŠO‚Ìê‡‚ÍA‚±‚ê‚Ü‚Å‚Ç‚¨‚è
 
   qr{\G(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])*?}oxms
 
@@ -1629,10 +1636,14 @@ MSWin32 ŠÂ‹«‚Ì ActivePerl ‚Ìƒo[ƒWƒ‡ƒ“ 5.6 ˆÈ~A‚ ‚é‚¢‚Í‚»‚Ì‘¼‚Ì Perl ‚Ìƒo[ƒWƒ
 
     ‘Oq‚Ì‚Æ‚¨‚èAƒGƒXƒP[ƒvŒã‚Ì³‹K•\Œ»‚É‚Íƒ}ƒ‹ƒ`ƒoƒCƒgƒAƒ“ƒJ[ƒŠƒ“ƒOˆ—‚Ì‚½
     ‚ß‚Ì‹Lq ${Esjis::anchor} ‚ª’Ç‰Á‚³‚ê‚Ü‚·‚ªA‚»‚Ì’†‚ÉŠÜ‚Ü‚ê‚é \G ‚Ì§–ñ‚ğó
-    ‚¯‚Ü‚·BMSWin32”Å‚ÌActivePerl5.6ˆÈ~A‚ ‚é‚¢‚Í‘¼‚ÌPerl‚Ìê‡‚Í5.10ˆÈ~‚Å‚È
-    ‚¯‚ê‚ÎA•¶š—ñ‚Ì32,767ƒoƒCƒg‚ğ’´‚¦‚éˆÊ’u‚Åƒ}ƒbƒ`‚³‚¹‚é‚±‚Æ‚ª‚Å‚«‚Ü‚¹‚ñB
+    ‚¯‚Ü‚·BMSWin32”Å‚ÌActivePerl5.6ˆÈ~(5.10.0‚àŠÜ‚İ‚Ü‚·)A‚ ‚é‚¢‚Í‘¼‚ÌPerl‚Ì
+    ê‡‚Í5.10.1ˆÈ~‚Å‚È‚¯‚ê‚ÎA•¶š—ñ‚Ì32,767ƒoƒCƒg‚ğ’´‚¦‚éˆÊ’u‚Åƒ}ƒbƒ`‚³‚¹‚é
+    ‚±‚Æ‚ª‚Å‚«‚Ü‚¹‚ñB
  
     QlƒŠƒ“ƒN
+    
+    In 5.10.0, the * quantifier in patterns was sometimes treated as {0,32767}
+    http://perldoc.perl.org/perl5101delta.html
     
     [perl #116379] \G can't treat over 32767 octet
     http://www.nntp.perl.org/group/perl.perl5.porters/2013/01/msg197320.html
