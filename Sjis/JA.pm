@@ -267,9 +267,11 @@ DOS•—ƒVƒXƒeƒ€‚Ì•W€ƒVƒFƒ‹(COMMAND.COM ‚¨‚æ‚Ñ cmd.exe)‚ÍA‹N“®‚·‚éƒvƒƒOƒ‰ƒ€‚Ö“n‚
       perl512     ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
       perl514     ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
       perl516     ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      perl518     ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
       perl64512   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
       perl64514   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
       perl64516   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      perl64518   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
 
       ActivePerl ‚ğg—p‚·‚éê‡
       aperl58     ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
@@ -277,9 +279,11 @@ DOS•—ƒVƒXƒeƒ€‚Ì•W€ƒVƒFƒ‹(COMMAND.COM ‚¨‚æ‚Ñ cmd.exe)‚ÍA‹N“®‚·‚éƒvƒƒOƒ‰ƒ€‚Ö“n‚
       aperl512    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
       aperl514    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
       aperl516    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      aperl518    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
       aperl64512  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
       aperl64514  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
       aperl64516  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      aperl64518  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
 
       Strawberry Perl ‚ğg—p‚·‚éê‡
       sperl58     ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
@@ -287,9 +291,11 @@ DOS•—ƒVƒXƒeƒ€‚Ì•W€ƒVƒFƒ‹(COMMAND.COM ‚¨‚æ‚Ñ cmd.exe)‚ÍA‹N“®‚·‚éƒvƒƒOƒ‰ƒ€‚Ö“n‚
       sperl512    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
       sperl514    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
       sperl516    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      sperl518    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
       sperl64512  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
       sperl64514  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
       sperl64516  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      sperl64518  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
 
       ‚æ‚­g‚¤ perl ‚ğ perl5.bat ‚Éİ’è‚µ‚Äg‚¤ê‡
       perl5       ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
@@ -518,7 +524,7 @@ Sjis.pm ‚Í /i Cüq‚Ì‘ã‚í‚è‚É Esjis::ignorecase() ‚ÌŒÄo‚µ‚ğ‘‚«‰Á‚¦‚Ü‚·B
    .            ${Esjis::dot}
                 ${Esjis::dot_s}    (/s Cüq‚ ‚è)
   \d            [0-9]
-  \s            [\x09\x0A\x0C\x0D\x20]
+  \s            [\x09\x0A\x0B\x0C\x0D\x20]
   \w            [0-9A-Z_a-z]
   \D            ${Esjis::eD}
   \S            ${Esjis::eS}
@@ -549,7 +555,7 @@ Sjis.pm ‚Í /i Cüq‚Ì‘ã‚í‚è‚É Esjis::ignorecase() ‚ÌŒÄo‚µ‚ğ‘‚«‰Á‚¦‚Ü‚·B
                 [\x41-\x5A\x61-\x7A]     (/i Cüq‚ ‚è)
   [:print:]     [\x20-\x7F]
   [:punct:]     [\x21-\x2F\x3A-\x3F\x40\x5B-\x5F\x60\x7B-\x7E]
-  [:space:]     [\x09\x0A\x0B\x0C\x0D\x20]
+  [:space:]     [\s\x0B]
   [:upper:]     [\x41-\x5A]
                 [\x41-\x5A\x61-\x7A]     (/i Cüq‚ ‚è)
   [:word:]      [\x30-\x39\x41-\x5A\x5F\x61-\x7A]
@@ -592,7 +598,7 @@ Sjis.pm ‚Í /i Cüq‚Ì‘ã‚í‚è‚É Esjis::ignorecase() ‚ÌŒÄo‚µ‚ğ‘‚«‰Á‚¦‚Ü‚·B
   ${Esjis::dot}            qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x0A])}
   ${Esjis::dot_s}          qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])}
   ${Esjis::eD}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC0-9])}
-  ${Esjis::eS}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x0A\x0C\x0D\x20])}
+  ${Esjis::eS}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x0A\x0B\x0C\x0D\x20])}
   ${Esjis::eW}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC0-9A-Z_a-z])}
   ${Esjis::eH}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x20])}
   ${Esjis::eV}             qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x0A\x0B\x0C\x0D])}
@@ -609,7 +615,7 @@ Sjis.pm ‚Í /i Cüq‚Ì‘ã‚í‚è‚É Esjis::ignorecase() ‚ÌŒÄo‚µ‚ğ‘‚«‰Á‚¦‚Ü‚·B
   ${Esjis::not_lower_i}    qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])}
   ${Esjis::not_print}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x20-\x7F])}
   ${Esjis::not_punct}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x21-\x2F\x3A-\x3F\x40\x5B-\x5F\x60\x7B-\x7E])}
-  ${Esjis::not_space}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x09\x0A\x0B\x0C\x0D\x20])}
+  ${Esjis::not_space}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\s\x0B])}
   ${Esjis::not_upper}      qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x41-\x5A])}
   ${Esjis::not_upper_i}    qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC])}
   ${Esjis::not_word}       qr{(?:[\x81-\x9F\xE0-\xFC][\x00-\xFF]|[^\x81-\x9F\xE0-\xFC\x30-\x39\x41-\x5A\x5F\x61-\x7A])}
@@ -908,32 +914,68 @@ perl5.00503 ‚ğg—p‚µ‚Ä‚¢‚éê‡‚Å‚àƒtƒ@ƒCƒ‹ƒeƒXƒg‰‰Zq‚ÍuÏ‚İd‚Ë‚év‚±‚Æ‚ª
 
     Sjis::substr ‚ÍAShiftJIS •¶š—ñ $string ‚Åw’è‚³‚ê‚½•¶š—ñ‚©‚ç•”•ª•¶š—ñ‚ğæ‚è
     o‚µ‚Ä•Ô‚µ‚Ü‚·B•”•ª•¶š—ñ‚ÍA•¶š—ñ‚Ìæ“ª‚©‚ç”‚¦‚Ä $offset •¶š–Ú‚©‚çn‚Ü‚éA
-    $length •¶š•ª‚Å‚·B$offset ‚ª•‰‚È‚ç‚ÎA•¶š—ñ‚Ì––”ö‚©‚ç -$offset •¶š•ª–ß‚Á‚½
-    ‚Æ‚±‚ë‚©‚ç•”•ª•¶š—ñ‚ªŠJn‚µ‚Ü‚·B$length ‚ğÈ—ª‚·‚é‚ÆA•¶š—ñ‚Ì––”ö‚Ü‚Å‚·‚×‚Ä‚ª
-    •Ô‚³‚ê‚Ü‚·B$length ‚ª•‰‚È‚ç‚ÎA•¶š—ñ‚Ì––”ö‚©‚ç -$length •¶š‚ªc‚é‚æ‚¤‚ÉA’·‚³
-    ‚ªŒˆ‚ß‚ç‚ê‚Ü‚·B‚»‚¤‚Å‚È‚¯‚ê‚ÎA$length ‚ÍA‚ ‚È‚½‚ªŠú‘Ò‚·‚é‚æ‚¤‚ÉAæ‚èo‚·•”•ª
-    •¶š—ñ‚Ì’·‚³‚ğ•\‚µ‚Ä‚¢‚Ü‚·B
+    $length •¶š•ª‚Å‚·BÅ‰‚Ì•¶š‚ªƒIƒtƒZƒbƒg 0 ‚Æ‚È‚è‚Ü‚·B$offset ‚É•‰‚Ì’l‚ğİ’è
+    ‚·‚é‚ÆA$string ‚ÌI‚í‚è‚©‚ç‚ÌƒIƒtƒZƒbƒg‚Æ‚È‚è‚Ü‚·B
+    $length ‚ğÈ—ª‚·‚é‚ÆA$string ‚ÌÅŒã‚Ü‚Å‚·‚×‚Ä‚ª•Ô‚³‚ê‚Ü‚·B$length ‚ª•‰‚Ì’l‚¾
+    ‚ÆA•¶š—ñ‚ÌÅŒã‚©‚çw’è‚³‚ê‚½”‚¾‚¯•¶š‚ğæ‚èœ‚«‚Ü‚·B‚»‚¤‚Å‚È‚¯‚ê‚ÎA$length
+    ‚ÍA‚ ‚È‚½‚ªŠú‘Ò‚·‚é‚æ‚¤‚ÉAæ‚èo‚·•”•ª•¶š—ñ‚Ì’·‚³‚ğ•\‚µ‚Ä‚¢‚Ü‚·B
 
-    Sjis::substr ‚ğ¶•Ó’l(‘ã“ü‚Ì‘ÎÛ‚Æ‚È‚é‚à‚Ì)‚Æ‚µ‚Äg‚¤‚±‚Æ‚Í‚Å‚«‚Ü‚¹‚ñB‚»‚Ì‘ã‚í
-    ‚è‚ÉA‘æ4ˆø” $replacement ‚É’u‚«Š·‚¦—p‚Ì•¶š—ñ‚ğw’è‚µ‚Ü‚·B‚±‚Ìê‡A
-    Sjis::substr ‚Í $string ‚Ìˆê•”‚ğ•¶š—ñ $replacement ‚Å’u‚«Š·‚¦‚é‚Æ‚Æ‚à‚ÉA
-    (splice ‚Ì‚æ‚¤‚É)’u‚«Š·‚¦‚ç‚ê‚½•”•ª‚ğ’l‚Æ‚µ‚Ä•Ô‚µ‚Ü‚·BŸ‚Ì—á‚ÍA$var ‚ÌÅŒã‚Ì
-    •¶š‚ğ "Curly" ‚Å’u‚«Š·‚¦‚é‚Æ‚Æ‚à‚ÉA’u‚«Š·‚¦‚ç‚ê‚½•¶š‚ğ $oldstr ‚ÉƒZƒbƒg‚µ‚Ü
-    ‚·:
+    my $s = "The black cat climbed the green tree";
+    my $color  = Sjis::substr $s, 4, 5;      # black
+    my $middle = Sjis::substr $s, 4, -11;    # black cat climbed the
+    my $end    = Sjis::substr $s, 14;        # climbed the green tree
+    my $tail   = Sjis::substr $s, -4;        # tree
+    my $z      = Sjis::substr $s, -4, 2;     # tr
 
-    $oldstr = Sjis::substr($var, -1, 1, "Curly");
+    ƒo[ƒWƒ‡ƒ“ 5.14 ˆÈ~‚Ì Perl ‚Å‚ ‚ê‚ÎASjis::substr() ‚ğ¶•Ó’l‚Æ‚µ‚Äg—p‚·‚é‚±‚Æ‚à
+    ‰Â”\‚Å‚·B‚»‚Ìê‡‚É‚ÍA$string ‚ª©g¶•Ó’l‚Å‚È‚¯‚ê‚Î‚È‚è‚Ü‚¹‚ñB$length ‚æ‚è’Z‚¢
+    ‚à‚Ì‚ğ‘ã“ü‚µ‚½‚Æ‚«‚É‚ÍA$string ‚Í’Z‚­‚È‚èA$length ‚æ‚è’·‚¢‚à‚Ì‚ğ‘ã“ü‚µ‚½‚Æ‚«‚É‚ÍA
+    $string ‚Í‚»‚ê‚É‡‚í‚¹‚ÄL‚Ñ‚é‚±‚Æ‚É‚È‚è‚Ü‚·B$string ‚Ì’·‚³‚ğˆê’è‚É•Û‚Â‚½‚ß‚É‚ÍA
+    sprintf ‚ğg‚Á‚ÄA‘ã“ü‚·‚é’l‚Ì’·‚³‚ğ’²®‚·‚é‚±‚Æ‚ªA•K—v‚É‚È‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñB
 
-    $var ‚Ìæ“ª‚É•¶š—ñ "Larry" ‚ğ•t‚¯‚é‚É‚ÍAŸ‚Ì‚æ‚¤‚É‚µ‚Ü‚·:
+    $offset ‚Æ $length ‚Æ‚µ‚Ä•¶š—ñ‚ÌŠO‘¤‚ğŠÜ‚Ş‚æ‚¤‚È•”•ª•¶š—ñ‚ªw’è‚³‚ê‚é‚ÆA•¶š—ñ
+    ‚Ì“à‘¤‚Ì•”•ª‚¾‚¯‚ª•Ô‚³‚ê‚Ü‚·B•”•ª•¶š—ñ‚ª•¶š—ñ‚Ì—¼’[‚ÌŠO‘¤‚Ìê‡ASjis::substr()
+    ‚Í–¢’è‹`’l‚ğ•Ô‚µAŒx‚ªo—Í‚³‚ê‚Ü‚·B¶•Ó’l‚Æ‚µ‚Äg‚Á‚½ê‡A•¶š—ñ‚ÌŠ®‘S‚ÉŠO‘¤‚ğ
+    •”•ª•¶š—ñ‚Æ‚µ‚Äw’è‚·‚é‚Æ—áŠO‚ª”­¶‚µ‚Ü‚·BˆÈ‰º‚Í‹«ŠEğŒ‚ÌU‚é•‘‚¢‚ğ¦‚·—á‚Å‚·:
 
-    Sjis::substr($var, 0, 0, "Larry");
+    my $name = 'fred';
+    Sjis::substr($name, 4) = 'dy';         # $name is now 'freddy'
+    my $null = Sjis::substr $name, 6, 2;   # returns "" (no warning)
+    my $oops = Sjis::substr $name, 7;      # returns undef, with warning
+    Sjis::substr($name, 7) = 'gap';        # raises an exception
 
-    $var ‚ÌÅ‰‚Ì1•¶š‚ğ "Moe" ‚Å’u‚«Š·‚¦‚é‚É‚ÍAŸ‚Ì‚æ‚¤‚É‚µ‚Ü‚·:
+    Sjis::substr() ‚ğ¶•Ó’l‚Æ‚µ‚Äg‚¤‘ã‚í‚è‚Ì•û–@‚ÍA’u‚«Š·‚¦‚é•¶š—ñ‚ğ 4 ”Ô–Ú‚Ìˆø”‚Æ
+    ‚µ‚Äw’è‚·‚é‚±‚Æ‚Å‚·B‚±‚ê‚É‚æ‚èA$string ‚Ìˆê•”‚ğ’u‚«Š·‚¦A’u‚«Š·‚¦‚é‘O‚ª‰½‚Å‚ ‚Á
+    ‚½‚©‚ğ•Ô‚·A‚Æ‚¢‚¤‚±‚Æ‚ğ(splice() ‚Æ“¯—l) 1 “®ì‚Ås‚¦‚Ü‚·B
 
-    Sjis::substr($var, 0, 1, "Moe");
+    my $s = "The black cat climbed the green tree";
+    my $z = Sjis::substr $s, 14, 7, "jumped from";    # climbed
+    # $s is now "The black cat jumped from the green tree"
 
-    $var ‚ÌÅŒã‚Ì1•¶š‚ğ "Curly" ‚Å’u‚«Š·‚¦‚é‚É‚ÍŸ‚Ì‚æ‚¤‚É‚µ‚Ü‚·:
+    3 ˆø”‚Ì Sjis::substr() ‚É‚æ‚Á‚Ä•Ô‚³‚ê‚½¶•Ó’l‚Íu–‚–@‚Ì’eŠÛv‚Ì‚æ‚¤‚ÉU•‘‚¤‚±‚Æ‚É
+    ’ˆÓ‚µ‚Ä‚­‚¾‚³‚¢; ‚±‚ê‚ª‘ã“ü‚³‚ê‚é–ˆ‚ÉAŒ³‚Ì•¶š—ñ‚Ì‚Ç‚Ì•”•ª‚ª•ÏX‚³‚ê‚½‚©‚ªv‚¢
+    o‚³‚ê‚Ü‚·; —á‚¦‚Î:
 
-    Sjis::substr($var, -1, 1, "Curly");
+    $x = '1234';
+    for (Sjis::substr($x,1,2)) {
+        $_ = 'a';   print $x,"\n";    # prints 1a4
+        $_ = 'xyz'; print $x,"\n";    # prints 1xyz4
+        $x = '56789';
+        $_ = 'pq';  print $x,"\n";    # prints 5pq9
+    }
+
+    •‰”‚ÌƒIƒtƒZƒbƒg‚Ìê‡Aƒ^[ƒQƒbƒg•¶š—ñ‚ªC³‚³‚ê‚½‚Æ‚«‚É•¶š—ñ‚Ì––”ö‚©‚ç‚ÌˆÊ’u
+    ‚ğŠo‚¦‚Ü‚·:
+
+    $x = '1234';
+    for (Sjis::substr($x, -3, 2)) {
+        $_ = 'a';   print $x,"\n";    # prints 1a4, as above
+        $x = 'abcdefg';
+        print $_,"\n";                # prints f
+    }
+
+    ƒo[ƒWƒ‡ƒ“ 5.10 ‚æ‚è‘O‚Ì Perl ‚Å‚ÍA•¡”‰ñ¶•Ó’l‚ğg‚Á‚½ê‡‚ÌŒ‹‰Ê‚Í –¢’è‹`‚Å‚µ‚½B
+    5.16 ‚æ‚è‘O‚Å‚ÍA•‰‚ÌƒIƒtƒZƒbƒg‚ÌŒ‹‰Ê‚Í–¢’è‹`‚Å‚·B
 
 =item * Sjis::index
 
@@ -1595,11 +1637,11 @@ MSWin32 ŠÂ‹«‚Ì ActivePerl ‚Ìƒo[ƒWƒ‡ƒ“ 5.6 ˆÈ~(Perl5.10.0‚àŠÜ‚İ‚Ü‚·)A‚ ‚é‚¢‚Í‚
     perl5.006 ‚Ü‚½‚Í perl5.00800 ‚Ìê‡‚Å•¶šƒR[ƒh(0x5C)‚ÅI‚í‚éƒfƒBƒŒƒNƒgƒŠ
     ‚ğw’è‚µ‚ÄÀs‚·‚é‚É‚Í jacode.pl ƒ‰ƒCƒuƒ‰ƒŠ‚ª•K—v‚Å‚·B
 
-    perl5.008001ˆÈ~, perl5.010, perl5.012, perl5.014, perl5.016 ‚É‚Ä•¶šƒR[ƒh
-    (0x5C)‚ÅI‚í‚éƒfƒBƒŒƒNƒgƒŠ‚ğw’è‚µ‚ÄÀs‚·‚é‚Æ‚«ACOMMAND.COM ‚ ‚é‚¢‚Í
-    cmd.exe ‚É‚æ‚Á‚Ä 8dot3name Œ`®‚Ì’Z‚¢–¼‘O‚ğæ“¾‚Å‚«‚½ê‡‚Í chdir() ‚ª¬Œ÷
-    ‚µ‚Ü‚·B‚½‚¾‚µAchdir() Œã‚ÌƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ÌÅI‚ÌƒTƒuƒfƒBƒŒƒNƒgƒŠ‚Í
-    8dot3name Œ`®‚Ì’Z‚¢–¼‘O‚É‚È‚è‚Ü‚·B
+    perl5.008001ˆÈ~, perl5.010, perl5.012, perl5.014, perl5.016, perl5.018 ‚É‚Ä
+    •¶šƒR[ƒh(0x5C)‚ÅI‚í‚éƒfƒBƒŒƒNƒgƒŠ‚ğw’è‚µ‚ÄÀs‚·‚é‚Æ‚«ACOMMAND.COM ‚ ‚é
+    ‚¢‚Í cmd.exe ‚É‚æ‚Á‚Ä 8dot3name Œ`®‚Ì’Z‚¢–¼‘O‚ğæ“¾‚Å‚«‚½ê‡‚Í chdir() ‚ª
+    ¬Œ÷‚µ‚Ü‚·B‚½‚¾‚µAchdir() Œã‚ÌƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ÌÅI‚ÌƒTƒuƒfƒBƒŒƒNƒgƒŠ
+    ‚Í 8dot3name Œ`®‚Ì’Z‚¢–¼‘O‚É‚È‚è‚Ü‚·B
 
     QlƒŠƒ“ƒN
     Bug #81839
@@ -1685,6 +1727,11 @@ MSWin32 ŠÂ‹«‚Ì ActivePerl ‚Ìƒo[ƒWƒ‡ƒ“ 5.6 ˆÈ~(Perl5.10.0‚àŠÜ‚İ‚Ü‚·)A‚ ‚é‚¢‚Í‚
     Microsoft Windows ã‚Å chr(0x5c) ‚ÅI‚í‚éƒpƒX‚ğw’è‚µ‚Äƒtƒ@ƒCƒ‹ƒeƒXƒg(‰‰Zq)A
     ‚ ‚é‚¢‚Í lstat()Astat() ‚ğÀs‚·‚é‚ÆA${^WIN32_SLOPPY_STAT} ‚É^‚Ì’l‚ªİ’è‚³‚ê
     ‚Ä‚¢‚éê‡‚Å‚à‚»‚Ìƒtƒ@ƒCƒ‹‚ğƒI[ƒvƒ“‚µ‚Ä’²‚×‚Ü‚·B
+
+=item * eval "string"
+
+    eval ‚Ì "string" ‚ğƒGƒXƒP[ƒv‚·‚é‹@”\‚Í‚Ü‚¾À‘•‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB¡Œã‚Ìƒo[ƒWƒ‡ƒ“
+    ‚ÅƒTƒ|[ƒg‚³‚ê‚é‚Å‚µ‚å‚¤B
 
 =back
 
@@ -2339,7 +2386,7 @@ Programming Perl, 3rd ed. (–M–ó ƒvƒƒOƒ‰ƒ~ƒ“ƒOPerl ‘æ3”Å) ‚Ì402ƒy[ƒW‚ğ‚à‚¤ˆê“x
     JPerl ‚ª‚Æ‚Ä‚à—D‚ê‚Ä‚¢‚é——R‚Í (c) ‚ÌˆÊ’u‚É‚ ‚é‚©‚ç‚Å‚·B‚·‚È‚í‚¿“ú–{Œêˆ—
     ‚ğs‚¤‚½‚ß‚ÉƒXƒNƒŠƒvƒg‚É“Á•Ê‚È‹Lq‚ğs‚¤•K—v‚ª‚ ‚è‚Ü‚¹‚ñB
 
-    JPerl ‚Í‚±‚ÌƒS[ƒ‹‚É’B¬‚µ‚½—Bˆê‚Ìƒ\ƒtƒgƒEƒFƒA‚Å‚·B
+    JPerl ‚Í‚±‚ÌƒS[ƒ‹‚É“’B‚µ‚½—Bˆê‚Ìƒ\ƒtƒgƒEƒFƒA‚Å‚·B
 
 =item * ƒS[ƒ‹3
 
@@ -2360,6 +2407,9 @@ Programming Perl, 3rd ed. (–M–ó ƒvƒƒOƒ‰ƒ~ƒ“ƒOPerl ‘æ3”Å) ‚Ì402ƒy[ƒW‚ğ‚à‚¤ˆê“x
     ƒvƒV[ƒPƒ“ƒX‚ª•K—v‚Å‚ ‚Á‚½‚èAShiftJIS ‚â UTF-8 ‚Ì‚æ‚¤‚É "ƒGƒXƒP[ƒvƒrƒbƒg"
     ‚ª•K—v‚É‚È‚Á‚½‚è‚µ‚Ü‚·B‚±‚ê‚ç‚ÌƒGƒXƒP[ƒvˆ—‚ª‰Á‚í‚é‚½‚ßAˆÈ‘O‚Æ“¯‚¶ƒXƒs[
     ƒh‚Å“®ì‚·‚×‚«‚Å‚ ‚é‚Æ‚¢‚¤‚Ì‚Í–³—‚È–Ú•W‚¾‚Æv‚¢‚Ü‚·B
+
+    ‚¢‚Â‚Ì“ú‚© Larry Wall ‚³‚ñ‚É‚±‚ÌƒS[ƒ‹‚Ì‚±‚Æ‚ğu‚Ë‚Ä‚İ‚½‚¢‚Å‚·(ƒGƒŒƒx[ƒ^[‚Ì
+    ’†‚Å)B
 
 =item * ƒS[ƒ‹4
 
@@ -2413,6 +2463,40 @@ Programming Perl, 3rd ed. ‚ª‘‚©‚ê‚½ ‚É‚ÍAUTF8 ƒtƒ‰ƒO‚Í¶‚Ü‚ê‚Ä‚¨‚ç‚¸APerl ‚Í
  ‚±‚ñ‚È‚É‘½‚­‚ÌŒë‚è‚ğ”Æ‚³‚È‚¢‚Ì‚Å‚·‚ªB
 
  --- ‰‚ß‚Ä‚ÌPerl ‘æ6”Å
+
+=head1 Sjis ƒ\ƒtƒgƒEƒFƒA’a¶‚Ì‚Í‚È‚µ
+
+ Perl3 ˆÈ~‚Ì Perl ‚ÍƒoƒCƒiƒŠƒf[ƒ^‚ğˆ—‚·‚éƒXƒNƒŠƒvƒg‚ğ‹Lq‚Å‚«‚Ü‚·B
+ ‚»‚ê‚ÍŠÈ’P‚ÉŒ¾‚¦‚ÎA‚Ç‚ñ‚Èƒf[ƒ^‚Å‚àˆ—‚Å‚«‚é‚Æ‚¢‚¤‚±‚Æ‚Å‚·B
+ 
+ ƒf[ƒ^‚Æ‚¢‚¤‚ÆA“ú–{‘“à‚Å‚Í(‚à‚Æ‚à‚Æ1981”N‚ÉCP/M-86‚Ì“à•”ˆ——p‚Æ‚µ‚ÄlˆÄ
+ ‚³‚ê‚½)ƒVƒtƒgJIS•„†‰»•û®‚ªAî•ñŒğŠ·—pA‚³‚ç‚É‚Íî•ñ’~Ï—p‚Æ‚µ‚ÄL‚­g‚í
+ ‚ê‚Ä‚¢‚Ü‚·B‚¾‚©‚çA‚»‚Ìƒf[ƒ^‚ğˆ—‚·‚éƒXƒNƒŠƒvƒg‚ğƒVƒtƒgJIS‚Åì¬‚·‚é‚Ì
+ ‚Í‚²‚­©‘R‚È‘I‘ğ‚Å‚·B
+ 
+ ‚Å‚àAc”O‚È‚±‚Æ‚É perl ƒCƒ“ƒ^ƒvƒŠƒ^‚ÍƒVƒtƒgJIS‚ÌPerlƒXƒNƒŠƒvƒg‚ğ‚»‚Ì‚Ü‚Ü
+ ‚Å‚ÍÀs‚·‚é‚±‚Æ‚ª‚Å‚«‚È‚¢‚Ì‚Å‚·B
+ 
+ ‚µ‚©‚µ‚È‚ª‚ç(‚ ‚È‚½‚Ì‘‚¢‚½) Perl ƒXƒNƒŠƒvƒg‚Íƒf[ƒ^‚Å‚ ‚é‚±‚Æ‚ÍŠÔˆá‚¢‚È‚¢
+ ‚Ì‚ÅA(•Ê‚É—pˆÓ‚µ‚½) Perl ƒXƒNƒŠƒvƒg‚Å‚»‚ê‚ğˆ—‚µAperl ƒCƒ“ƒ^ƒvƒŠƒ^‚ÅÀs
+ ‚Å‚«‚éƒXƒNƒŠƒvƒg‚É•ÏŠ·‚·‚é‚±‚Æ‚È‚çA‚Å‚«‚é‚Ì‚Å‚Í‚È‚¢‚Å‚µ‚å‚¤‚©H
+ 
+ ‚¿‚å‚Á‚Æ¬—‚µ‚Ä‚«‚½‚Ì‚ÅAŒ¾ŒêAƒCƒ“ƒ^ƒvƒŠƒ^AƒXƒNƒŠƒvƒgA‚»‚ê‚¼‚ê‚ÌƒeƒLƒX
+ ƒgAƒoƒCƒiƒŠ‚Ìˆµ‚¢‚Ì‰Â”Û‚ğ‚Ü‚Æ‚ß‚Ä‚İ‚Ü‚µ‚å‚¤B‚±‚±‚Å‚ÍƒVƒtƒgJIS‚ğƒoƒCƒiƒŠ
+ ‚É•ª—Ş‚µ‚Ä‚¢‚Ü‚·B
+ 
+ ---------------------------------------------------
+                   ‘ÎÛ        ƒeƒLƒXƒg  ƒoƒCƒiƒŠ
+ ---------------------------------------------------
+ PerlŒ¾Œê          ƒXƒNƒŠƒvƒg  ‰Â        ‰Â
+ perlƒCƒ“ƒ^ƒvƒŠƒ^  ƒXƒNƒŠƒvƒg  ‰Â        •s‰Â
+ PerlƒXƒNƒŠƒvƒg    ƒf[ƒ^      ‰Â        ‰Â
+ ---------------------------------------------------
+ 
+ perl ƒCƒ“ƒ^ƒvƒŠƒ^‚ÍƒoƒCƒiƒŠ‚ÌƒXƒNƒŠƒvƒg‚ğÀs‚Å‚«‚È‚¢‚¯‚ê‚ÇAPerl Œ¾Œê‚Æ
+ Perl ƒXƒNƒŠƒvƒg‚ª‚ ‚ê‚ÎA‚±‚Ì–â‘è‚ğ‰ğŒˆ‚Å‚«‚é‚Éˆá‚¢‚ ‚è‚Ü‚¹‚ñB
+ 
+ ‚±‚Ìƒ\ƒtƒgƒEƒFƒA‚Í‚»‚Ì‚æ‚¤‚ÈƒAƒCƒfƒBƒA‚É‚æ‚Á‚Äì‚èn‚ß‚ç‚ê‚Ü‚µ‚½B
 
 =head1 Ql•¶Œ£AƒŠƒ“ƒN
 
