@@ -11,6 +11,14 @@ package Char::Esjis;
 use 5.00503;    # Galapagos Consensus 1998 for primetools
 # use 5.008001; # Lancaster Consensus 2013 for toolchains
 
+# 12.3. Delaying use Until Runtime
+# in Chapter 12. Packages, Libraries, and Modules
+# of ISBN 0-596-00313-7 Perl Cookbook, 2nd Edition.
+# (and so on)
+
+BEGIN { eval q{ use vars qw($VERSION) } }
+$VERSION = sprintf '%d.%02d', q$Revision: 0.92 $ =~ /(\d+)/xmsg;
+
 BEGIN {
     if ($^X =~ / jperl /oxmsi) {
         die __FILE__, ": needs perl(not jperl) 5.00503 or later. (\$^X==$^X)";
@@ -22,14 +30,6 @@ BEGIN {
         die __FILE__, ": is not US-ASCII script (must be US-ASCII script).";
     }
 }
-
-# 12.3. Delaying use Until Runtime
-# in Chapter 12. Packages, Libraries, and Modules
-# of ISBN 0-596-00313-7 Perl Cookbook, 2nd Edition.
-# (and so on)
-
-BEGIN { eval q{ use vars qw($VERSION) } }
-$VERSION = sprintf '%d.%02d', q$Revision: 0.91 $ =~ /(\d+)/xmsg;
 
 BEGIN {
 
@@ -1578,14 +1578,14 @@ sub _charlist_tr {
 #
 sub _cc {
     if (scalar(@_) == 0) {
-        die __FILE__, ": function cc got no parameter.";
+        die __FILE__, ": subroutine cc got no parameter.";
     }
     elsif (scalar(@_) == 1) {
         return sprintf('\x%02X',$_[0]);
     }
     elsif (scalar(@_) == 2) {
         if ($_[0] > $_[1]) {
-            die __FILE__, ": function cc got \$_[0] > \$_[1] parameters).";
+            die __FILE__, ": subroutine cc got \$_[0] > \$_[1] parameters).";
         }
         elsif ($_[0] == $_[1]) {
             return sprintf('\x%02X',$_[0]);
@@ -1598,7 +1598,7 @@ sub _cc {
         }
     }
     else {
-        die __FILE__, ": function cc got 3 or more parameters (@{[scalar(@_)]} parameters).";
+        die __FILE__, ": subroutine cc got 3 or more parameters (@{[scalar(@_)]} parameters).";
     }
 }
 
@@ -1793,7 +1793,7 @@ sub _octets {
         }
     }
     else {
-        die __FILE__, ": function _octets got invalid length ($length).";
+        die __FILE__, ": subroutine _octets got invalid length ($length).";
     }
 }
 
@@ -1877,7 +1877,7 @@ sub _range_regexp {
         }
 
         else {
-            die __FILE__, ": function _range_regexp panic.";
+            die __FILE__, ": subroutine _range_regexp panic.";
         }
     }
 
@@ -2090,7 +2090,7 @@ sub _charlist {
                 }
 
                 else {
-                    die __FILE__, ": function make_regexp panic.";
+                    die __FILE__, ": subroutine make_regexp panic.";
                 }
 
                 if ($length == 1) {
@@ -6143,7 +6143,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   @split = Char::Esjis::split();
   @split = Char::Esjis::split;
 
-  This function scans a string given by $string for separators, and splits the
+  This subroutine scans a string given by $string for separators, and splits the
   string into a list of substring, returning the resulting list value in list
   context or the count of substring in scalar context. Scalar context also causes
   split to write its result to @_, but this usage is deprecated. The separators
@@ -6156,13 +6156,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   expression modifiers to the /pattern/, like /pattern/i, /pattern/x, etc. The
   //m modifier is assumed when you split on the pattern /^/.
 
-  If $limit is specified and positive, the function splits into no more than that
+  If $limit is specified and positive, the subroutine splits into no more than that
   many fields (though it may split into fewer if it runs out of separators). If
   $limit is negative, it is treated as if an arbitrarily large $limit has been
   specified If $limit is omitted or zero, trailing null fields are stripped from
   the result (which potential users of pop would do wel to remember). If $string
-  is omitted, the function splits the $_ string. If /pattern/ is also omitted or
-  is the literal space, " ", the function split on whitespace, /\s+/, after
+  is omitted, the subroutine splits the $_ string. If /pattern/ is also omitted or
+  is the literal space, " ", the subroutine split on whitespace, /\s+/, after
   skipping any leading whitespace.
 
   A /pattern/ of /^/ is secretly treated if it it were /^/m, since it isn't much
@@ -6230,7 +6230,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   that vary at runtime. As with ordinary patterns, to do run-time compilation only
   once, use /$variable/o.
 
-  As a special case, if the expression is a single space (" "), the function
+  As a special case, if the expression is a single space (" "), the subroutine
   splits on whitespace just as Char::Esjis::split with no arguments does. Thus,
   Char::Esjis::split(" ") can be used to emulate awk's default behavior. In contrast,
   Char::Esjis::split(/ /) will give you as many null initial fields as there are
@@ -6290,7 +6290,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   which is like the y/// operator in the Unix sed program, only better, in
   everybody's humble opinion.
 
-  This function scans a ShiftJIS string character by character and replaces all
+  This subroutine scans a ShiftJIS string character by character and replaces all
   occurrences of the characters found in $searchlist with the corresponding character
   in $replacementlist. It returns the number of characters replaced or deleted.
   If no ShiftJIS string is specified via =~ operator, the $_ variable is translated.
@@ -6315,12 +6315,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   $chop = Char::Esjis::chop();
   $chop = Char::Esjis::chop;
 
-  This function chops off the last character of a string variable and returns the
-  character chopped. The Char::Esjis::chop function is used primary to remove the newline
+  This subroutine chops off the last character of a string variable and returns the
+  character chopped. The Char::Esjis::chop subroutine is used primary to remove the newline
   from the end of an input recoed, and it is more efficient than using a
   substitution. If that's all you're doing, then it would be safer to use chomp,
   since Char::Esjis::chop always shortens the string no matter what's there, and chomp
-  is more selective. If no argument is given, the function chops the $_ variable.
+  is more selective. If no argument is given, the subroutine chops the $_ variable.
 
   You cannot Char::Esjis::chop a literal, only a variable. If you Char::Esjis::chop a list of
   variables, each string in the list is chopped:
@@ -6372,10 +6372,10 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   $byte_pos = Char::Esjis::index($string,$substr,$byte_offset);
   $byte_pos = Char::Esjis::index($string,$substr);
 
-  This function searches for one string within another. It returns the byte position
+  This subroutine searches for one string within another. It returns the byte position
   of the first occurrence of $substring in $string. The $byte_offset, if specified,
   says how many bytes from the start to skip before beginning to look. Positions are
-  based at 0. If the substring is not found, the function returns one less than the
+  based at 0. If the substring is not found, the subroutine returns one less than the
   base, ordinarily -1. To work your way through a string, you might say:
 
   $byte_pos = -1;
@@ -6389,9 +6389,9 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   $byte_pos = Char::Esjis::rindex($string,$substr,$byte_offset);
   $byte_pos = Char::Esjis::rindex($string,$substr);
 
-  This function works just like Char::Esjis::index except that it returns the byte
+  This subroutine works just like Char::Esjis::index except that it returns the byte
   position of the last occurrence of $substring in $string (a reverse Char::Esjis::index).
-  The function returns -1 if $substring is not found. $byte_offset, if specified,
+  The subroutine returns -1 if $substring is not found. $byte_offset, if specified,
   is the rightmost byte position that may be returned. To work your way through a
   string backward, say:
 
@@ -6406,11 +6406,11 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   $lc = Char::Esjis::lc($string);
   $lc = Char::Esjis::lc_;
 
-  This function returns a lowercased version of ShiftJIS $string (or $_, if
-  $string is omitted). This is the internal function implementing the \L escape
+  This subroutine returns a lowercased version of ShiftJIS $string (or $_, if
+  $string is omitted). This is the internal subroutine implementing the \L escape
   in double-quoted strings.
 
-  You can use the Char::Esjis::fc function for case-insensitive comparisons via Char::Sjis
+  You can use the Char::Esjis::fc subroutine for case-insensitive comparisons via Char::Sjis
   software.
 
 =item Lower case first character of string
@@ -6418,8 +6418,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   $lcfirst = Char::Esjis::lcfirst($string);
   $lcfirst = Char::Esjis::lcfirst_;
 
-  This function returns a version of ShiftJIS $string with the first character
-  lowercased (or $_, if $string is omitted). This is the internal function
+  This subroutine returns a version of ShiftJIS $string with the first character
+  lowercased (or $_, if $string is omitted). This is the internal subroutine
   implementing the \l escape in double-quoted strings.
 
 =item Upper case string
@@ -6427,11 +6427,11 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   $uc = Char::Esjis::uc($string);
   $uc = Char::Esjis::uc_;
 
-  This function returns an uppercased version of ShiftJIS $string (or $_, if
-  $string is omitted). This is the internal function implementing the \U escape
+  This subroutine returns an uppercased version of ShiftJIS $string (or $_, if
+  $string is omitted). This is the internal subroutine implementing the \U escape
   in interpolated strings. For titlecase, use Char::Esjis::ucfirst instead.
 
-  You can use the Char::Esjis::fc function for case-insensitive comparisons via Char::Sjis
+  You can use the Char::Esjis::fc subroutine for case-insensitive comparisons via Char::Sjis
   software.
 
 =item Upper case first character of string
@@ -6439,13 +6439,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   $ucfirst = Char::Esjis::ucfirst($string);
   $ucfirst = Char::Esjis::ucfirst_;
 
-  This function returns a version of ShiftJIS $string with the first character
+  This subroutine returns a version of ShiftJIS $string with the first character
   titlecased and other characters left alone (or $_, if $string is omitted).
   Titlecase is "Camel" for an initial capital that has (or expects to have)
   lowercase characters following it, not uppercase ones. Exsamples are the first
   letter of a sentence, of a person's name, of a newspaper headline, or of most
   words in a title. Characters with no titlecase mapping return the uppercase
-  mapping instead. This is the internal function implementing the \u escape in
+  mapping instead. This is the internal subroutine implementing the \u escape in
   double-quoted strings.
 
   To capitalize a string by mapping its first character to titlecase and the rest
@@ -6482,8 +6482,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   $fc = Char::Esjis::fc($string);
   $fc = Char::Esjis::fc_;
 
-  New to Char::Sjis software, this function returns the full Unicode-like casefold of
-  ShiftJIS $string (or $_, if omitted). This is the internal function implementing
+  New to Char::Sjis software, this subroutine returns the full Unicode-like casefold of
+  ShiftJIS $string (or $_, if omitted). This is the internal subroutine implementing
   the \F escape in double-quoted strings.
 
   Just as title-case is based on uppercase but different, foldcase is based on
@@ -6511,38 +6511,38 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
   @ignorecase = Char::Esjis::ignorecase(@string);
 
-  This function is internal use to m/ /i, s/ / /i, split / /i and qr/ /i.
+  This subroutine is internal use to m/ /i, s/ / /i, split / /i and qr/ /i.
 
 =item Make capture number
 
   $capturenumber = Char::Esjis::capture($string);
 
-  This function is internal use to m/ /, s/ / /, split / / and qr/ /.
+  This subroutine is internal use to m/ /, s/ / /, split / / and qr/ /.
 
 =item Make character
 
   $chr = Char::Esjis::chr($code);
   $chr = Char::Esjis::chr_;
 
-  This function returns a programmer-visible character, character represented by
+  This subroutine returns a programmer-visible character, character represented by
   that $code in the character set. For example, Char::Esjis::chr(65) is "A" in either
   ASCII or ShiftJIS, not Unicode. For the reverse of Char::Esjis::chr, use Char::Sjis::ord.
 
-=item File test function Char::Esjis::X
+=item File test subroutine Char::Esjis::X
 
-  The following all functions function when the pathname ends with chr(0x5C) on
+  The following all subroutines function when the pathname ends with chr(0x5C) on
   MSWin32.
 
-  A file test function is a unary function that takes one argument, either a
+  A file test subroutine is a unary function that takes one argument, either a
   filename or a filehandle, and tests the associated file to see whether something
   is true about it. If the argument is omitted, it tests $_. Unless otherwise
   documented, it returns 1 for true and "" for false, or the undefined value if
   the file doesn't exist or is otherwise inaccessible. Currently implemented file
-  test functions are listed in:
+  test subroutines are listed in:
 
   Available in MSWin32, MacOS, and UNIX-like systems
   ------------------------------------------------------------------------------
-  Function and Prototype     Meaning
+  Subroutine and Prototype   Meaning
   ------------------------------------------------------------------------------
   Char::Esjis::r(*), Char::Esjis::r_()   File or directory is readable by this (effective) user or group
   Char::Esjis::w(*), Char::Esjis::w_()   File or directory is writable by this (effective) user or group
@@ -6555,7 +6555,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   
   Available in MacOS and UNIX-like systems
   ------------------------------------------------------------------------------
-  Function and Prototype     Meaning
+  Subroutine and Prototype   Meaning
   ------------------------------------------------------------------------------
   Char::Esjis::R(*), Char::Esjis::R_()   File or directory is readable by this real user or group
                              Same as Char::Esjis::r(*), Char::Esjis::r_() on MacOS
@@ -6569,7 +6569,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   
   Not available in MSWin32 and MacOS
   ------------------------------------------------------------------------------
-  Function and Prototype     Meaning
+  Subroutine and Prototype   Meaning
   ------------------------------------------------------------------------------
   Char::Esjis::o(*), Char::Esjis::o_()   File or directory is owned by this (effective) user
   Char::Esjis::O(*), Char::Esjis::O_()   File or directory is owned by this real user
@@ -6609,7 +6609,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
   Available in MSWin32, MacOS, and UNIX-like systems
   ------------------------------------------------------------------------------
-  Function and Prototype     Meaning
+  Subroutine and Prototype   Meaning
   ------------------------------------------------------------------------------
   Char::Esjis::T(*), Char::Esjis::T_()   File looks like a "text" file
   Char::Esjis::B(*), Char::Esjis::B_()   File looks like a "binary" file
@@ -6628,7 +6628,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
   Available in MSWin32, MacOS, and UNIX-like systems
   ------------------------------------------------------------------------------
-  Function and Prototype     Meaning
+  Subroutine and Prototype   Meaning
   ------------------------------------------------------------------------------
   Char::Esjis::M(*), Char::Esjis::M_()   Modification age (measured in days)
   Char::Esjis::A(*), Char::Esjis::A_()   Access age (measured in days)
@@ -6641,7 +6641,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
   Available in MSWin32, MacOS, and UNIX-like systems
   ------------------------------------------------------------------------------
-  Function and Prototype     Meaning
+  Subroutine and Prototype   Meaning
   ------------------------------------------------------------------------------
   Char::Esjis::s(*), Char::Esjis::s_()   File or directory exists and has nonzero size
                              (the value is the size in bytes)
@@ -6652,11 +6652,11 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   @glob = Char::Esjis::glob($string);
   @glob = Char::Esjis::glob_;
 
-  This function returns the value of $string with filename expansions the way a
+  This subroutine returns the value of $string with filename expansions the way a
   DOS-like shell would expand them, returning the next successive name on each
   call. If $string is omitted, $_ is globbed instead. This is the internal
-  function implementing the <*> and glob operator.
-  This function function when the pathname ends with chr(0x5C) on MSWin32.
+  subroutine implementing the <*> and glob operator.
+  This subroutine function when the pathname ends with chr(0x5C) on MSWin32.
 
   For ease of use, the algorithm matches the DOS-like shell's style of expansion,
   not the UNIX-like shell's. An asterisk ("*") matches any sequence of any
@@ -6669,7 +6669,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   backslashes if you are putting them in literally, due to double-quotish parsing
   of the pattern by perl.
 
-  The Char::Esjis::glob function grandfathers the use of whitespace to separate multiple
+  The Char::Esjis::glob subroutine grandfathers the use of whitespace to separate multiple
   patterns such as <*.c *.h>. If you want to glob filenames that might contain
   whitespace, you'll have to use extra quotes around the spacy filename to protect
   it. For example, to glob filenames that have an "e" followed by a space followed
@@ -6707,16 +6707,16 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   unimplemented on your system, a normal Char::Esjis::stat is done instead. If file is
   omitted, returns information on file given in $_. Returns values (especially
   device and inode) may be bogus.
-  This function function when the filename ends with chr(0x5C) on MSWin32.
+  This subroutine function when the filename ends with chr(0x5C) on MSWin32.
 
 =item Open directory handle
 
   $rc = Char::Esjis::opendir(DIR,$dir);
 
-  This function opens a directory named $dir for processing by readdir, telldir,
-  seekdir, rewinddir, and closedir. The function returns true if successful.
+  This subroutine opens a directory named $dir for processing by readdir, telldir,
+  seekdir, rewinddir, and closedir. The subroutine returns true if successful.
   Directory handles have their own namespace from filehandles.
-  This function function when the directory name ends with chr(0x5C) on MSWin32.
+  This subroutine function when the directory name ends with chr(0x5C) on MSWin32.
 
 =item Statistics about file
 
@@ -6729,7 +6729,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   @stat = Char::Esjis::stat($expr);
   @stat = Char::Esjis::stat_;
 
-  In scalar context, this function returns a Boolean value that indicates whether
+  In scalar context, this subroutine returns a Boolean value that indicates whether
   the call succeeded. In list context, it returns a 13-element list giving the
   statistics for a file, either the file opened via FILEHANDLE or DIRHANDLE, or
   named by $expr. It's typically used as followes:
@@ -6786,7 +6786,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
   If Char::Esjis::stat is passed the special filehandle consisting of an underline, no
   actual stat(2) is done, but the current contents of the stat structure from
-  the last Char::Esjis::stat, Char::Esjis::lstat, or Char::Esjis::stat-based file test function
+  the last Char::Esjis::stat, Char::Esjis::lstat, or Char::Esjis::stat-based file test subroutine
   (such as Char::Esjis::r, Char::Esjis::w, and Char::Esjis::x) are returned.
 
   Because the mode contains both the file type and its permissions, you should
@@ -6797,7 +6797,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   printf "Permissions are %04o\n", $mode &07777;
 
   If $expr is omitted, returns information on file given in $_.
-  This function function when the filename ends with chr(0x5C) on MSWin32.
+  This subroutine function when the filename ends with chr(0x5C) on MSWin32.
 
 =item Deletes a list of files.
 
@@ -6807,23 +6807,23 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
   Delete a list of files. (Under Unix, it will remove a link to a file, but the
   file may still exist if another link references it.) If list is omitted, it
-  unlinks the file given in $_. The function returns the number of files
+  unlinks the file given in $_. The subroutine returns the number of files
   successfully deleted.
-  This function function when the filename ends with chr(0x5C) on MSWin32.
+  This subroutine function when the filename ends with chr(0x5C) on MSWin32.
 
 =item Changes the working directory.
 
   $chdir = Char::Esjis::chdir($dirname);
   $chdir = Char::Esjis::chdir;
 
-  This function changes the current process's working directory to $dirname, if
+  This subroutine changes the current process's working directory to $dirname, if
   possible. If $dirname is omitted, $ENV{'HOME'} is used if set, and $ENV{'LOGDIR'}
-  otherwise; these are usually the process's home directory. The function returns
+  otherwise; these are usually the process's home directory. The subroutine returns
   true on success, false otherwise (and puts the error code into $!).
 
   chdir("$prefix/lib") || die "Can't cd to $prefix/lib: $!";
 
-  This function has limitation on the MSWin32. See also BUGS AND LIMITATIONS.
+  This subroutine has limitation on the MSWin32. See also BUGS AND LIMITATIONS.
 
 =item Do file
 
@@ -6880,7 +6880,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   Char::Esjis::require($file);
   Char::Esjis::require();
 
-  This function asserts a dependency of some kind on its argument. If an argument is
+  This subroutine asserts a dependency of some kind on its argument. If an argument is
   not supplied, $_ is used.
 
   Char::Esjis::require loads and executes the Perl code found in the separate file whose
@@ -6899,10 +6899,10 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
   $telldir = Char::Esjis::telldir(DIRHANDLE);
 
-  This function returns the current position of the readdir routines on DIRHANDLE.
+  This subroutine returns the current position of the readdir routines on DIRHANDLE.
   This value may be given to seekdir to access a particular location in a directory.
-  The function has the same caveats about possible directory compaction as the
-  corresponding system library routine. This function might not be implemented
+  The subroutine has the same caveats about possible directory compaction as the
+  corresponding system library routine. This subroutine might not be implemented
   everywhere that readdir is. Even if it is, no calculation may be done with the
   return value. It's just an opaque value, meaningful only to seekdir.
 
