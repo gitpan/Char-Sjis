@@ -81,6 +81,8 @@ ftp://ftp.oreilly.co.jp/pcjp98/watanabe/jperlconf.ppt
 
 =item * Ruby ‚Ì‚æ‚¤‚É•¶šW‡“Æ—§‚Èè–@
 
+=item * cpanminus ‚Ì‚æ‚¤‚Éƒ‚ƒmƒŠƒVƒbƒN‚ÈƒXƒNƒŠƒvƒg
+
 =item * Perl ©g‚Ì‚æ‚¤‚É TMTOWTDI(There's more than one way to do it)
 
 =back
@@ -133,13 +135,7 @@ http://mail.pm.org/pipermail/tokyo-pm/1999-September/001854.html
    perl pMakefile.pl          --- pMakefile.pl ‚ª pmake.bat ‚ğ¶¬‚µ‚Ü‚·
    pmake.bat
    pmake.bat test
-
    pmake.bat install          --- Œ»İg—p’†‚Ì perl ŠÂ‹«‚ÉƒCƒ“ƒXƒg[ƒ‹‚µ‚Ü‚·
-   perl55   pmake.bat install --- perl5.005 ŠÂ‹«‚ÉƒCƒ“ƒXƒg[ƒ‹‚µ‚Ü‚·
-   perl56   pmake.bat install --- perl5.006 ŠÂ‹«‚ÉƒCƒ“ƒXƒg[ƒ‹‚µ‚Ü‚·
-   perl58   pmake.bat install --- perl5.008 ŠÂ‹«‚ÉƒCƒ“ƒXƒg[ƒ‹‚µ‚Ü‚·
-   (ˆÈ‰º“¯‚¶)
-
    pmake.bat dist             --- CPAN ”z•z—pƒpƒbƒP[ƒW‚ğì‚è‚Ü‚·
    pmake.bat ptar.bat         --- ptar.bat ‚ğì¬‚µ‚Ü‚·
 
@@ -149,45 +145,6 @@ http://mail.pm.org/pipermail/tokyo-pm/1999-September/001854.html
    Esjis.pm              --- Sjis.pm ‚Ìƒ‰ƒ“ƒ^ƒCƒ€ƒ‹[ƒ`ƒ“
    Char/Sjis.pm          --- Sjis.pm ‚Ì•Ê–¼(‹@”\‚Í“¯‚¶‚Å‚·)
    Char/Esjis.pm         --- Esjis.pm ‚Ì•Ê–¼(‹@”\‚Í“¯‚¶‚Å‚·)
-   perl5.bat             --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É perl5    ‚ğ’T‚µ‚ÄÀs‚·‚é
-   perl55.bat            --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É perl5.5  ‚ğ’T‚µ‚ÄÀs‚·‚é
-   perl56.bat            --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É perl5.6  ‚ğ’T‚µ‚ÄÀs‚·‚é
-   perl58.bat            --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É perl5.8  ‚ğ’T‚µ‚ÄÀs‚·‚é
-   perl510.bat           --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É perl5.10 ‚ğ’T‚µ‚ÄÀs‚·‚é
-   perl512.bat           --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É perl5.12 ‚ğ’T‚µ‚ÄÀs‚·‚é
-   perl514.bat           --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É perl5.14 ‚ğ’T‚µ‚ÄÀs‚·‚é
-   perl516.bat           --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É perl5.16 ‚ğ’T‚µ‚ÄÀs‚·‚é
-   perl518.bat           --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É perl5.18 ‚ğ’T‚µ‚ÄÀs‚·‚é
-   perl64.bat            --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É perl64   ‚ğ’T‚µ‚ÄÀs‚·‚é
-   perl64512.bat         --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É perl5.12 (64ƒrƒbƒg”Å) ‚ğ’T‚µ‚ÄÀs‚·‚é
-   perl64514.bat         --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É perl5.14 (64ƒrƒbƒg”Å) ‚ğ’T‚µ‚ÄÀs‚·‚é
-   perl64516.bat         --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É perl5.16 (64ƒrƒbƒg”Å) ‚ğ’T‚µ‚ÄÀs‚·‚é
-   perl64518.bat         --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É perl5.18 (64ƒrƒbƒg”Å) ‚ğ’T‚µ‚ÄÀs‚·‚é
-   aperl58.bat           --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É ActivePerl 5.8  ‚ğ’T‚µ‚ÄÀs‚·‚é
-   aperl510.bat          --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É ActivePerl 5.10 ‚ğ’T‚µ‚ÄÀs‚·‚é
-   aperl512.bat          --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É ActivePerl 5.12 ‚ğ’T‚µ‚ÄÀs‚·‚é
-   aperl514.bat          --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É ActivePerl 5.14 ‚ğ’T‚µ‚ÄÀs‚·‚é
-   aperl516.bat          --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É ActivePerl 5.16 ‚ğ’T‚µ‚ÄÀs‚·‚é
-   aperl518.bat          --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É ActivePerl 5.18 ‚ğ’T‚µ‚ÄÀs‚·‚é
-   aperl64512.bat        --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É ActivePerl 5.12 (64ƒrƒbƒg”Å) ‚ğ’T‚µ‚ÄÀs‚·‚é
-   aperl64514.bat        --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É ActivePerl 5.14 (64ƒrƒbƒg”Å) ‚ğ’T‚µ‚ÄÀs‚·‚é
-   aperl64516.bat        --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É ActivePerl 5.16 (64ƒrƒbƒg”Å) ‚ğ’T‚µ‚ÄÀs‚·‚é
-   aperl64518.bat        --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É ActivePerl 5.18 (64ƒrƒbƒg”Å) ‚ğ’T‚µ‚ÄÀs‚·‚é
-   sperl58.bat           --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É Strawberry Perl 5.8  ‚ğ’T‚µ‚ÄÀs‚·‚é
-   sperl510.bat          --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É Strawberry Perl 5.10 ‚ğ’T‚µ‚ÄÀs‚·‚é
-   sperl512.bat          --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É Strawberry Perl 5.12 ‚ğ’T‚µ‚ÄÀs‚·‚é
-   sperl514.bat          --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É Strawberry Perl 5.14 ‚ğ’T‚µ‚ÄÀs‚·‚é
-   sperl516.bat          --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É Strawberry Perl 5.16 ‚ğ’T‚µ‚ÄÀs‚·‚é
-   sperl518.bat          --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É Strawberry Perl 5.18 ‚ğ’T‚µ‚ÄÀs‚·‚é
-   sperl64512.bat        --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É Strawberry Perl perl5.12 (64ƒrƒbƒg”Å) ‚ğ’T‚µ‚ÄÀs‚·‚é
-   sperl64514.bat        --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É Strawberry Perl perl5.14 (64ƒrƒbƒg”Å) ‚ğ’T‚µ‚ÄÀs‚·‚é
-   sperl64516.bat        --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É Strawberry Perl perl5.16 (64ƒrƒbƒg”Å) ‚ğ’T‚µ‚ÄÀs‚·‚é
-   sperl64518.bat        --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É Strawberry Perl perl5.18 (64ƒrƒbƒg”Å) ‚ğ’T‚µ‚ÄÀs‚·‚é
-   cperl.bat             --- ŠÂ‹«•Ï” PATH ‚Ìİ’è‚È‚µ‚É Cygwin ‚Ì Perl ‚ğ’T‚µ‚ÄÀs‚·‚é
-   strict.pm_            --- ƒ_ƒ~[‚Ì strict.pm
-   warnings.pm_          --- warnings.pm ‚ÌŠÈˆÕ”Å
-   warnings/register.pm_ --- warnings/register.pm ‚ÌŠÈˆÕ”Å
-   feature.pm_           --- ƒ_ƒ~[‚Ì feature.pm
 
 =head1 DOS•—ƒVƒXƒeƒ€‚É‚¨‚¯‚éƒRƒ}ƒ“ƒhƒ‰ƒCƒ“‚ÌƒƒCƒ‹ƒhƒJ[ƒh“WŠJ
 
@@ -254,54 +211,9 @@ DOS•—ƒVƒXƒeƒ€‚Ì•W€ƒVƒFƒ‹(COMMAND.COM ‚¨‚æ‚Ñ cmd.exe)‚ÍA‹N“®‚·‚éƒvƒƒOƒ‰ƒ€‚Ö“n‚
       ‚È‚¢‚È‚ç‚Î die ‚µ‚Ü‚·B—á‚¦‚ÎAuse Sjis 0.88.0; ‚Æ‹Lq‚·‚é‚Æ Sjis ƒ\ƒtƒgƒEƒFƒA
       ‚Ìƒo[ƒWƒ‡ƒ“‚ª 0.88 ‚Å‚ ‚é‚±‚Æ‚ğ•Ûá‚Å‚«‚Ü‚·B
 
-    2. ƒRƒ}ƒ“ƒhƒvƒƒ“ƒvƒg‚ÅˆÈ‰º‚Ì‚¢‚¸‚ê‚©‚ÅÀs‚·‚é
+    2. ƒRƒ}ƒ“ƒhƒvƒƒ“ƒvƒg‚ÅˆÈ‰º‚Ì‚æ‚¤‚ÉÀs‚·‚é
 
-      PATH ‚Éİ’è‚³‚ê‚Ä‚¢‚éƒfƒBƒŒƒNƒgƒŠ‚Ì perl ‚ğÀs‚·‚éê‡
-      perl        ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-
-      Strawberry Perl, ActivePerl ‚Ì‡‚É—L–³‚ğ’²‚×‚Äæ‚ÉŒ©‚Â‚©‚Á‚½ perl ‚ğÀs
-      perl55      ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl56      ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl58      ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl510     ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl512     ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl514     ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl516     ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl518     ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl64512   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl64514   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl64516   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      perl64518   ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-
-      ActivePerl ‚ğg—p‚·‚éê‡
-      aperl58     ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      aperl510    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      aperl512    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      aperl514    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      aperl516    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      aperl518    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      aperl64512  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      aperl64514  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      aperl64516  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      aperl64518  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-
-      Strawberry Perl ‚ğg—p‚·‚éê‡
-      sperl58     ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      sperl510    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      sperl512    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      sperl514    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      sperl516    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      sperl518    ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      sperl64512  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      sperl64514  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      sperl64516  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-      sperl64518  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-
-      ‚æ‚­g‚¤ perl ‚ğ perl5.bat ‚Éİ’è‚µ‚Äg‚¤ê‡
-      perl5       ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
-
-      64ƒrƒbƒg”Å‚Ì perl ‚ğÀs‚·‚éê‡
-      perl64      ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
+      perl  ShiftJIS_script.pl  wild*  *card  and  '*quote*'  on MSWin32
 
       ? * ‚ğg‚Á‚ÄƒƒCƒ‹ƒhƒJ[ƒh‚Ìw’è‚ª‚Å‚«‚Ü‚·
       ' ` ' ‚ğg‚Á‚ÄƒNƒH[ƒg‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·
@@ -330,13 +242,6 @@ DOS•—ƒVƒXƒeƒ€‚Ì•W€ƒVƒFƒ‹(COMMAND.COM ‚¨‚æ‚Ñ cmd.exe)‚ÍA‹N“®‚·‚éƒvƒƒOƒ‰ƒ€‚Ö“n‚
       CORE::getc(...);
       CORE::index(...);
       CORE::rindex(...);
-
-  œ Perl5.6 ƒGƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“(perl5.005‚Ìê‡)
-      use warnings;
-      use warnings::register;
-
-  œ Perl5.16 ƒGƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“
-      use feature qw(fc);
 
   œ ˆÈ‰º‚Íƒ_ƒ~[ƒTƒuƒ‹[ƒ`ƒ“‚Æ‚µ‚Ä—pˆÓ‚³‚ê‚Ä‚¢‚é
       utf8::upgrade(...);
@@ -1301,17 +1206,6 @@ perl5.00503 ‚ğg—p‚µ‚Ä‚¢‚éê‡‚Å‚àƒtƒ@ƒCƒ‹ƒeƒXƒg‰‰Zq‚ÍuÏ‚İd‚Ë‚év‚±‚Æ‚ª
   utf8 ƒvƒ‰ƒOƒ}Abytes ƒvƒ‰ƒOƒ}‚ÍƒRƒƒ“ƒgƒAƒEƒg‚³‚ê‚Ü‚·B“¯ƒtƒ@ƒCƒ‹‚Å’ñ‹Ÿ‚³‚ê‚Ä
   ‚¢‚éƒTƒuƒ‹[ƒ`ƒ“‚Ì‘ã‚í‚è‚Æ‚µ‚Ä Esjis.pm ‚ªƒ_ƒ~[ƒTƒuƒ‹[ƒ`ƒ“‚ğ’ñ‹Ÿ‚µ‚Ü‚·B
 
-=head1 perl5.005 ‚É‚æ‚é Perl5.6 ƒGƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“
-
-  perl5.005 ‚É‚Ä warnings ƒvƒ‰ƒOƒ}‚ğƒGƒ~ƒ…ƒŒ[ƒg‚µ‚Ü‚·B
-  “¯«‚Ì warnings.pm_ ‚ğ warnings.pm ‚ÉAwarnings/register.pm_ ‚ğ
-  warnings/register.pm ‚Éƒtƒ@ƒCƒ‹–¼‚ğ•ÏX‚µ‚Äg—p‚Å‚«‚Ü‚·B
-
-=head1 Perl5.16 ƒGƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“
-
-  feature ƒvƒ‰ƒOƒ}‚ğƒGƒ~ƒ…ƒŒ[ƒg‚µ‚Ü‚·B
-  “¯«‚Ì feature.pm_ ‚ğ feature.pm ‚Éƒtƒ@ƒCƒ‹–¼‚ğ•ÏX‚µ‚Äg—p‚Å‚«‚Ü‚·B
-
 =over 2
 
 =item * ƒ_ƒ~[‚ÌƒTƒuƒ‹[ƒ`ƒ“ utf8::upgrade
@@ -1717,6 +1611,16 @@ MSWin32 ŠÂ‹«‚Ì ActivePerl ‚Ìƒo[ƒWƒ‡ƒ“ 5.6 ˆÈ~(Perl5.10.0‚àŠÜ‚İ‚Ü‚·)A‚ ‚é‚¢‚Í‚
     ‚±‚Ìƒ\ƒtƒgƒEƒFƒA‚ÌƒRƒ“ƒZƒvƒg‚Í•¡”‚Ì•„†‰»•û®‚ğ“¯‚É—˜—p‚µ‚È‚¢‚æ‚¤‚É‚·‚é
     ‚±‚Æ‚Å‚·B]‚Á‚ÄCüq /a /d /l /u ‚ğƒTƒ|[ƒg‚µ‚Ü‚¹‚ñB
     \d ‚ÍÌ‚à¡‚à [0-9] ‚ğˆÓ–¡‚µ‚Ü‚·B
+
+=item * –¼‘O•t‚«•¶š
+
+    —á‚¦‚ÎA\N{GREEK SMALL LETTER EPSILON}A\N{greek:epsilon}A\N{epsilon} ‚Ì‚æ‚¤
+    ‚È–¼‘O•t‚«•¶š‚Í—˜—p‚Å‚«‚Ü‚¹‚ñB
+
+=item * ³‹K•\Œ»‚ÌUnicode‘®«
+
+    ³‹K•\Œ»‚ÌUnicode‘®«‚Í—˜—p‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚¹‚ñBPerl5.18‚Å’Ç‰Á‚³‚ê‚½ (?[])
+    \•¶‚à—˜—p‚Å‚«‚Ü‚¹‚ñB‚¢‚Ü‚Ì‚Æ‚±‚ë‚»‚ê‚ç‚ğƒTƒ|[ƒg‚·‚é—\’è‚Í‚ ‚è‚Ü‚¹‚ñB
 
 =item * –³‹‚³‚ê‚é ${^WIN32_SLOPPY_STAT} ‚Ì’l
 
@@ -2368,7 +2272,7 @@ Programming Perl, 3rd ed. (–M–ó ƒvƒƒOƒ‰ƒ~ƒ“ƒOPerl ‘æ3”Å) ‚Ì402ƒy[ƒW‚ğ‚à‚¤ˆê“x
     ‚±‚Ìƒ\ƒtƒgƒEƒFƒAA‚¨‚æ‚Ñ‘¶İ‚µ‚Ä‚¢‚½ JPerl ‚ğ‘‚«‘«‚µ‚Ä‚İ‚Ü‚µ‚å‚¤B
 
                             (a)     (b)     (c)     (d)     (e)
-                                          JPerl           Encode,Sjis
+                                          JPerl,japerl    Encode,Sjis
           +--------------+-------+-------+-------+-------+-------+
           | data         |  Old  |  Old  |  New  |  Old  |  New  |
           +--------------+-------+-------+-------+-------+-------+
@@ -2381,8 +2285,6 @@ Programming Perl, 3rd ed. (–M–ó ƒvƒƒOƒ‰ƒ~ƒ“ƒOPerl ‘æ3”Å) ‚Ì402ƒy[ƒW‚ğ‚à‚¤ˆê“x
 
     JPerl ‚ª‚Æ‚Ä‚à—D‚ê‚Ä‚¢‚é——R‚Í (c) ‚ÌˆÊ’u‚É‚ ‚é‚©‚ç‚Å‚·B‚·‚È‚í‚¿“ú–{Œêˆ—
     ‚ğs‚¤‚½‚ß‚ÉƒXƒNƒŠƒvƒg‚É“Á•Ê‚È‹Lq‚ğs‚¤•K—v‚ª‚ ‚è‚Ü‚¹‚ñB
-
-    JPerl ‚Í‚±‚ÌƒS[ƒ‹‚É“’B‚µ‚½—Bˆê‚Ìƒ\ƒtƒgƒEƒFƒA‚Å‚·B
 
 =item * ƒS[ƒ‹3
 
@@ -2802,9 +2704,19 @@ Programming Perl, 3rd ed. ‚ª‘‚©‚ê‚½ ‚É‚ÍAUTF8 ƒtƒ‰ƒO‚Í¶‚Ü‚ê‚Ä‚¨‚ç‚¸APerl ‚Í
  http://blade.nagaokaut.ac.jp/cgi-bin/scat.rb/ruby/ruby-list/12393
  http://blade.nagaokaut.ac.jp/cgi-bin/scat.rb/ruby/ruby-list/19156
 
+ Object-oriented with Perl
+ http://www.freeml.com/perl-oo/486
+ http://www.freeml.com/perl-oo/487
+ http://www.freeml.com/perl-oo/490
+ http://www.freeml.com/perl-oo/491
+ http://www.freeml.com/perl-oo/492
+ http://www.freeml.com/perl-oo/494
+ http://www.freeml.com/perl-oo/514
+
  ŠÖ˜Aƒ\ƒtƒgƒEƒFƒA
- http://search.cpan.org/dist/jacode/
  http://search.cpan.org/dist/Char/
+ http://search.cpan.org/dist/jacode/
+ http://search.cpan.org/dist/japerl/
 
  BackPAN
  http://backpan.perl.org/authors/id/I/IN/INA/
@@ -2963,6 +2875,9 @@ Programming Perl, 3rd ed. ‚ª‘‚©‚ê‚½ ‚É‚ÍAUTF8 ƒtƒ‰ƒO‚Í¶‚Ü‚ê‚Ä‚¨‚ç‚¸APerl ‚Í
  YAPC::Asia 2006 Tokyo "Perl5.8 and Unicode: Myths, Facts and Changes" ‚Å Perl5.8
  ‚Å‚Ì•ÏX“_‚ğÚ‚µ‚­‹³‚¦‚Ä‚à‚ç‚¢‚Ü‚µ‚½BCPAN ‚Ì face icon ‚Í‚±‚ÌƒXƒ‰ƒCƒh‚Éo‚Ä‚­‚é
  Perl5.6 = a city without bridges ‚Ì‰æ‘œ‚©‚çƒqƒ“ƒg‚ğ“¾‚Ä‚¢‚Ü‚·B
+
+ ‚‹´ ³„‚³‚ñ, JPerl Wiki
+ http://ja.jperl.wikia.com/wiki/JPerl_Wiki
 
  Juerd ‚³‚ñ, Perl Unicode Advice
  http://juerd.nl/site.plp/perluniadvice

@@ -17,7 +17,7 @@ use 5.00503;    # Galapagos Consensus 1998 for primetools
 # (and so on)
 
 BEGIN { eval q{ use vars qw($VERSION) } }
-$VERSION = sprintf '%d.%02d', q$Revision: 0.92 $ =~ /(\d+)/oxmsg;
+$VERSION = sprintf '%d.%02d', q$Revision: 0.93 $ =~ /(\d+)/oxmsg;
 
 BEGIN {
     if ($^X =~ / jperl /oxmsi) {
@@ -33,7 +33,7 @@ BEGIN {
 
 BEGIN { CORE::require Esjis; }
 
-# poor Symbol.pm - substitute of real Symbol.pm
+# instead of Symbol.pm
 BEGIN {
     my $genpkg = "Symbol::";
     my $genseq = 0;
@@ -181,14 +181,6 @@ my $q_angle    = qr{(?{local $nest=0}) (?>(?:
                              \>  (?(?{$nest>0})(?{$nest--})|(?!)))*) (?(?{$nest!=0})(?!))
                  }xms;
 
-# P.854 31.17. use re
-# in Chapter 31. Pragmatic Modules
-# of ISBN 0-596-00027-8 Programming Perl Third Edition.
-
-# P.1026 re
-# in Chapter 29. Pragmatic Modules
-# of ISBN 978-0-596-00492-7 Programming Perl 4th Edition.
-
 my $matched     = '';
 my $s_matched   = '';
 $matched        = q{$Esjis::matched};
@@ -220,9 +212,6 @@ my $ignore_modules = join('|', qw(
     Wildcard
     Japanese
 ));
-
-# in Chapter 8: Standard Modules
-# of ISBN 0-596-00241-6 Perl in a Nutshell, Second Edition
 
 # when this script is main program
 if ($0 eq __FILE__) {
@@ -276,10 +265,40 @@ sub import {
             Esjis::unlink "$filename.e";
         }
         else {
-            my $e_mtime   = (Esjis::stat("$filename.e"))[9];
-            my $mtime     = (Esjis::stat($filename))[9];
-            my $__mtime__ = (Esjis::stat(__FILE__))[9];
-            if (($e_mtime < $mtime) or ($mtime < $__mtime__)) {
+
+            #----------------------------------------------------
+            #  older >
+            #  newer >>>>>
+            #----------------------------------------------------
+            # Filter >
+            # Source >>>>>
+            # Escape >>>   needs re-escape (Source was changed)
+            #
+            # Filter >>>
+            # Source >>>>>
+            # Escape >     needs re-escape (Source was changed)
+            #
+            # Filter >>>>>
+            # Source >>>
+            # Escape >     needs re-escape (Source was changed)
+            #
+            # Filter >>>>>
+            # Source >
+            # Escape >>>   needs re-escape (Filter was changed)
+            #
+            # Filter >
+            # Source >>>
+            # Escape >>>>> executable without re-escape
+            #
+            # Filter >>>
+            # Source >
+            # Escape >>>>> executable without re-escape
+            #----------------------------------------------------
+
+            my $mtime_filter = (Esjis::stat(__FILE__     ))[9];
+            my $mtime_source = (Esjis::stat($filename    ))[9];
+            my $mtime_escape = (Esjis::stat("$filename.e"))[9];
+            if (($mtime_escape < $mtime_source) or ($mtime_escape < $mtime_filter)) {
                 Esjis::unlink "$filename.e";
             }
         }
@@ -333,8 +352,8 @@ sub import {
             eval q{ flock($fh, LOCK_EX) };
         }
 
-        truncate($fh, 0) or die __FILE__, ": Can't truncate file: $filename.e";
-        seek($fh, 0, 0)  or die __FILE__, ": Can't seek file: $filename.e";
+        eval q{ truncate($fh, 0) };
+        seek($fh, 0, 0) or die __FILE__, ": Can't seek file: $filename.e";
 
         my $e_script = Sjis::escape_script($filename);
         print {$fh} $e_script;
@@ -946,16 +965,16 @@ sub escape {
     elsif (/\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) qq \s* (\{) ((?:$qq_brace)+?)            (\}) /oxgc) { $slash = 'm//'; return "Esjis::filetest(qw($1)," . e_qq('qq',$2,$4,$3) . ")"; }
     elsif (/\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) qq \s* (\[) ((?:$qq_bracket)+?)          (\]) /oxgc) { $slash = 'm//'; return "Esjis::filetest(qw($1)," . e_qq('qq',$2,$4,$3) . ")"; }
     elsif (/\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) qq \s* (\<) ((?:$qq_angle)+?)            (\>) /oxgc) { $slash = 'm//'; return "Esjis::filetest(qw($1)," . e_qq('qq',$2,$4,$3) . ")"; }
-    elsif (/\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) qq \s* (\S) ((?:$qq_char)+?)             (\3) /oxgc) { $slash = 'm//'; return "Esjis::filetest(qw($1)," . e_qq('qq',$2,$4,$3) . ")"; }
+    elsif (/\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) qq \s* (\S) ((?:$qq_char)+?)             (\2) /oxgc) { $slash = 'm//'; return "Esjis::filetest(qw($1)," . e_qq('qq',$2,$4,$3) . ")"; }
 
     elsif (/\G (-[rwxoRWXOezfdlpSbcugkTB](?:\s+-[rwxoRWXOezfdlpSbcugkTB])+)
-                                                         \s* (\') ((?:\\\1|\\\\|$q_char)+?)    (\') /oxgc) { $slash = 'm//'; return "Esjis::filetest(qw($1)," . e_q ('',  $2,$4,$3) . ")"; }
+                                                         \s* (\') ((?:\\\'|\\\\|$q_char)+?)    (\') /oxgc) { $slash = 'm//'; return "Esjis::filetest(qw($1)," . e_q ('',  $2,$4,$3) . ")"; }
     elsif (/\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) q  \s* (\#) ((?:\\\#|\\\\|$q_char)+?)    (\#) /oxgc) { $slash = 'm//'; return "Esjis::filetest(qw($1)," . e_q ('q', $2,$4,$3) . ")"; }
     elsif (/\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) q  \s* (\() ((?:\\\)|\\\\|$q_paren)+?)   (\)) /oxgc) { $slash = 'm//'; return "Esjis::filetest(qw($1)," . e_q ('q', $2,$4,$3) . ")"; }
     elsif (/\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) q  \s* (\{) ((?:\\\}|\\\\|$q_brace)+?)   (\}) /oxgc) { $slash = 'm//'; return "Esjis::filetest(qw($1)," . e_q ('q', $2,$4,$3) . ")"; }
     elsif (/\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) q  \s* (\[) ((?:\\\]|\\\\|$q_bracket)+?) (\]) /oxgc) { $slash = 'm//'; return "Esjis::filetest(qw($1)," . e_q ('q', $2,$4,$3) . ")"; }
     elsif (/\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) q  \s* (\<) ((?:\\\>|\\\\|$q_angle)+?)   (\>) /oxgc) { $slash = 'm//'; return "Esjis::filetest(qw($1)," . e_q ('q', $2,$4,$3) . ")"; }
-    elsif (/\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) q  \s* (\S) ((?:\\\1|\\\\|$q_char)+?)    (\3) /oxgc) { $slash = 'm//'; return "Esjis::filetest(qw($1)," . e_q ('q', $2,$4,$3) . ")"; }
+    elsif (/\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) q  \s* (\S) ((?:\\\2|\\\\|$q_char)+?)    (\2) /oxgc) { $slash = 'm//'; return "Esjis::filetest(qw($1)," . e_q ('q', $2,$4,$3) . ")"; }
 
     elsif (/\G (-[rwxoRWXOezfdlpSbcugkTB](?:\s+-[rwxoRWXOezfdlpSbcugkTB])+) (\$ \w+(?: ::\w+)* (?: (?: ->)? (?: \( (?:$qq_paren)*? \) | \{ (?:$qq_brace)+? \} | \[ (?:$qq_bracket)+? \] ) )*) /oxgc)
                                                                                                            { $slash = 'm//'; return "Esjis::filetest(qw($1),$2)"; }
@@ -970,15 +989,15 @@ sub escape {
     elsif (/\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ qq \s* (\{) ((?:$qq_brace)+?)            (\}) /oxgc)    { $slash = 'm//'; return "Esjis::$1(" . e_qq('qq',$2,$4,$3) . ")"; }
     elsif (/\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ qq \s* (\[) ((?:$qq_bracket)+?)          (\]) /oxgc)    { $slash = 'm//'; return "Esjis::$1(" . e_qq('qq',$2,$4,$3) . ")"; }
     elsif (/\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ qq \s* (\<) ((?:$qq_angle)+?)            (\>) /oxgc)    { $slash = 'm//'; return "Esjis::$1(" . e_qq('qq',$2,$4,$3) . ")"; }
-    elsif (/\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ qq \s* (\S) ((?:$qq_char)+?)             (\3) /oxgc)    { $slash = 'm//'; return "Esjis::$1(" . e_qq('qq',$2,$4,$3) . ")"; }
+    elsif (/\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ qq \s* (\S) ((?:$qq_char)+?)             (\2) /oxgc)    { $slash = 'm//'; return "Esjis::$1(" . e_qq('qq',$2,$4,$3) . ")"; }
 
-    elsif (/\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+    \s* (\') ((?:\\\1|\\\\|$q_char)+?)    (\') /oxgc)    { $slash = 'm//'; return "Esjis::$1(" . e_q ('',  $2,$4,$3) . ")"; }
+    elsif (/\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+    \s* (\') ((?:\\\'|\\\\|$q_char)+?)    (\') /oxgc)    { $slash = 'm//'; return "Esjis::$1(" . e_q ('',  $2,$4,$3) . ")"; }
     elsif (/\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ q  \s* (\#) ((?:\\\#|\\\\|$q_char)+?)    (\#) /oxgc)    { $slash = 'm//'; return "Esjis::$1(" . e_q ('q', $2,$4,$3) . ")"; }
     elsif (/\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ q  \s* (\() ((?:\\\)|\\\\|$q_paren)+?)   (\)) /oxgc)    { $slash = 'm//'; return "Esjis::$1(" . e_q ('q', $2,$4,$3) . ")"; }
     elsif (/\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ q  \s* (\{) ((?:\\\}|\\\\|$q_brace)+?)   (\}) /oxgc)    { $slash = 'm//'; return "Esjis::$1(" . e_q ('q', $2,$4,$3) . ")"; }
     elsif (/\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ q  \s* (\[) ((?:\\\]|\\\\|$q_bracket)+?) (\]) /oxgc)    { $slash = 'm//'; return "Esjis::$1(" . e_q ('q', $2,$4,$3) . ")"; }
     elsif (/\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ q  \s* (\<) ((?:\\\>|\\\\|$q_angle)+?)   (\>) /oxgc)    { $slash = 'm//'; return "Esjis::$1(" . e_q ('q', $2,$4,$3) . ")"; }
-    elsif (/\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ q  \s* (\S) ((?:\\\1|\\\\|$q_char)+?)    (\3) /oxgc)    { $slash = 'm//'; return "Esjis::$1(" . e_q ('q', $2,$4,$3) . ")"; }
+    elsif (/\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ q  \s* (\S) ((?:\\\2|\\\\|$q_char)+?)    (\2) /oxgc)    { $slash = 'm//'; return "Esjis::$1(" . e_q ('q', $2,$4,$3) . ")"; }
 
     elsif (/\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s* (\$ \w+(?: ::\w+)* (?: (?: ->)? (?: \( (?:$qq_paren)*? \) | \{ (?:$qq_brace)+? \} | \[ (?:$qq_bracket)+? \] ) )*) /oxgc)
                                                                                                            { $slash = 'm//'; return "Esjis::$1($2)";      }
@@ -996,15 +1015,15 @@ sub escape {
     elsif (/\G -s                               \s+ qq \s* (\{) ((?:$qq_brace)+?)            (\}) /oxgc)   { $slash = 'm//'; return '-s ' . e_qq('qq',$1,$3,$2); }
     elsif (/\G -s                               \s+ qq \s* (\[) ((?:$qq_bracket)+?)          (\]) /oxgc)   { $slash = 'm//'; return '-s ' . e_qq('qq',$1,$3,$2); }
     elsif (/\G -s                               \s+ qq \s* (\<) ((?:$qq_angle)+?)            (\>) /oxgc)   { $slash = 'm//'; return '-s ' . e_qq('qq',$1,$3,$2); }
-    elsif (/\G -s                               \s+ qq \s* (\S) ((?:$qq_char)+?)             (\3) /oxgc)   { $slash = 'm//'; return '-s ' . e_qq('qq',$1,$3,$2); }
+    elsif (/\G -s                               \s+ qq \s* (\S) ((?:$qq_char)+?)             (\1) /oxgc)   { $slash = 'm//'; return '-s ' . e_qq('qq',$1,$3,$2); }
 
-    elsif (/\G -s                               \s+    \s* (\') ((?:\\\1|\\\\|$q_char)+?)    (\') /oxgc)   { $slash = 'm//'; return '-s ' . e_q ('',  $1,$3,$2); }
+    elsif (/\G -s                               \s+    \s* (\') ((?:\\\'|\\\\|$q_char)+?)    (\') /oxgc)   { $slash = 'm//'; return '-s ' . e_q ('',  $1,$3,$2); }
     elsif (/\G -s                               \s+ q  \s* (\#) ((?:\\\#|\\\\|$q_char)+?)    (\#) /oxgc)   { $slash = 'm//'; return '-s ' . e_q ('q', $1,$3,$2); }
     elsif (/\G -s                               \s+ q  \s* (\() ((?:\\\)|\\\\|$q_paren)+?)   (\)) /oxgc)   { $slash = 'm//'; return '-s ' . e_q ('q', $1,$3,$2); }
     elsif (/\G -s                               \s+ q  \s* (\{) ((?:\\\}|\\\\|$q_brace)+?)   (\}) /oxgc)   { $slash = 'm//'; return '-s ' . e_q ('q', $1,$3,$2); }
     elsif (/\G -s                               \s+ q  \s* (\[) ((?:\\\]|\\\\|$q_bracket)+?) (\]) /oxgc)   { $slash = 'm//'; return '-s ' . e_q ('q', $1,$3,$2); }
     elsif (/\G -s                               \s+ q  \s* (\<) ((?:\\\>|\\\\|$q_angle)+?)   (\>) /oxgc)   { $slash = 'm//'; return '-s ' . e_q ('q', $1,$3,$2); }
-    elsif (/\G -s                               \s+ q  \s* (\S) ((?:\\\1|\\\\|$q_char)+?)    (\3) /oxgc)   { $slash = 'm//'; return '-s ' . e_q ('q', $1,$3,$2); }
+    elsif (/\G -s                               \s+ q  \s* (\S) ((?:\\\1|\\\\|$q_char)+?)    (\1) /oxgc)   { $slash = 'm//'; return '-s ' . e_q ('q', $1,$3,$2); }
 
     elsif (/\G -s                               \s* (\$ \w+(?: ::\w+)* (?: (?: ->)? (?: \( (?:$qq_paren)*? \) | \{ (?:$qq_brace)+? \} | \[ (?:$qq_bracket)+? \] ) )*) /oxgc)
                                                                                                            { $slash = 'm//'; return "-s $1";   }
@@ -2297,16 +2316,16 @@ E_STRING_LOOP:
         elsif ($string =~ /\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) qq \s* (\{) ((?:$qq_brace)+?)            (\}) /oxgc) { $e_string .= "Esjis::filetest(qw($1)," . e_qq('qq',$2,$4,$3) . ")"; $slash = 'm//'; }
         elsif ($string =~ /\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) qq \s* (\[) ((?:$qq_bracket)+?)          (\]) /oxgc) { $e_string .= "Esjis::filetest(qw($1)," . e_qq('qq',$2,$4,$3) . ")"; $slash = 'm//'; }
         elsif ($string =~ /\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) qq \s* (\<) ((?:$qq_angle)+?)            (\>) /oxgc) { $e_string .= "Esjis::filetest(qw($1)," . e_qq('qq',$2,$4,$3) . ")"; $slash = 'm//'; }
-        elsif ($string =~ /\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) qq \s* (\S) ((?:$qq_char)+?)             (\3) /oxgc) { $e_string .= "Esjis::filetest(qw($1)," . e_qq('qq',$2,$4,$3) . ")"; $slash = 'm//'; }
+        elsif ($string =~ /\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) qq \s* (\S) ((?:$qq_char)+?)             (\2) /oxgc) { $e_string .= "Esjis::filetest(qw($1)," . e_qq('qq',$2,$4,$3) . ")"; $slash = 'm//'; }
 
         elsif ($string =~ /\G (-[rwxoRWXOezfdlpSbcugkTB](?:\s+-[rwxoRWXOezfdlpSbcugkTB])+)
-                                                                        \s* (\') ((?:\\\1|\\\\|$q_char)+?)    (\') /oxgc) { $e_string .= "Esjis::filetest(qw($1)," . e_q ('',  $2,$4,$3) . ")"; $slash = 'm//'; }
+                                                                        \s* (\') ((?:\\\'|\\\\|$q_char)+?)    (\') /oxgc) { $e_string .= "Esjis::filetest(qw($1)," . e_q ('',  $2,$4,$3) . ")"; $slash = 'm//'; }
         elsif ($string =~ /\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) q  \s* (\#) ((?:\\\#|\\\\|$q_char)+?)    (\#) /oxgc) { $e_string .= "Esjis::filetest(qw($1)," . e_q ('q', $2,$4,$3) . ")"; $slash = 'm//'; }
         elsif ($string =~ /\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) q  \s* (\() ((?:\\\)|\\\\|$q_paren)+?)   (\)) /oxgc) { $e_string .= "Esjis::filetest(qw($1)," . e_q ('q', $2,$4,$3) . ")"; $slash = 'm//'; }
         elsif ($string =~ /\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) q  \s* (\{) ((?:\\\}|\\\\|$q_brace)+?)   (\}) /oxgc) { $e_string .= "Esjis::filetest(qw($1)," . e_q ('q', $2,$4,$3) . ")"; $slash = 'm//'; }
         elsif ($string =~ /\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) q  \s* (\[) ((?:\\\]|\\\\|$q_bracket)+?) (\]) /oxgc) { $e_string .= "Esjis::filetest(qw($1)," . e_q ('q', $2,$4,$3) . ")"; $slash = 'm//'; }
         elsif ($string =~ /\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) q  \s* (\<) ((?:\\\>|\\\\|$q_angle)+?)   (\>) /oxgc) { $e_string .= "Esjis::filetest(qw($1)," . e_q ('q', $2,$4,$3) . ")"; $slash = 'm//'; }
-        elsif ($string =~ /\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) q  \s* (\S) ((?:\\\1|\\\\|$q_char)+?)    (\3) /oxgc) { $e_string .= "Esjis::filetest(qw($1)," . e_q ('q', $2,$4,$3) . ")"; $slash = 'm//'; }
+        elsif ($string =~ /\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) q  \s* (\S) ((?:\\\2|\\\\|$q_char)+?)    (\2) /oxgc) { $e_string .= "Esjis::filetest(qw($1)," . e_q ('q', $2,$4,$3) . ")"; $slash = 'm//'; }
 
         elsif ($string =~ /\G (-[rwxoRWXOezfdlpSbcugkTB](?:\s+-[rwxoRWXOezfdlpSbcugkTB])+) (\$ \w+(?: ::\w+)* (?: (?: ->)? (?: \( (?:$qq_paren)*? \) | \{ (?:$qq_brace)+? \} | \[ (?:$qq_bracket)+? \] ) )*) /oxgc)
                                                                                                                           { $e_string .= "Esjis::filetest(qw($1),$2)"; $slash = 'm//'; }
@@ -2321,15 +2340,15 @@ E_STRING_LOOP:
         elsif ($string =~ /\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ qq \s* (\{) ((?:$qq_brace)+?)            (\}) /oxgc)    { $e_string .= "Esjis::$1(" . e_qq('qq',$2,$4,$3) . ")"; $slash = 'm//'; }
         elsif ($string =~ /\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ qq \s* (\[) ((?:$qq_bracket)+?)          (\]) /oxgc)    { $e_string .= "Esjis::$1(" . e_qq('qq',$2,$4,$3) . ")"; $slash = 'm//'; }
         elsif ($string =~ /\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ qq \s* (\<) ((?:$qq_angle)+?)            (\>) /oxgc)    { $e_string .= "Esjis::$1(" . e_qq('qq',$2,$4,$3) . ")"; $slash = 'm//'; }
-        elsif ($string =~ /\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ qq \s* (\S) ((?:$qq_char)+?)             (\3) /oxgc)    { $e_string .= "Esjis::$1(" . e_qq('qq',$2,$4,$3) . ")"; $slash = 'm//'; }
+        elsif ($string =~ /\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ qq \s* (\S) ((?:$qq_char)+?)             (\2) /oxgc)    { $e_string .= "Esjis::$1(" . e_qq('qq',$2,$4,$3) . ")"; $slash = 'm//'; }
 
-        elsif ($string =~ /\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+    \s* (\') ((?:\\\1|\\\\|$q_char)+?)    (\') /oxgc)    { $e_string .= "Esjis::$1(" . e_q ('',  $2,$4,$3) . ")"; $slash = 'm//'; }
+        elsif ($string =~ /\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+    \s* (\') ((?:\\\'|\\\\|$q_char)+?)    (\') /oxgc)    { $e_string .= "Esjis::$1(" . e_q ('',  $2,$4,$3) . ")"; $slash = 'm//'; }
         elsif ($string =~ /\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ q  \s* (\#) ((?:\\\#|\\\\|$q_char)+?)    (\#) /oxgc)    { $e_string .= "Esjis::$1(" . e_q ('q', $2,$4,$3) . ")"; $slash = 'm//'; }
         elsif ($string =~ /\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ q  \s* (\() ((?:\\\)|\\\\|$q_paren)+?)   (\)) /oxgc)    { $e_string .= "Esjis::$1(" . e_q ('q', $2,$4,$3) . ")"; $slash = 'm//'; }
         elsif ($string =~ /\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ q  \s* (\{) ((?:\\\}|\\\\|$q_brace)+?)   (\}) /oxgc)    { $e_string .= "Esjis::$1(" . e_q ('q', $2,$4,$3) . ")"; $slash = 'm//'; }
         elsif ($string =~ /\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ q  \s* (\[) ((?:\\\]|\\\\|$q_bracket)+?) (\]) /oxgc)    { $e_string .= "Esjis::$1(" . e_q ('q', $2,$4,$3) . ")"; $slash = 'm//'; }
         elsif ($string =~ /\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ q  \s* (\<) ((?:\\\>|\\\\|$q_angle)+?)   (\>) /oxgc)    { $e_string .= "Esjis::$1(" . e_q ('q', $2,$4,$3) . ")"; $slash = 'm//'; }
-        elsif ($string =~ /\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ q  \s* (\S) ((?:\\\1|\\\\|$q_char)+?)    (\3) /oxgc)    { $e_string .= "Esjis::$1(" . e_q ('q', $2,$4,$3) . ")"; $slash = 'm//'; }
+        elsif ($string =~ /\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ q  \s* (\S) ((?:\\\2|\\\\|$q_char)+?)    (\2) /oxgc)    { $e_string .= "Esjis::$1(" . e_q ('q', $2,$4,$3) . ")"; $slash = 'm//'; }
 
         elsif ($string =~ /\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s* (\$ \w+(?: ::\w+)* (?: (?: ->)? (?: \( (?:$qq_paren)*? \) | \{ (?:$qq_brace)+? \} | \[ (?:$qq_bracket)+? \] ) )*) /oxgc)
                                                                                                                           { $e_string .= "Esjis::$1($2)";      $slash = 'm//'; }
@@ -2347,15 +2366,15 @@ E_STRING_LOOP:
         elsif ($string =~ /\G -s                               \s+ qq \s* (\{) ((?:$qq_brace)+?)            (\}) /oxgc)    { $e_string .= '-s ' . e_qq('qq',$1,$3,$2); $slash = 'm//'; }
         elsif ($string =~ /\G -s                               \s+ qq \s* (\[) ((?:$qq_bracket)+?)          (\]) /oxgc)    { $e_string .= '-s ' . e_qq('qq',$1,$3,$2); $slash = 'm//'; }
         elsif ($string =~ /\G -s                               \s+ qq \s* (\<) ((?:$qq_angle)+?)            (\>) /oxgc)    { $e_string .= '-s ' . e_qq('qq',$1,$3,$2); $slash = 'm//'; }
-        elsif ($string =~ /\G -s                               \s+ qq \s* (\S) ((?:$qq_char)+?)             (\3) /oxgc)    { $e_string .= '-s ' . e_qq('qq',$1,$3,$2); $slash = 'm//'; }
+        elsif ($string =~ /\G -s                               \s+ qq \s* (\S) ((?:$qq_char)+?)             (\1) /oxgc)    { $e_string .= '-s ' . e_qq('qq',$1,$3,$2); $slash = 'm//'; }
 
-        elsif ($string =~ /\G -s                               \s+    \s* (\') ((?:\\\1|\\\\|$q_char)+?)    (\') /oxgc)    { $e_string .= '-s ' . e_q ('',  $1,$3,$2); $slash = 'm//'; }
+        elsif ($string =~ /\G -s                               \s+    \s* (\') ((?:\\\'|\\\\|$q_char)+?)    (\') /oxgc)    { $e_string .= '-s ' . e_q ('',  $1,$3,$2); $slash = 'm//'; }
         elsif ($string =~ /\G -s                               \s+ q  \s* (\#) ((?:\\\#|\\\\|$q_char)+?)    (\#) /oxgc)    { $e_string .= '-s ' . e_q ('q', $1,$3,$2); $slash = 'm//'; }
         elsif ($string =~ /\G -s                               \s+ q  \s* (\() ((?:\\\)|\\\\|$q_paren)+?)   (\)) /oxgc)    { $e_string .= '-s ' . e_q ('q', $1,$3,$2); $slash = 'm//'; }
         elsif ($string =~ /\G -s                               \s+ q  \s* (\{) ((?:\\\}|\\\\|$q_brace)+?)   (\}) /oxgc)    { $e_string .= '-s ' . e_q ('q', $1,$3,$2); $slash = 'm//'; }
         elsif ($string =~ /\G -s                               \s+ q  \s* (\[) ((?:\\\]|\\\\|$q_bracket)+?) (\]) /oxgc)    { $e_string .= '-s ' . e_q ('q', $1,$3,$2); $slash = 'm//'; }
         elsif ($string =~ /\G -s                               \s+ q  \s* (\<) ((?:\\\>|\\\\|$q_angle)+?)   (\>) /oxgc)    { $e_string .= '-s ' . e_q ('q', $1,$3,$2); $slash = 'm//'; }
-        elsif ($string =~ /\G -s                               \s+ q  \s* (\S) ((?:\\\1|\\\\|$q_char)+?)    (\3) /oxgc)    { $e_string .= '-s ' . e_q ('q', $1,$3,$2); $slash = 'm//'; }
+        elsif ($string =~ /\G -s                               \s+ q  \s* (\S) ((?:\\\1|\\\\|$q_char)+?)    (\1) /oxgc)    { $e_string .= '-s ' . e_q ('q', $1,$3,$2); $slash = 'm//'; }
 
         elsif ($string =~ /\G -s                               \s* (\$ \w+(?: ::\w+)* (?: (?: ->)? (?: \( (?:$qq_paren)*? \) | \{ (?:$qq_brace)+? \} | \[ (?:$qq_bracket)+? \] ) )*) /oxgc)
                                                                                                                            { $e_string .= "-s $1";   $slash = 'm//'; }
@@ -3943,7 +3962,7 @@ sub e_qr_qt {
         \[\:\^ [a-z]+ \:\] |
         \[\:   [a-z]+ \:\] |
         \[\^               |
-        [\$\@\/\\]          |
+        [\$\@\/\\]         |
         \\?    (?:$q_char)
     )/oxmsg;
 
@@ -5815,12 +5834,6 @@ There are two steps there:
     CORE::index(...);
     CORE::rindex(...);
 
-  emulate Perl5.6 on perl5.00503
-    use warnings;
-    use warnings::register;
-
-  emulate Perl5.16
-    use feature qw(fc);
 
   dummy functions:
     utf8::upgrade(...);
@@ -5902,6 +5915,8 @@ I learned the following things from the successful software.
 
 =item * Code Set Independent like Ruby
 
+=item * Monolithic Script like cpanminus
+
 =item * There's more than one way to do it like Perl itself
 
 =back
@@ -5955,9 +5970,9 @@ I am glad that I could confirm my idea is not so wrong.
 
 =head1 Command-line Wildcard Expansion on DOS-like Systems
 
-The default command shells on DOS-like systems (COMMAND.COM or cmd.exe) do not
-expand wildcard arguments supplied to programs. Instead, import of Esjis.pm
-works well.
+The default command shells on DOS-like systems (COMMAND.COM or cmd.exe or
+Win95Cmd.exe) do not expand wildcard arguments supplied to programs. Instead,
+import of Esjis.pm works well.
 
    in Esjis.pm
    #
@@ -6002,45 +6017,6 @@ works well.
 
    Sjis.pm               --- source code filter to escape ShiftJIS
    Esjis.pm              --- run-time routines for Sjis.pm
-   perl5.bat             --- find and run perl5    without %PATH% settings
-   perl55.bat            --- find and run perl5.5  without %PATH% settings
-   perl56.bat            --- find and run perl5.6  without %PATH% settings
-   perl58.bat            --- find and run perl5.8  without %PATH% settings
-   perl510.bat           --- find and run perl5.10 without %PATH% settings
-   perl512.bat           --- find and run perl5.12 without %PATH% settings
-   perl514.bat           --- find and run perl5.14 without %PATH% settings
-   perl516.bat           --- find and run perl5.16 without %PATH% settings
-   perl518.bat           --- find and run perl5.18 without %PATH% settings
-   perl64.bat            --- find and run perl64   without %PATH% settings
-   perl64512.bat         --- find and run perl5.12 (x64) without %PATH% settings
-   perl64514.bat         --- find and run perl5.14 (x64) without %PATH% settings
-   perl64516.bat         --- find and run perl5.16 (x64) without %PATH% settings
-   perl64518.bat         --- find and run perl5.18 (x64) without %PATH% settings
-   aperl58.bat           --- find and run ActivePerl 5.8  without %PATH% settings
-   aperl510.bat          --- find and run ActivePerl 5.10 without %PATH% settings
-   aperl512.bat          --- find and run ActivePerl 5.12 without %PATH% settings
-   aperl514.bat          --- find and run ActivePerl 5.14 without %PATH% settings
-   aperl516.bat          --- find and run ActivePerl 5.16 without %PATH% settings
-   aperl518.bat          --- find and run ActivePerl 5.18 without %PATH% settings
-   aperl64512.bat        --- find and run ActivePerl 5.12 (x64) without %PATH% settings
-   aperl64514.bat        --- find and run ActivePerl 5.14 (x64) without %PATH% settings
-   aperl64516.bat        --- find and run ActivePerl 5.16 (x64) without %PATH% settings
-   aperl64518.bat        --- find and run ActivePerl 5.18 (x64) without %PATH% settings
-   sperl58.bat           --- find and run Strawberry Perl 5.8  without %PATH% settings
-   sperl510.bat          --- find and run Strawberry Perl 5.10 without %PATH% settings
-   sperl512.bat          --- find and run Strawberry Perl 5.12 without %PATH% settings
-   sperl514.bat          --- find and run Strawberry Perl 5.14 without %PATH% settings
-   sperl516.bat          --- find and run Strawberry Perl 5.16 without %PATH% settings
-   sperl518.bat          --- find and run Strawberry Perl 5.18 without %PATH% settings
-   sperl64512.bat        --- find and run Strawberry Perl 5.12 (x64) without %PATH% settings
-   sperl64514.bat        --- find and run Strawberry Perl 5.14 (x64) without %PATH% settings
-   sperl64516.bat        --- find and run Strawberry Perl 5.16 (x64) without %PATH% settings
-   sperl64518.bat        --- find and run Strawberry Perl 5.18 (x64) without %PATH% settings
-   cperl.bat             --- find and run Cygwin's Perl without %PATH% settings
-   strict.pm_            --- dummy strict.pm
-   warnings.pm_          --- poor warnings.pm
-   warnings/register.pm_ --- poor warnings/register.pm
-   feature.pm_           --- dummy feature.pm
 
 =head1 Upper Compatibility by Escaping
 
@@ -7029,19 +7005,6 @@ Back to and see 'Escaping Your Script'. Enjoy hacking!!
  
  (The value '1' doesn't have the meaning)
 
-=head1 Perl5.6 Emulation on perl5.005
-
-  Using warnings pragma on perl5.00503 by rename files.
-
-  warnings.pm_ --> warnings.pm
-  warnings/register.pm_ --> warnings/register.pm
-
-=head1 Perl5.16 Emulation
-
-  Using feature pragma by rename files.
-
-  feature.pm_ --> feature.pm
-
 =head1 MacJPerl on The MacOS
 
  The functions of MacJPerl was mimicked referring to the books and web.
@@ -7086,8 +7049,8 @@ library.
 
 On perl5.008001 or later, perl5.010, perl5.012, perl5.014, perl5.016, perl5.018
 if path is ended by chr(0x5C), chdir succeeds when a short path name (8dot3name)
-can be acquired according to COMMAND.COM or cmd.exe. However, leaf-subdirectory
-of the current directory is a short path name (8dot3name).
+can be acquired according to COMMAND.COM or cmd.exe or Win95Cmd.exe. However,
+leaf-subdirectory of the current directory is a short path name (8dot3name).
 
   see also,
   Bug #81839
@@ -7168,6 +7131,17 @@ octet of the previous multiple-octet code.
 The concept of this software is not to use two or more encoding methods at the
 same time. Therefore, modifier /a /d /l and /u are not supported.
 \d means [0-9] always.
+
+=item * Named Character
+
+A named character, such \N{GREEK SMALL LETTER EPSILON}, \N{greek:epsilon}, or
+\N{epsilon} is not supported.
+
+=item * Unicode Properties (aka Character Properties) of Regular Expression
+
+Unicode properties (aka character properties) of regexp are not available.
+Also (?[]) in regexp of Perl 5.18 is not available. There is no plans to currently
+support these.
 
 =item * ${^WIN32_SLOPPY_STAT} is ignored
 
@@ -7287,7 +7261,7 @@ of old and new. Let's add the Encode module and this software did not
 exist at time of be written this document and JPerl did exist.
 
                         (a)     (b)     (c)     (d)     (e)
-                                      JPerl           Encode,Sjis
+                                      JPerl,japerl    Encode,Sjis
       +--------------+-------+-------+-------+-------+-------+
       | data         |  Old  |  Old  |  New  |  Old  |  New  |
       +--------------+-------+-------+-------+-------+-------+
@@ -7301,8 +7275,6 @@ exist at time of be written this document and JPerl did exist.
 The reason why JPerl is very excellent is that it is at the position of
 (c). That is, it is not necessary to do a special description to the
 script to process new character-oriented string.
-
-JPerl is the only software attained to this goal.
 
 =item * Goal #3:
 
@@ -7544,8 +7516,9 @@ programming environment like at that time.
  http://shop.oreilly.com/product/9780735622623.do
 
  Other Tools
- http://search.cpan.org/dist/jacode/
  http://search.cpan.org/dist/Char/
+ http://search.cpan.org/dist/jacode/
+ http://search.cpan.org/dist/japerl/
 
  BackPAN
  http://backpan.perl.org/authors/id/I/IN/INA/
@@ -7620,6 +7593,9 @@ I am thankful to all persons.
  http://www.archive.org/details/YAPCAsia2006TokyoPerl58andUnicodeMythsFactsandChanges (video)
  http://yapc.g.hatena.ne.jp/jkondo/ (audio)
 
+ Takahashi Masatuyo, JPerl Wiki
+ http://ja.jperl.wikia.com/wiki/JPerl_Wiki
+
  Juerd, Perl Unicode Advice
  http://juerd.nl/site.plp/perluniadvice
 
@@ -7633,6 +7609,16 @@ I am thankful to all persons.
  http://mail.pm.org/pipermail/tokyo-pm/
  http://mail.pm.org/pipermail/tokyo-pm/1999-September/001844.html
  http://mail.pm.org/pipermail/tokyo-pm/1999-September/001854.html
+
+ Error: Runtime exception on jperl 5.005_03
+ http://www.rakunet.org/tsnet/TSperl/12/374.html
+ http://www.rakunet.org/tsnet/TSperl/12/375.html
+ http://www.rakunet.org/tsnet/TSperl/12/376.html
+ http://www.rakunet.org/tsnet/TSperl/12/377.html
+ http://www.rakunet.org/tsnet/TSperl/12/378.html
+ http://www.rakunet.org/tsnet/TSperl/12/379.html
+ http://www.rakunet.org/tsnet/TSperl/12/380.html
+ http://www.rakunet.org/tsnet/TSperl/12/382.html
 
  ruby-list
  http://blade.nagaokaut.ac.jp/ruby/ruby-list/index.shtml
@@ -7648,6 +7634,15 @@ I am thankful to all persons.
  http://blade.nagaokaut.ac.jp/cgi-bin/scat.rb/ruby/ruby-list/12392
  http://blade.nagaokaut.ac.jp/cgi-bin/scat.rb/ruby/ruby-list/12393
  http://blade.nagaokaut.ac.jp/cgi-bin/scat.rb/ruby/ruby-list/19156
+
+ Object-oriented with Perl
+ http://www.freeml.com/perl-oo/486
+ http://www.freeml.com/perl-oo/487
+ http://www.freeml.com/perl-oo/490
+ http://www.freeml.com/perl-oo/491
+ http://www.freeml.com/perl-oo/492
+ http://www.freeml.com/perl-oo/494
+ http://www.freeml.com/perl-oo/514
 
 =cut
 
