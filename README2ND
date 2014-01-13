@@ -1,6 +1,6 @@
 NAME
 
-      Char::Sjis - Source code filter for ShiftJIS script (Imitation JPerl)
+      Sjis - Source code filter for ShiftJIS script (Imitation JPerl)
 
 SYNOPSIS
 
@@ -8,9 +8,7 @@ SYNOPSIS
 
     In ShiftJIS_script.pl:
 
-      use Char::Sjis; # CPAN formal style
-         or
-      use Sjis; # casual style
+      use Sjis;
 
     And on command prompt:
 

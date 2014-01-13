@@ -1554,12 +1554,15 @@ MSWin32 ä¬ã´ÇÃ ActivePerl ÇÃÉoÅ[ÉWÉáÉì 5.6 à»ç~(Perl5.10.0Ç‡ä‹Ç›Ç‹Ç∑)ÅAÇ†ÇÈÇ¢ÇÕÇ
     èàóùëO          èàóùå„               é¿çsÇ≥ÇÍÇÈì‡óe
     -------------------------------------------------------------------------------------------
     $`              Esjis::PREMATCH()    CORE::substr($&,0,CORE::length($&)-CORE::length($1))
+    ${`}            Esjis::PREMATCH()    CORE::substr($&,0,CORE::length($&)-CORE::length($1))
     $PREMATCH       Esjis::PREMATCH()    CORE::substr($&,0,CORE::length($&)-CORE::length($1))
     ${^PREMATCH}    Esjis::PREMATCH()    CORE::substr($&,0,CORE::length($&)-CORE::length($1))
     $&              Esjis::MATCH()       $1
+    ${&}            Esjis::MATCH()       $1
     $MATCH          Esjis::MATCH()       $1
     ${^MATCH}       Esjis::MATCH()       $1
-    $'              Esjis::POSTMATCH()   $'
+    $'              $'                   $'
+    ${'}            ${'}                 $'
     $POSTMATCH      Esjis::POSTMATCH()   $'
     ${^POSTMATCH}   Esjis::POSTMATCH()   $'
     -------------------------------------------------------------------------------------------
