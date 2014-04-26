@@ -2343,7 +2343,7 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
 簡単な仕事を簡単にできるように設計されていました。このソフトウェアは当時のような
 プログラミング環境を提供します。
 
-=head1 初めてのPerlのあゆみ
+=head1 Perlの主張
 
   コンピュータ科学者の中には(特に還元主義者たちは)否定する者もいるのだが、
  人間というものは変わった形の心を持っているものなのだ。心の形は平坦ではない
@@ -2364,6 +2364,17 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
  こんなに多くの誤りを犯さないのですが。
 
  --- 初めてのPerl 第6版
+
+ とはいえPerlでUnicodeデータを処理する際に覚えておかなければならない最も重要な
+ ことは、Unicodeデータを使用しない場合(どのファイルもUTF-8としてマークされて
+ おらず、かつUTF-8ロケールを使用していない場合)、幸いPerl5.005_3ランドにい
+ るふりをできるということです。Unicode機能を明示的に使用していない限り、
+ Unicode機能があなたのコードを妨げることはありません。Unicodeを取り入れながら
+ 旧式のバイト対応スクリプトを妨害しないというこの2つの目標が妥協案と混乱をもた
+ らすこともありますが、正しいことを黙って行う、それがPerlの方式であり、Perlの方
+ 針でもあります。
+
+ --- 実用Perlプログラミング 第2版
 
 =head1 Sjis ソフトウェア誕生のはなし
 
@@ -2500,6 +2511,13 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
  488ページ
  ISBN 978-4-87311-567-2
  http://www.oreilly.co.jp/books/9784873115672/
+
+ 実用 Perlプログラミング 第2版
+ Simon Cozens 著, 菅野 良二 訳
+ 2006年03月 発行
+ 320ページ
+ ISBN 4-87311-280-X
+ http://www.oreilly.co.jp/books/487311280X/
 
  Perlリソースキット - UNIX版
  Futato, Irving, Jepson, Patwardhan, Siever 共著, イエローレーベル 山本 浩 訳
@@ -2716,13 +2734,14 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
  http://www.freeml.com/perl-oo/494
  http://www.freeml.com/perl-oo/514
 
- 関連ソフトウェア
- http://search.cpan.org/dist/Char/
- http://search.cpan.org/dist/jacode/
- http://search.cpan.org/dist/japerl/
+ CPAN Directory INABA Hitoshi
+ http://search.cpan.org/~ina/
 
  BackPAN
  http://backpan.perl.org/authors/id/I/IN/INA/
+
+ Recent Perl packages by "INABA Hitoshi"
+ http://code.activestate.com/ppm/author:INABA-Hitoshi/
 
 =head1 謝辞
 
