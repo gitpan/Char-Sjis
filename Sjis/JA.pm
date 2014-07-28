@@ -11,8 +11,21 @@ Sjis-JA - JAPANESE DOCUMENT
 
 =head1 —v–ñ
 
+=head2 g—p‘O
+
+  #!/usr/bin/perl
+  use utf8;
+  use open IO => ":encoding(cp932)";
+  binmode STDIN => ":encoding(cp932)";
+  binmode STDOUT => ":encoding(cp932)";
+  binmode STDERR => ":encoding(cp932)";
+  use Encode;
+
+=head2 g—pŒã
+
 ƒXƒNƒŠƒvƒg ShiftJIS_script.pl ‚Ì’†‚ÉˆÈ‰º‚ğ‹Lq‚µ‚Ä...
 
+  #!/usr/bin/perl
   use Sjis;
 
 ƒRƒ}ƒ“ƒhƒvƒƒ“ƒvƒg‚ÅˆÈ‰º‚Ì‚æ‚¤‚ÉÀs‚·‚é
@@ -143,8 +156,8 @@ http://mail.pm.org/pipermail/tokyo-pm/1999-September/001854.html
 
    Sjis.pm               --- ShiftJIS ƒ\[ƒXƒR[ƒhƒtƒBƒ‹ƒ^
    Esjis.pm              --- Sjis.pm ‚Ìƒ‰ƒ“ƒ^ƒCƒ€ƒ‹[ƒ`ƒ“
-   Char/Sjis.pm          --- Sjis.pm ‚Ì•Ê–¼(‹@”\‚Í“¯‚¶‚Å‚·)
-   Char/Esjis.pm         --- Esjis.pm ‚Ì•Ê–¼(‹@”\‚Í“¯‚¶‚Å‚·)
+   Char/Sjis.pm          --- CPANƒeƒXƒ^[Œü‚¯‚Ì Sjis.pm
+   Char/Esjis.pm         --- CPANƒeƒXƒ^[Œü‚¯‚Ì Esjis.pm
 
 =head1 DOS•—ƒVƒXƒeƒ€‚É‚¨‚¯‚éƒRƒ}ƒ“ƒhƒ‰ƒCƒ“‚ÌƒƒCƒ‹ƒhƒJ[ƒh“WŠJ
 
@@ -370,6 +383,7 @@ Sjis.pm ‚Í /i Cüq‚Ì‘ã‚í‚è‚É Esjis::ignorecase() ‚ÌŒÄo‚µ‚ğ‘‚«‰Á‚¦‚Ü‚·B
 =head1 •¶šwŒü‚Ì³‹K•\Œ»
 
 /b Cüq‚Ì‚È‚¢³‹K•\Œ»‚Í•¶šwŒü‚Ì“­‚«‚ğ‚µ‚Ü‚·B
+‚Â‚Ü‚èA/./ (ƒhƒbƒg)‚Í•¶š‚Éƒ}ƒbƒ`‚µ‚Ü‚·B
 
   --------------------------------------------------------------------------------
   ˆ—‘O                  ˆ—Œã
@@ -396,6 +410,7 @@ Sjis.pm ‚Í /i Cüq‚Ì‘ã‚í‚è‚É Esjis::ignorecase() ‚ÌŒÄo‚µ‚ğ‘‚«‰Á‚¦‚Ü‚·B
 =head1 ƒoƒCƒgwŒü‚Ì³‹K•\Œ»
 
 /b Cüq‚ğ•t‰Á‚µ‚½³‹K•\Œ»‚ÍƒoƒCƒgwŒü‚Ì“­‚«‚ğ‚µ‚Ü‚·B
+‚Â‚Ü‚èA/./ (ƒhƒbƒg)‚ÍƒoƒCƒg‚Éƒ}ƒbƒ`‚µ‚Ü‚·B
 
   --------------------------------------------------------------------------------
   ˆ—‘O                  ˆ—Œã
@@ -1527,11 +1542,11 @@ MSWin32 ŠÂ‹«‚Ì ActivePerl ‚Ìƒo[ƒWƒ‡ƒ“ 5.6 ˆÈ~(Perl5.10.0‚àŠÜ‚İ‚Ü‚·)A‚ ‚é‚¢‚Í‚
     perl5.006 ‚Ü‚½‚Í perl5.00800 ‚Ìê‡‚Å•¶šƒR[ƒh(0x5C)‚ÅI‚í‚éƒfƒBƒŒƒNƒgƒŠ
     ‚ğw’è‚µ‚ÄÀs‚·‚é‚É‚Í jacode.pl ƒ‰ƒCƒuƒ‰ƒŠ‚ª•K—v‚Å‚·B
 
-    perl5.008001ˆÈ~, perl5.010, perl5.012, perl5.014, perl5.016, perl5.018 ‚É‚Ä
-    •¶šƒR[ƒh(0x5C)‚ÅI‚í‚éƒfƒBƒŒƒNƒgƒŠ‚ğw’è‚µ‚ÄÀs‚·‚é‚Æ‚«ACOMMAND.COM ‚ ‚é
-    ‚¢‚Í cmd.exe ‚É‚æ‚Á‚Ä 8dot3name Œ`®‚Ì’Z‚¢–¼‘O‚ğæ“¾‚Å‚«‚½ê‡‚Í chdir() ‚ª
-    ¬Œ÷‚µ‚Ü‚·B‚½‚¾‚µAchdir() Œã‚ÌƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ÌÅI‚ÌƒTƒuƒfƒBƒŒƒNƒgƒŠ
-    ‚Í 8dot3name Œ`®‚Ì’Z‚¢–¼‘O‚É‚È‚è‚Ü‚·B
+    perl5.008001ˆÈ~, perl5.010, perl5.012, perl5.014, perl5.016, perl5.018,
+    perl5.020 ‚É‚Ä•¶šƒR[ƒh(0x5C)‚ÅI‚í‚éƒfƒBƒŒƒNƒgƒŠ‚ğw’è‚µ‚ÄÀs‚·‚é‚Æ‚«A
+    COMMAND.COM ‚ ‚é‚¢‚Í cmd.exe ‚É‚æ‚Á‚Ä 8dot3name Œ`®‚Ì’Z‚¢–¼‘O‚ğæ“¾‚Å‚«‚½
+    ê‡‚Í chdir() ‚ª¬Œ÷‚µ‚Ü‚·B‚½‚¾‚µAchdir() Œã‚ÌƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚Ì
+    ÅI‚ÌƒTƒuƒfƒBƒŒƒNƒgƒŠ‚Í 8dot3name Œ`®‚Ì’Z‚¢–¼‘O‚É‚È‚è‚Ü‚·B
 
     QlƒŠƒ“ƒN
     Bug #81839
@@ -1611,8 +1626,9 @@ MSWin32 ŠÂ‹«‚Ì ActivePerl ‚Ìƒo[ƒWƒ‡ƒ“ 5.6 ˆÈ~(Perl5.10.0‚àŠÜ‚İ‚Ü‚·)A‚ ‚é‚¢‚Í‚
 
 =item * ³‹K•\Œ»‚ÌCüq /a /d /l /u
 
-    ‚±‚Ìƒ\ƒtƒgƒEƒFƒA‚ÌƒRƒ“ƒZƒvƒg‚Í•¡”‚Ì•„†‰»•û®‚ğ“¯‚É—˜—p‚µ‚È‚¢‚æ‚¤‚É‚·‚é
-    ‚±‚Æ‚Å‚·B]‚Á‚ÄCüq /a /d /l /u ‚ğƒTƒ|[ƒg‚µ‚Ü‚¹‚ñB
+    ‚±‚Ìƒ\ƒtƒgƒEƒFƒA‚ÌƒRƒ“ƒZƒvƒg‚ÍA‚Ğ‚Æ‚Â‚ÌƒXƒNƒŠƒvƒg’†‚ÌƒŠƒeƒ‰ƒ‹•¶š—ñ‚â³‹K•\Œ»
+    ‚ÌƒŠƒeƒ‰ƒ‹•”•ª‚É•¡”‚Ì•„†‰»•û®‚ğ—˜—p‚µ‚È‚¢‚æ‚¤‚É‚·‚é‚±‚Æ‚Å‚·B]‚Á‚ÄCüq
+    /a /d /l /u ‚ğƒTƒ|[ƒg‚µ‚Ü‚¹‚ñB
     \d ‚ÍÌ‚à¡‚à [0-9] ‚ğˆÓ–¡‚µ‚Ü‚·B
 
 =item * –¼‘O•t‚«•¶š
@@ -1635,6 +1651,11 @@ MSWin32 ŠÂ‹«‚Ì ActivePerl ‚Ìƒo[ƒWƒ‡ƒ“ 5.6 ˆÈ~(Perl5.10.0‚àŠÜ‚İ‚Ü‚·)A‚ ‚é‚¢‚Í‚
 
     eval ‚Ì "string" ‚ğƒGƒXƒP[ƒv‚·‚é‹@”\‚Í‚Ü‚¾À‘•‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB¡Œã‚Ìƒo[ƒWƒ‡ƒ“
     ‚ÅƒTƒ|[ƒg‚³‚ê‚é‚Å‚µ‚å‚¤B
+
+=item * •¶š—ñ‚¨‚æ‚Ñ³‹K•\Œ»‚ÌƒfƒŠƒ~ƒ^
+
+    qq//, q//, qw//, qx//, qr//, m//, s///, tr///, y/// ‚ÌƒfƒŠƒ~ƒ^‚Æ‚µ‚ÄƒƒCƒhƒLƒƒ
+    ƒ‰ƒNƒ^‚ğg—p‚·‚é‚±‚Æ‚Í‚Å‚«‚Ü‚¹‚ñB
 
 =back
 
@@ -2218,13 +2239,13 @@ Unicode ƒTƒ|[ƒg‚ª perl ‚É“±“ü‚³‚ê‚éˆÈ‘O‚ÍAeq ‰‰Zq‚ÍA2‚Â‚ÌƒXƒJƒ‰[•Ï”‚É‚æ‚Á
 ‚Å‚·B©•ª‚Åì‚Á‚½ƒXƒNƒŠƒvƒg‚Í‚»‚ÌƒfƒoƒbƒO‚Ì‘O‚É“®“I‚É‚Ó‚é‚Ü‚¤ UTF8 ƒtƒ‰ƒO‚É‚Â‚¢‚Ä
 ƒfƒoƒbƒO‚µ‚È‚¯‚ê‚Î‚È‚è‚Ü‚¹‚ñB
 
-  perl3 ˆÈ~A‚ ‚é‚¢‚Í‚±‚Ìƒ\ƒtƒgƒEƒFƒA‚É‚æ‚éî•ñˆ—ƒ‚ƒfƒ‹
+  UNIX/CŒ¾Œê“I‚È perl3 ˆÈ~A‚ ‚é‚¢‚Í‚±‚Ìƒ\ƒtƒgƒEƒFƒA‚É‚æ‚éî•ñˆ—ƒ‚ƒfƒ‹
  
     +--------------------------------------------+
     |       Text strings as Binary strings       |
     |       Binary strings as Text strings       |
     +--------------------------------------------+
-    |              Not UTF8 Flagged              |
+    |        Not UTF8 Flagged, UNIX/C-ism        |
     +--------------------------------------------+
 
 ‚»‚±‚ÅA‚±‚Ì•û–@‚É–ß‚·‚±‚Æ‚É‚æ‚Á‚Ä‚Ç‚Ì‚æ‚¤‚É‰ğŒˆ‚³‚ê‚é‚Ì‚©A‚Ù‚±‚è‚É‚Ü‚İ‚ê‚½ŒÃ‚¢
@@ -2896,7 +2917,8 @@ Programming Perl, 3rd ed. ‚ª‘‚©‚ê‚½ ‚É‚ÍAUTF8 ƒtƒ‰ƒO‚Í¶‚Ü‚ê‚Ä‚¨‚ç‚¸APerl ‚Í
  
  YAPC::Asia 2006 Tokyo "Perl5.8 and Unicode: Myths, Facts and Changes" ‚Å Perl5.8
  ‚Å‚Ì•ÏX“_‚ğÚ‚µ‚­‹³‚¦‚Ä‚à‚ç‚¢‚Ü‚µ‚½BCPAN ‚Ì face icon ‚Í‚±‚ÌƒXƒ‰ƒCƒh‚Éo‚Ä‚­‚é
- Perl5.6 = a city without bridges ‚Ì‰æ‘œ‚©‚çƒqƒ“ƒg‚ğ“¾‚Ä‚¢‚Ü‚·B
+ Perl5.6 = a city without bridges ‚Ì‰æ‘œ‚©‚çƒqƒ“ƒg‚ğ“¾‚Ä‚¢‚Ü‚·B‚±‚ê‚Í5.005ƒVƒeƒB
+ ‚©‚çƒGƒXƒP[ƒv‚·‚é‚½‚ß‚ÌƒuƒŠƒbƒW‚ğ•\‚í‚µ‚Ä‚¢‚Ü‚·B
 
  ‚‹´ ³„‚³‚ñ, JPerl Wiki
  http://ja.jperl.wikia.com/wiki/JPerl_Wiki

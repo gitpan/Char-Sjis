@@ -17,7 +17,7 @@ use 5.00503;    # Galapagos Consensus 1998 for primetools
 # (and so on)
 
 BEGIN { eval q{ use vars qw($VERSION) } }
-$VERSION = sprintf '%d.%02d', q$Revision: 0.96 $ =~ /(\d+)/oxmsg;
+$VERSION = sprintf '%d.%02d', q$Revision: 0.97 $ =~ /(\d+)/oxmsg;
 
 BEGIN {
     if ($^X =~ / jperl /oxmsi) {
@@ -143,8 +143,8 @@ my $qq_angle   = qr{(?{local $nest=0}) (?>(?:
 my $qq_scalar  = qr{(?: \{ (?:$qq_brace)*? \} |
                        (?: ::)? (?:
                              [a-zA-Z_][a-zA-Z_0-9]*
-                       (?: ::[a-zA-Z_][a-zA-Z_0-9]* )* (?: \[ (?: \$\[ | \$\] | $qq_char )*? \] | \{ (?:$qq_brace)*? \} )*
-                                         (?: (?: -> )? (?: \[ (?: \$\[ | \$\] | $qq_char )*? \] | \{ (?:$qq_brace)*? \} ) )*
+                       (?: ::[a-zA-Z_][a-zA-Z_0-9]* )* (?:                                   \[ (?: \$\[ | \$\] | $qq_char )*? \] |           \{ (?:$qq_brace)*? \} )*
+                                         (?: (?: -> )? (?: [\$\@\%\&\*]\* | \$\#\* | [\@\%]? \[ (?: \$\[ | \$\] | $qq_char )*? \] | [\@\%\*]? \{ (?:$qq_brace)*? \} ) )*
                    ))
                  }xms;
 my $qq_variable = qr{(?: \{ (?:$qq_brace)*? \}                    |
@@ -153,8 +153,8 @@ my $qq_variable = qr{(?: \{ (?:$qq_brace)*? \}                    |
                               [^\x81-\x9F\xE0-\xFCa-zA-Z_0-9\[\]] |
                               ^[A-Z]                              |
                               [a-zA-Z_][a-zA-Z_0-9]*
-                        (?: ::[a-zA-Z_][a-zA-Z_0-9]* )* (?: \[ (?: \$\[ | \$\] | $qq_char )*? \] | \{ (?:$qq_brace)*? \} )*
-                                          (?: (?: -> )? (?: \[ (?: \$\[ | \$\] | $qq_char )*? \] | \{ (?:$qq_brace)*? \} ) )*
+                        (?: ::[a-zA-Z_][a-zA-Z_0-9]* )* (?:                                   \[ (?: \$\[ | \$\] | $qq_char )*? \] |           \{ (?:$qq_brace)*? \} )*
+                                          (?: (?: -> )? (?: [\$\@\%\&\*]\* | \$\#\* | [\@\%]? \[ (?: \$\[ | \$\] | $qq_char )*? \] | [\@\%\*]? \{ (?:$qq_brace)*? \} ) )*
                     ))
                   }xms;
 my $qq_substr  = qr{(?: Sjis::substr | CORE::substr | substr ) \( $qq_paren \)
@@ -662,13 +662,11 @@ USE_TK
 
     $slash = 'm//';
 
-    # Yes, I studied study yesterday.
-
     # P.359 The Study Function
     # in Chapter 7: Perl
     # of ISBN 0-596-00289-0 Mastering Regular Expressions, Second edition
 
-    study $_;
+    study $_; # Yes, I studied study yesterday.
 
     # while all script
 
@@ -993,7 +991,7 @@ sub escape {
     elsif (/\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) q  \s* (\<) ((?:\\\>|\\\\|$q_angle)+?)   (\>) /oxgc) { $slash = 'm//'; return "Esjis::filetest(qw($1)," . e_q ('q', $2,$4,$3) . ")"; }
     elsif (/\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) q  \s* (\S) ((?:\\\2|\\\\|$q_char)+?)    (\2) /oxgc) { $slash = 'm//'; return "Esjis::filetest(qw($1)," . e_q ('q', $2,$4,$3) . ")"; }
 
-    elsif (/\G (-[rwxoRWXOezfdlpSbcugkTB](?:\s+-[rwxoRWXOezfdlpSbcugkTB])+) (\$ \w+(?: ::\w+)* (?: (?: ->)? (?: \( (?:$qq_paren)*? \) | \{ (?:$qq_brace)+? \} | \[ (?:$qq_bracket)+? \] ) )*) /oxgc)
+    elsif (/\G (-[rwxoRWXOezfdlpSbcugkTB](?:\s+-[rwxoRWXOezfdlpSbcugkTB])+) (\$ \w+(?: ::\w+)* (?: (?: ->)? (?: [\$\@\%\&\*]\* | \$\#\* | \( (?:$qq_paren)*? \) | [\@\%\*]? \{ (?:$qq_brace)+? \} | [\@\%]? \[ (?:$qq_bracket)+? \] ) )*) /oxgc)
                                                                                                            { $slash = 'm//'; return "Esjis::filetest(qw($1),$2)"; }
     elsif (/\G (-[rwxoRWXOezfdlpSbcugkTB](?:\s+-[rwxoRWXOezfdlpSbcugkTB])+) \( ((?:$qq_paren)*?) \) /oxgc) { $slash = 'm//'; return "Esjis::filetest(qw($1),$2)"; }
     elsif (/\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) (?= [a-z]+)                                   /oxgc) { $slash = 'm//'; return "Esjis::filetest qw($1),";    }
@@ -1015,7 +1013,7 @@ sub escape {
     elsif (/\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ q  \s* (\<) ((?:\\\>|\\\\|$q_angle)+?)      (\>) /oxgc) { $slash = 'm//'; return "Esjis::$1(" . e_q ('q', $2,$4,$3) . ")"; }
     elsif (/\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ q  \s* (\S) ((?:\\\2|\\\\|$q_char)+?)       (\2) /oxgc) { $slash = 'm//'; return "Esjis::$1(" . e_q ('q', $2,$4,$3) . ")"; }
 
-    elsif (/\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s* (\$ \w+(?: ::\w+)* (?: (?: ->)? (?: \( (?:$qq_paren)*? \) | \{ (?:$qq_brace)+? \} | \[ (?:$qq_bracket)+? \] ) )*) /oxgc)
+    elsif (/\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s* (\$ \w+(?: ::\w+)* (?: (?: ->)? (?: [\$\@\%\&\*]\* | \$\#\* | \( (?:$qq_paren)*? \) | [\@\%\*]? \{ (?:$qq_brace)+? \} | [\@\%]? \[ (?:$qq_bracket)+? \] ) )*) /oxgc)
                                                                                                            { $slash = 'm//'; return "Esjis::$1($2)";             }
     elsif (/\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s* \( ((?:$qq_paren)*?) \)                          /oxgc) { $slash = 'm//'; return "Esjis::$1($2)";             }
     elsif (/\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) (?= \s+ [a-z]+)                                      /oxgc) { $slash = 'm//'; return "Esjis::$1";                 }
@@ -1041,7 +1039,7 @@ sub escape {
     elsif (/\G -s                               \s+ q  \s* (\<) ((?:\\\>|\\\\|$q_angle)+?)     (\>) /oxgc) { $slash = 'm//'; return '-s ' . e_q ('q', $1,$3,$2); }
     elsif (/\G -s                               \s+ q  \s* (\S) ((?:\\\1|\\\\|$q_char)+?)      (\1) /oxgc) { $slash = 'm//'; return '-s ' . e_q ('q', $1,$3,$2); }
 
-    elsif (/\G -s                               \s* (\$ \w+(?: ::\w+)* (?: (?: ->)? (?: \( (?:$qq_paren)*? \) | \{ (?:$qq_brace)+? \} | \[ (?:$qq_bracket)+? \] ) )*) /oxgc)
+    elsif (/\G -s                               \s* (\$ \w+(?: ::\w+)* (?: (?: ->)? (?: [\$\@\%\&\*]\* | \$\#\* | \( (?:$qq_paren)*? \) | [\@\%\*]? \{ (?:$qq_brace)+? \} | [\@\%]? \[ (?:$qq_bracket)+? \] ) )*) /oxgc)
                                                                                                            { $slash = 'm//'; return "-s $1";   }
     elsif (/\G -s                               \s* \( ((?:$qq_paren)*?) \)                         /oxgc) { $slash = 'm//'; return "-s ($1)"; }
     elsif (/\G -s                               (?= \s+ [a-z]+)                                     /oxgc) { $slash = 'm//'; return '-s';      }
@@ -2351,7 +2349,7 @@ E_STRING_LOOP:
         elsif ($string =~ /\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) q  \s* (\<) ((?:\\\>|\\\\|$q_angle)+?)   (\>) /oxgc) { $e_string .= "Esjis::filetest(qw($1)," . e_q ('q', $2,$4,$3) . ")"; $slash = 'm//'; }
         elsif ($string =~ /\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) q  \s* (\S) ((?:\\\2|\\\\|$q_char)+?)    (\2) /oxgc) { $e_string .= "Esjis::filetest(qw($1)," . e_q ('q', $2,$4,$3) . ")"; $slash = 'm//'; }
 
-        elsif ($string =~ /\G (-[rwxoRWXOezfdlpSbcugkTB](?:\s+-[rwxoRWXOezfdlpSbcugkTB])+) (\$ \w+(?: ::\w+)* (?: (?: ->)? (?: \( (?:$qq_paren)*? \) | \{ (?:$qq_brace)+? \} | \[ (?:$qq_bracket)+? \] ) )*) /oxgc)
+        elsif ($string =~ /\G (-[rwxoRWXOezfdlpSbcugkTB](?:\s+-[rwxoRWXOezfdlpSbcugkTB])+) (\$ \w+(?: ::\w+)* (?: (?: ->)? (?: [\$\@\%\&\*]\* | \$\#\* | \( (?:$qq_paren)*? \) | [\@\%\*]? \{ (?:$qq_brace)+? \} | [\@\%]? \[ (?:$qq_bracket)+? \] ) )*) /oxgc)
                                                                                                                           { $e_string .= "Esjis::filetest(qw($1),$2)"; $slash = 'm//'; }
         elsif ($string =~ /\G (-[rwxoRWXOezfdlpSbcugkTB](?:\s+-[rwxoRWXOezfdlpSbcugkTB])+) \( ((?:$qq_paren)*?) \) /oxgc) { $e_string .= "Esjis::filetest(qw($1),$2)"; $slash = 'm//'; }
         elsif ($string =~ /\G ((?:-[rwxoRWXOezfdlpSbcugkTB]\s+){2,}) (?= [a-z]+)                                   /oxgc) { $e_string .= "Esjis::filetest qw($1),";    $slash = 'm//'; }
@@ -2373,7 +2371,7 @@ E_STRING_LOOP:
         elsif ($string =~ /\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ q  \s* (\<) ((?:\\\>|\\\\|$q_angle)+?)      (\>) /oxgc) { $e_string .= "Esjis::$1(" . e_q ('q', $2,$4,$3) . ")"; $slash = 'm//'; }
         elsif ($string =~ /\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s+ q  \s* (\S) ((?:\\\2|\\\\|$q_char)+?)       (\2) /oxgc) { $e_string .= "Esjis::$1(" . e_q ('q', $2,$4,$3) . ")"; $slash = 'm//'; }
 
-        elsif ($string =~ /\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s* (\$ \w+(?: ::\w+)* (?: (?: ->)? (?: \( (?:$qq_paren)*? \) | \{ (?:$qq_brace)+? \} | \[ (?:$qq_bracket)+? \] ) )*) /oxgc)
+        elsif ($string =~ /\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s* (\$ \w+(?: ::\w+)* (?: (?: ->)? (?: [\$\@\%\&\*]\* | \$\#\* | \( (?:$qq_paren)*? \) | [\@\%\*]? \{ (?:$qq_brace)+? \} | [\@\%]? \[ (?:$qq_bracket)+? \] ) )*) /oxgc)
                                                                                                                           { $e_string .= "Esjis::$1($2)";      $slash = 'm//'; }
         elsif ($string =~ /\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) \s* \( ((?:$qq_paren)*?) \)                          /oxgc) { $e_string .= "Esjis::$1($2)";      $slash = 'm//'; }
         elsif ($string =~ /\G -([rwxoRWXOezsfdlpSbcugkTBMAC]) (?= \s+ [a-z]+)                                      /oxgc) { $e_string .= "Esjis::$1";          $slash = 'm//'; }
@@ -2399,7 +2397,7 @@ E_STRING_LOOP:
         elsif ($string =~ /\G -s                               \s+ q  \s* (\<) ((?:\\\>|\\\\|$q_angle)+?)      (\>) /oxgc) { $e_string .= '-s ' . e_q ('q', $1,$3,$2); $slash = 'm//'; }
         elsif ($string =~ /\G -s                               \s+ q  \s* (\S) ((?:\\\1|\\\\|$q_char)+?)       (\1) /oxgc) { $e_string .= '-s ' . e_q ('q', $1,$3,$2); $slash = 'm//'; }
 
-        elsif ($string =~ /\G -s                               \s* (\$ \w+(?: ::\w+)* (?: (?: ->)? (?: \( (?:$qq_paren)*? \) | \{ (?:$qq_brace)+? \} | \[ (?:$qq_bracket)+? \] ) )*) /oxgc)
+        elsif ($string =~ /\G -s                               \s* (\$ \w+(?: ::\w+)* (?: (?: ->)? (?: [\$\@\%\&\*]\* | \$\#\* | \( (?:$qq_paren)*? \) | [\@\%\*]? \{ (?:$qq_brace)+? \} | [\@\%]? \[ (?:$qq_bracket)+? \] ) )*) /oxgc)
                                                                                                                            { $e_string .= "-s $1";   $slash = 'm//'; }
         elsif ($string =~ /\G -s                               \s* \( ((?:$qq_paren)*?) \)                          /oxgc) { $e_string .= "-s ($1)"; $slash = 'm//'; }
         elsif ($string =~ /\G -s                               (?= \s+ [a-z]+)                                      /oxgc) { $e_string .= '-s';      $slash = 'm//'; }
@@ -7076,10 +7074,11 @@ symbian, dos).
 On perl5.006 or perl5.00800, if path is ended by chr(0x5C), it needs jacode.pl
 library.
 
-On perl5.008001 or later, perl5.010, perl5.012, perl5.014, perl5.016, perl5.018
-if path is ended by chr(0x5C), chdir succeeds when a short path name (8dot3name)
-can be acquired according to COMMAND.COM or cmd.exe or Win95Cmd.exe. However,
-leaf-subdirectory of the current directory is a short path name (8dot3name).
+On perl5.008001 or later, perl5.010, perl5.012, perl5.014, perl5.016, perl5.018,
+perl5.020 if path is ended by chr(0x5C), chdir succeeds when a short path name
+(8dot3name) can be acquired according to COMMAND.COM or cmd.exe or Win95Cmd.exe.
+However, leaf-subdirectory of the current directory is a short path name
+(8dot3name).
 
   see also,
   Bug #81839
@@ -7160,8 +7159,9 @@ octet of the previous multiple-octet code.
 
 =item * Modifier /a /d /l and /u of Regular Expression
 
-The concept of this software is not to use two or more encoding methods at the
-same time. Therefore, modifier /a, /d, /l, and /u are not supported.
+The concept of this software is not to use two or more encoding methods as
+literal string and literal of regexp in one Perl script. Therefore, modifier
+/a, /d, /l, and /u are not supported.
 \d means [0-9] universally.
 
 =item * Named Character
@@ -7185,6 +7185,11 @@ which has chr(0x5c) at end.
 
 The function which escapes "string" of eval has not been implemented yet. It will
 be supported in future versions.
+
+=item * Delimiter of String and Regexp
+
+qq//, q//, qw//, qx//, qr//, m//, s///, tr///, and y/// can't use a wide character
+as the delimiter.
 
 =back
 
@@ -7239,14 +7244,26 @@ to real encode of string. Thus you must debug about UTF8 flag, before
 your script. How to solve it by returning to a this method, let's drag out
 page 402 of the old dusty Programming Perl, 3rd ed. again.
 
-  Information processing model beginning with perl3 or this software.
+  Information processing model beginning with perl3 or this software of
+  UNIX/C-ism.
 
     +--------------------------------------------+
     |       Text strings as Binary strings       |
     |       Binary strings as Text strings       |
     +--------------------------------------------+
-    |              Not UTF8 Flagged              |
+    |        Not UTF8 Flagged, UNIX/C-ism        |
     +--------------------------------------------+
+
+  Script could be written in native encoding of operating systems.
+  - Like contents of a file
+  - Like a file name on the file systems
+  - Like command lines
+  - Like environment variables
+  - Like parameters of API
+
+  In UNIX Everything is a File
+  - In UNIX everything is a stream of bytes
+  - In UNIX the filesystem is used as a universal name space
 
 Ideally, I'd like to achieve these five Goals:
 
@@ -7366,14 +7383,12 @@ programming environment like at that time.
    Their fervent but misguided desire was simply to squash your mind to
   fit their mindset, to smush your patterns of thought into some sort of
   Hyperdimensional Flatland. It's a joyless existence, being smushed.
- 
   --- Learning Perl on Win32 Systems
- 
+
   If you think this is a big headache, you're right. No one likes
   this situation, but Perl does the best it can with the input and
   encodings it has to deal with. If only we could reset history and
   not make so many mistakes next time.
- 
   --- Learning Perl 6th Edition
 
    The most important thing for most people to know about handling
@@ -7385,7 +7400,6 @@ programming environment like at that time.
   goals of embracing Unicode but not disturbing old-style byte-oriented
   scripts has led to compromise and confusion, but it's the Perl way to
   silently do the right thing, which is what Perl ends up doing.
-
   --- Advanced Perl Programming, 2nd Edition
 
 =head1 SEE ALSO
