@@ -2832,13 +2832,14 @@ Programming Perl, 3rd ed. が書かれた頃には、UTF8 フラグは生まれておらず、Perl は
  http://www.oreilly.co.jp/books/4873111080/
  
  「日本語情報処理」「CJKV日中韓越情報処理」を読んで文字集合規格と符号化方式を学び、
- 文字化けについて理解が深まりました。文字化けの原因のひとつとして「利用者の意思と異
- なる、符号化方式の変換(が行われてしまう)」が挙げられます。それを防ぐために、この
- ソフトウェアは符号化方式を変換せずに情報処理を行います。利用者の意思がどうであった
- としても、その意思と異なる変換がされることはありません。
+ 文字化けの原因について理解が深まりました。さらに JPerl の説明の箇所にて「よりよい
+ 可搬性(optimal portability)」という言葉から、アプリケーションプログラムと、言語
+ 処理系のふたつの可搬性を同時に解決すべきだということに気づかせてもらいました。
  
  Appendix W: Perl Code Examples の中の CJKV Encoding Templates、Multiple-Byte
- Anchoring、Multiple-Byte Processing がとても参考になりました。
+ Anchoring、Multiple-Byte Processing もとても参考になりました。
+ 
+ 私のささやかなハックとして、ここで Jeffrey E. F. Friedl さんに感謝します。
 
  貞廣 知行さん, Shift-JISテキストを正しく扱う
  http://homepage1.nifty.com/nomenclator/perl/shiftjis.htm

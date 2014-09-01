@@ -1,3 +1,6 @@
+#
+# This file is *** FOR CPAN USE ONLY ***.
+#
 package Char::Esjis;
 ######################################################################
 #
@@ -17,7 +20,7 @@ use 5.00503;    # Galapagos Consensus 1998 for primetools
 # (and so on)
 
 BEGIN { eval q{ use vars qw($VERSION) } }
-$VERSION = sprintf '%d.%02d', q$Revision: 0.99 $ =~ /(\d+)/xmsg;
+$VERSION = sprintf '%d.%02d', q$Revision: 1.00 $ =~ /(\d+)/xmsg;
 
 BEGIN {
     if ($^X =~ / jperl /oxmsi) {
@@ -417,6 +420,18 @@ if (($] >= 5.010001) or
     # GB18030 encoding
     if (__PACKAGE__ =~ / \b Egb18030 \z/oxms) {
         ${Char::Esjis::q_char_SADAHIRO_Tomoyuki_2002_01_17} = qr{.*?[^\x30-\x39\x81-\xFE](?:[\x30-\x39]|[\x81-\xFE][\x30-\x39][\x81-\xFE][\x30-\x39]|[\x81-\xFE]{2})*?}oxms;
+        #                                                     ********************* octets not in multiple octet char (always char boundary)
+        #                                                                             *********** 1 octet chars in multiple octet char
+        #                                                                                         ******************************************** 4 octet chars
+        #                                                                                                                                      ************** 2 octet chars
+    }
+
+    # EUC-TW encoding
+    elsif (__PACKAGE__ =~ / \b Eeuctw \z/oxms) {
+        ${Char::Esjis::q_char_SADAHIRO_Tomoyuki_2002_01_17} = qr{.*?[^\x8E\xA1-\xFE]     (?:            \x8E[\xA1-\xB0][\xA1-\xFE]{2}|               [\xA1-\xFE]{2})*?}oxms;
+        #                                                     **************** octets not in multiple octet char (always char boundary)
+        #                                                                                         ***************************** 4 octet chars
+        #                                                                                                                                      ************** 2 octet chars
     }
 
     # other encoding
@@ -5102,7 +5117,7 @@ sub Char::Esjis::unlink(@) {
                 close $fh;
 
                 # cmd.exe on Windows NT, Windows 2000, Windows XP, Windows 2003 or later
-                if ($ENV{'OS'} eq 'Windows_NT') {
+                if ((defined $ENV{'OS'}) and ($ENV{'OS'} eq 'Windows_NT')) {
                     CORE::system 'DEL', '/F', $file, '2>NUL';
                 }
 
@@ -5348,7 +5363,7 @@ sub Char::Esjis::chdir(;$) {
         }
 
         # cmd.exe on Windows XP, Windows 2003 or later
-        elsif ($ENV{'OS'} eq 'Windows_NT') {
+        elsif ((defined $ENV{'OS'}) and ($ENV{'OS'} eq 'Windows_NT')) {
             chomp(my @dirx = grep /<DIR>/oxms, qx{dir /ad /x "$dir*" 2>NUL});
             for my $dirx (sort { CORE::length($a) <=> CORE::length($b) } @dirx) {
                 if (Char::Esjis::fc(CORE::substr $dirx,-CORE::length($subdir[-1]),CORE::length($subdir[-1])) eq Char::Esjis::fc($subdir[-1])) {
