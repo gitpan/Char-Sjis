@@ -20,6 +20,10 @@ Sjis-JA - JAPANESE DOCUMENT
   binmode STDOUT => ":encoding(cp932)";
   binmode STDERR => ":encoding(cp932)";
   use Encode;
+  
+  my $char_length = length("ƒ}ƒ‹ƒ`ƒoƒCƒg•¶Žš—ñ"); # •¶Žš”‚ð•Ô‚·
+  use bytes; # -- don't use it. just forget about it.
+  my $byte_length = bytes::length("ƒ}ƒ‹ƒ`ƒoƒCƒg•¶Žš—ñ"); # ƒoƒCƒg”‚ð•Ô‚·
 
 =head2 Žg—pŒã
 
@@ -27,6 +31,9 @@ Sjis-JA - JAPANESE DOCUMENT
 
   #!/usr/bin/perl
   use Sjis;
+  
+  my $byte_length = length("ƒ}ƒ‹ƒ`ƒoƒCƒg•¶Žš—ñ"); # ‚±‚ê‚Ü‚Å’Ê‚èƒoƒCƒg”‚ð•Ô‚·
+  my $char_length = Sjis::length("ƒ}ƒ‹ƒ`ƒoƒCƒg•¶Žš—ñ"); # V‹@”\‚Æ‚µ‚Ä•¶Žš”‚ð•Ô‚·
 
 ƒRƒ}ƒ“ƒhƒvƒƒ“ƒvƒg‚ÅˆÈ‰º‚Ì‚æ‚¤‚ÉŽÀs‚·‚é
 
@@ -58,7 +65,8 @@ JPerl ‚Í‚Æ‚Ä‚à—D‚ê‚½ƒ\ƒtƒgƒEƒFƒA‚Å‚·B‚¨‚Á‚ÆA‚±‚±‚Å‚¢‚¤ JPerl ‚Í“ú–{Œê‘Î‰ž”Å‚Ì
 Perl ‚Ì‚±‚Æ‚ÅAJava ‚â JVM ‚Æ‚ÍŠÖŒW‚ª‚ ‚è‚Ü‚¹‚ñBŒë‰ð‚³‚ê‚½‚èAŠú‘Ò‚³‚ê‚½‚è‚·‚é
 ‚Ì‚à¢‚é‚Ì‚ÅA‚±‚Ìƒ\ƒtƒgƒEƒFƒA‚Í Sjis ‚Æ‚¢‚¤–¼‘O‚É‚µ‚Ü‚µ‚½B‚»‚ÌŒãAƒgƒbƒvƒŒƒxƒ‹
 ‚Ì–¼‘O‚ð”ð‚¯‚é‚½‚ß Char::Sjis ‚Æ‚¢‚¤–¼‘O‚ÅƒfƒBƒXƒgƒŠƒrƒ…[ƒVƒ‡ƒ“‚ðì¬‚·‚é‚æ‚¤‚É
-‚µ‚Ü‚µ‚½‚ªA’ÊíŽg—p‚·‚é‚Ì‚Í]—ˆ‚Ì Sjis.pm, Esjis.pm ‚Å‚æ‚¢‚ÆŽv‚¢‚Ü‚·B
+‚µ‚Ü‚µ‚½‚ªA‚ ‚È‚½‚ª CPAN ƒeƒXƒ^[‚Å‚È‚¢‚Ì‚È‚ç‚±‚ê‚Ü‚Å‚Ç‚¨‚è Sjis.pm, Esjis.pm
+‚ðŽg‚Á‚Ä‚­‚¾‚³‚¢B
 
 ‚Æ‚±‚ë‚ÅA‚»‚Ì JPerl ‚Íƒo[ƒWƒ‡ƒ“ 5.005_04 ˆÈ~Aƒƒ“ƒeƒiƒ“ƒX‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB
 
@@ -219,9 +227,9 @@ DOS•—ƒVƒXƒeƒ€‚Ì•W€ƒVƒFƒ‹(COMMAND.COM ‚¨‚æ‚Ñ cmd.exe)‚ÍA‹N“®‚·‚éƒvƒƒOƒ‰ƒ€‚Ö“n‚
 
       ¦ no Sjis; ‚Í—˜—p‚Å‚«‚Ü‚¹‚ñB
 
-      use Sjis ver.sion.0; Œ`Ž®‚¾‚Æ Sjis ƒ\ƒtƒgƒEƒFƒA‚Ìƒo[ƒWƒ‡ƒ“‚ÌãŒÀE‰ºŒÀ‚Ì‘o•û
-      ‚ðŽw’è‚Å‚«‚Ü‚·BŽÀsŽž‚Ì Sjis ƒ\ƒtƒgƒEƒFƒA‚ª‹Lq‚µ‚½ƒo[ƒWƒ‡ƒ“‚Æ‚Ò‚Á‚½‚è“¯‚¶‚Å
-      ‚È‚¢‚È‚ç‚Î die ‚µ‚Ü‚·B—á‚¦‚ÎAuse Sjis 0.88.0; ‚Æ‹Lq‚·‚é‚Æ Sjis ƒ\ƒtƒgƒEƒFƒA
+      use Sjis ver.sion.0; Œ`Ž®‚¾‚Æ Sjisƒ\ƒtƒgƒEƒFƒA‚Ìƒo[ƒWƒ‡ƒ“‚ÌãŒÀE‰ºŒÀ‚Ì‘o•û
+      ‚ðŽw’è‚Å‚«‚Ü‚·BŽÀsŽž‚Ì Sjisƒ\ƒtƒgƒEƒFƒA‚ª‹Lq‚µ‚½ƒo[ƒWƒ‡ƒ“‚Æ‚Ò‚Á‚½‚è“¯‚¶‚Å
+      ‚È‚¢‚È‚ç‚Î die ‚µ‚Ü‚·B—á‚¦‚ÎAuse Sjis 0.88.0; ‚Æ‹Lq‚·‚é‚Æ Sjisƒ\ƒtƒgƒEƒFƒA
       ‚Ìƒo[ƒWƒ‡ƒ“‚ª 0.88 ‚Å‚ ‚é‚±‚Æ‚ð•Ûá‚Å‚«‚Ü‚·B
 
     2. ƒRƒ}ƒ“ƒhƒvƒƒ“ƒvƒg‚ÅˆÈ‰º‚Ì‚æ‚¤‚ÉŽÀs‚·‚é
@@ -249,6 +257,7 @@ DOS•—ƒVƒXƒeƒ€‚Ì•W€ƒVƒFƒ‹(COMMAND.COM ‚¨‚æ‚Ñ cmd.exe)‚ÍA‹N“®‚·‚éƒvƒƒOƒ‰ƒ€‚Ö“n‚
       Sjis::substr(...);
       Sjis::index(...);
       Sjis::rindex(...);
+      Sjis::eval(...);
       CORE::chop(...);
       CORE::ord(...);
       CORE::reverse(...);
@@ -318,7 +327,7 @@ PerlŽ©g‚Ì”ñŒÝŠ·‚ÈŠg’£‚ðŽæ‚èœ‚­‚±‚Æ‚à‚ ‚è‚Ü‚·B
   -----------------------------------------
   escaped script  "`\/"   [83 [5c] 5c]
   -----------------------------------------
-                    ^--- Sjis ƒ\ƒtƒgƒEƒFƒA‚ÅƒGƒXƒP[ƒv‚³‚ê‚é
+                    ^--- Sjisƒ\ƒtƒgƒEƒFƒA‚ÅƒGƒXƒP[ƒv‚³‚ê‚é
  
   ŽQl            Œ©‚¦•û  ƒ_ƒ“ƒv
   -----------------------------------------
@@ -334,7 +343,7 @@ PerlŽ©g‚Ì”ñŒÝŠ·‚ÈŠg’£‚ðŽæ‚èœ‚­‚±‚Æ‚à‚ ‚è‚Ü‚·B
 
 =head1 ³‹K•\Œ»’†‚Ö‚Ìƒ}ƒ‹ƒ`ƒoƒCƒgƒAƒ“ƒJ[ƒŠƒ“ƒOˆ—‚Ì’Ç‰Á
 
-Sjis.pm ‚Í³‹K•\Œ»‚Ìæ“ª‚Éƒ}ƒ‹ƒ`ƒoƒCƒgƒAƒ“ƒJ[ƒŠƒ“ƒOˆ—‚ð•t‚¯‘«‚µ‚Ü‚·B
+Sjisƒ\ƒtƒgƒEƒFƒA‚Í³‹K•\Œ»‚Ìæ“ª‚Éƒ}ƒ‹ƒ`ƒoƒCƒgƒAƒ“ƒJ[ƒŠƒ“ƒOˆ—‚ð•t‚¯‘«‚µ‚Ü‚·B
 
   --------------------------------------------------------------------------------
   ˆ—‘O                  ˆ—Œã
@@ -342,12 +351,12 @@ Sjis.pm ‚Í³‹K•\Œ»‚Ìæ“ª‚Éƒ}ƒ‹ƒ`ƒoƒCƒgƒAƒ“ƒJ[ƒŠƒ“ƒOˆ—‚ð•t‚¯‘«‚µ‚Ü‚·B
   m/regexp/               m/${Esjis::anchor}(?:regexp).../
   --------------------------------------------------------------------------------
 
-${Esjis::anchor} ‚Ì‹ï‘Ì“I‚È“à—e‚É‚Â‚¢‚Ä‚Í•Ê“ruSjis ƒ\ƒtƒgƒEƒFƒA‚Ìƒ}ƒ‹ƒ`ƒoƒCƒgƒAƒ“
+${Esjis::anchor} ‚Ì‹ï‘Ì“I‚È“à—e‚É‚Â‚¢‚Ä‚Í•Ê“ruSjisƒ\ƒtƒgƒEƒFƒA‚Ìƒ}ƒ‹ƒ`ƒoƒCƒgƒAƒ“
 ƒJ[ƒŠƒ“ƒOˆ—v‚É‹Lq‚µ‚Ä‚ ‚è‚Ü‚·B
 
 =head1 ‘æ2ƒIƒNƒeƒbƒg‚ÌƒGƒXƒP[ƒvˆ—
 
-Sjis.pm ‚Í³‹K•\Œ»’†‚Ìƒ}ƒ‹ƒ`ƒoƒCƒg•¶Žš‚Ì‘æ2ƒIƒNƒeƒbƒg‚ðƒGƒXƒP[ƒv‚µ‚Ü‚·B
+Sjisƒ\ƒtƒgƒEƒFƒA‚Í³‹K•\Œ»’†‚Ìƒ}ƒ‹ƒ`ƒoƒCƒg•¶Žš‚Ì‘æ2ƒIƒNƒeƒbƒg‚ðƒGƒXƒP[ƒv‚µ‚Ü‚·B
 
   --------------------------------------------------------------------------------
   ˆ—‘O                  ˆ—Œã
@@ -357,9 +366,9 @@ Sjis.pm ‚Í³‹K•\Œ»’†‚Ìƒ}ƒ‹ƒ`ƒoƒCƒg•¶Žš‚Ì‘æ2ƒIƒNƒeƒbƒg‚ðƒGƒXƒP[ƒv‚µ‚Ü‚·B
 
 =head1 ³‹K•\Œ»’†‚Ìƒ}ƒ‹ƒ`ƒoƒCƒg•¶Žš‚Ìˆµ‚¢‚É‚Â‚¢‚Ä
 
-Sjis.pm ‚Íƒ}ƒ‹ƒ`ƒoƒCƒg•¶Žš‚Ö‚Ì—ÊŽw’èŽqA‚¨‚æ‚Ñƒ}ƒ‹ƒ`ƒoƒCƒg•¶Žš‚ÌƒJƒXƒ^ƒ€•¶ŽšƒNƒ‰ƒX
-‚ðƒNƒ‰ƒXƒ^ƒŠƒ“ƒO‚µ‚Ü‚·B‚Ü‚½ƒNƒ‰ƒbƒVƒbƒN‚È Perl •¶ŽšƒNƒ‰ƒXAPOSIX ƒXƒ^ƒCƒ‹‚Ì•¶Žš
-ƒNƒ‰ƒX‚ðƒ}ƒ‹ƒ`ƒoƒCƒg•¶Žš‘Î‰ž”Å‚É‘‚«Š·‚¦‚Ü‚·B
+Sjisƒ\ƒtƒgƒEƒFƒA‚Íƒ}ƒ‹ƒ`ƒoƒCƒg•¶Žš‚Ö‚Ì—ÊŽw’èŽqA‚¨‚æ‚Ñƒ}ƒ‹ƒ`ƒoƒCƒg•¶Žš‚ÌƒJƒXƒ^ƒ€
+•¶ŽšƒNƒ‰ƒX‚ðƒNƒ‰ƒXƒ^ƒŠƒ“ƒO‚µ‚Ü‚·B‚Ü‚½ƒNƒ‰ƒbƒVƒbƒN‚È Perl •¶ŽšƒNƒ‰ƒXAPOSIX ƒXƒ^ƒC
+ƒ‹‚Ì•¶ŽšƒNƒ‰ƒX‚ðƒ}ƒ‹ƒ`ƒoƒCƒg•¶Žš‘Î‰ž”Å‚É‘‚«Š·‚¦‚Ü‚·B
 
   --------------------------------------------------------------------------------
   ˆ—‘O                  ˆ—Œã
@@ -372,7 +381,7 @@ Sjis.pm ‚Íƒ}ƒ‹ƒ`ƒoƒCƒg•¶Žš‚Ö‚Ì—ÊŽw’èŽqA‚¨‚æ‚Ñƒ}ƒ‹ƒ`ƒoƒCƒg•¶Žš‚ÌƒJƒXƒ^ƒ€•¶ŽšƒNƒ‰
 
 =head1 Esjis::ignorecase() ‚ÌŒÄ‚Ño‚µ
 
-Sjis.pm ‚Í /i CüŽq‚Ì‘ã‚í‚è‚É Esjis::ignorecase() ‚ÌŒÄo‚µ‚ð‘‚«‰Á‚¦‚Ü‚·B
+Sjisƒ\ƒtƒgƒEƒFƒA‚Í /i CüŽq‚Ì‘ã‚í‚è‚É Esjis::ignorecase() ‚ÌŒÄo‚µ‚ð‘‚«‰Á‚¦‚Ü‚·B
 
   --------------------------------------------------------------------------------
   ˆ—‘O                  ˆ—Œã
@@ -936,6 +945,208 @@ perl5.00503 ‚ðŽg—p‚µ‚Ä‚¢‚éê‡‚Å‚àƒtƒ@ƒCƒ‹ƒeƒXƒg‰‰ŽZŽq‚ÍuÏ‚Ýd‚Ë‚év‚±‚Æ‚ª
         $pos--;
     }
 
+=item * Sjis::eval
+
+    $eval = Sjis::eval { block };
+    $eval = Sjis::eval $expr;
+    $eval = Sjis::eval;
+
+    JPerl ‚É‚¨‚¢‚Ä‚ÍASjis::eval ƒL[ƒ[ƒh‚ÍA“Æ—§‚µ‚Ä‚¢‚Ü‚·‚ªAŠÖ˜A«‚Ì‚ ‚é2‚Â
+    ‚Ì–Ú“I‚ÉŽg—p‚³‚ê‚Ä‚¢‚Ü‚·B‚±‚ê‚ç2‚Â‚Ì–Ú“I‚É‡‚í‚¹‚ÄA2‚Â‚ÌŒ`Ž® Sjis::eval
+    { block } ‚Æ Sjis::eval $expr ‚ª—pˆÓ‚³‚ê‚Ä‚¢‚Ü‚·B1”Ô–Ú‚ÌŒ`Ž® Sjis::eval
+    { block } ‚ÍA‚»‚Ì‚Ü‚Ü‚Å‚Í’v–½“I‚Å‚ ‚é‚æ‚¤‚ÈŽÀsŽž—áŠO(ƒGƒ‰[)‚ðƒgƒ‰ƒbƒv‚·‚é
+    ‚½‚ß‚Ì‚à‚Ì‚ÅAC++ ‚â Java ‚Ì "tryƒuƒƒbƒN" ‚ÉŽ—‚Ä‚¢‚Ü‚·B2”Ô–Ú‚ÌŒ`Ž®
+    Sjis::eval $expr ‚ÍAŽÀsŽž‚ÉƒR[ƒh‚ðƒRƒ“ƒpƒCƒ‹‚µ‚ÄŽÀs‚·‚é‚Æ‚Æ‚à‚ÉA1”Ô–Ú‚Ì
+    Œ`Ž®‚Æ“¯‚¶‚æ‚¤‚ÉA”­¶‚µ‚½—áŠO‚ðƒgƒ‰ƒbƒv‚µ‚Ü‚·B‚µ‚©‚µASjis::eval $expr ‚Ì
+    ‚Ù‚¤‚ª Sjis::eval { block } ‚æ‚è‚à‚©‚È‚èŽÀs‚ª’x‚­‚È‚è‚Ü‚·B‚È‚º‚È‚çA
+    Sjis::eval $expr ‚ÍA–ˆ‰ñ•¶Žš—ñ‚ðƒp[ƒX‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢‚©‚ç‚Å‚·B‚»‚Ìˆê•û‚ÅA
+    Sjis::eval $expr ‚Ì‚Ù‚¤‚ª‚æ‚è”Ä—p«‚ª‚‚­‚È‚è‚Ü‚·B‚Ç‚¿‚ç‚ÌŒ`Ž®‚ðŽg‚¤‚É‚¹‚æA
+    JPerl ‚É‚¨‚¢‚Ä‚ÍA‚·‚×‚Ä‚Ì—áŠOˆ—‚É‚Í Sjis::eval ‚ð—˜—p‚·‚é‚±‚Æ‚ª–]‚Ü‚µ‚¢
+    ‚Å‚·B
+
+    ‚Ç‚¿‚ç‚ÌŒ`Ž®‚Ì Sjis::eval ‚Å‚àAƒTƒuƒ‹[ƒ`ƒ“‚Æ“¯‚¶‚æ‚¤‚ÉAÅŒã‚É•]‰¿‚µ‚½Ž®‚Ì
+    ’l‚ª Sjis::eval ‚Ì’l‚Æ‚µ‚Ä•Ô‚³‚ê‚Ü‚·B‚Ü‚½“¯—l‚ÉAreturn ‰‰ŽZŽq‚ðŽg‚¤‚±‚Æ‚É
+    ‚æ‚Á‚ÄASjis::eval ‚Ì“r’†‚©‚ç’l‚ð•Ô‚·‚±‚Æ‚ª‚Å‚«‚Ü‚·BSjis::eval ‚Ì–ß‚è’l‚ð’ñ
+    ‹Ÿ‚·‚éŽ®‚ÍASjis::eval Ž©‘Ì‚ÌƒRƒ“ƒeƒLƒXƒg‚É‰ž‚¶‚ÄA–³ŒøƒRƒ“ƒeƒLƒXƒgAƒXƒJƒ‰[
+    ƒRƒ“ƒeƒLƒXƒgA‚Ü‚½‚ÍƒŠƒXƒgƒRƒ“ƒeƒLƒXƒg‚Å•]‰¿‚³‚ê‚Ü‚·B•]‰¿‚ªs‚í‚ê‚éƒRƒ“ƒeƒL
+    ƒXƒg‚ð’m‚é•û–@‚É‚Â‚¢‚Ä‚ÍAwantarray ‚ðŽQÆ‚µ‚Ä‚­‚¾‚³‚¢B
+
+    ƒgƒ‰ƒbƒv‰Â”\‚ÈƒGƒ‰[(die ‰‰ŽZŽq‚Å”­¶‚³‚¹‚½ƒGƒ‰[‚àŠÜ‚Þ)‚ª”­¶‚·‚é‚ÆA
+    Sjis::eval ‚Í underf ‚ð•Ô‚µA•Ï” $@ ‚ÉƒGƒ‰[ƒƒbƒZ[ƒW(‚Ü‚½‚ÍƒIƒuƒWƒFƒNƒg)‚ð
+    ƒZƒbƒg‚µ‚Ü‚·BƒGƒ‰[‚ª”­¶‚µ‚È‚¯‚ê‚ÎA$@ ‚ª‹ó•¶Žš—ñ‚É‚È‚é‚±‚Æ‚ª•ÛØ‚³‚ê‚Ä‚¢
+    ‚Ü‚·B‚¾‚©‚çASjis::eval ‚ÌŒã‚Å $@ ‚Ì’l‚ð’²‚×‚ê‚ÎAƒGƒ‰[‚Ì—L–³‚ðŠmŽÀ‚É”»’è
+    ‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·BŽÀÛ‚É‚ÍAŽŸ‚Ì‚æ‚¤‚È’Pƒ‚Èƒu[ƒ‹’l‚ÌƒeƒXƒg‚Å\•ª‚Å‚·:
+
+        Sjis::eval { ... }; # ŽÀsŽžƒGƒ‰[‚ðƒgƒ‰ƒbƒv‚·‚é
+        if ($@) { ... }     # ƒGƒ‰[ˆ—‚ðs‚¤
+
+    (Perl 5.16 ˆÈ‘O‚Å‚ÍAƒoƒO‚É‚æ‚Á‚ÄAƒŠƒXƒgƒRƒ“ƒeƒLƒXƒg‚Å\•¶ƒGƒ‰[‚ÌŽž‚É‚Í undef
+    ‚ð•Ô‚µ‚Ä‚¢‚Ü‚µ‚½‚ªAŽÀsƒGƒ‰[‚ÌŽž‚É‚Í•Ô‚µ‚Ä‚¢‚Ü‚¹‚ñ‚Å‚µ‚½)B
+
+    Sjis::eval { block } Œ`Ž®‚ÍAƒRƒ“ƒpƒCƒ‹Žž‚É\•¶ƒ`ƒFƒbƒN‚ðs‚¤‚½‚ß‚ÉA”ñí‚ÉŒø
+    —¦‚ª—Ç‚­‚È‚è‚Ü‚·B(’x‚¢ Sjis::eval $expr Œ`Ž®‚ÉŠµ‚ê‚Ä‚¢‚él‚ÍA‚±‚Ì“_‚É‚Â‚¢‚Ä
+    Œë‰ð‚µ‚Ä‚¢‚é‚±‚Æ‚ª‘½‚¢‚æ‚¤‚Å‚·B) { block } “à‚ÌƒR[ƒh‚ÍA‰ñ‚è‚ÌƒR[ƒh‚Æ“¯Žž‚É
+    ƒRƒ“ƒpƒCƒ‹‚³‚ê‚é‚Ì‚ÅA‚±‚ÌŒ`Ž®‚Ì Sjis::eval ‚Å‚Í\•¶ƒGƒ‰[‚ðƒgƒ‰ƒbƒv‚·‚é‚±‚Æ‚Í
+    ‚Å‚«‚Ü‚¹‚ñB
+
+    Sjis::eval $expr Œ`Ž®‚ÍAŽÀsŽž‚ÉƒR[ƒh‚ðƒp[ƒX‚·‚é‚Ì‚ÅA\•¶ƒGƒ‰[‚ðƒgƒ‰ƒbƒv
+    ‚·‚é‚±‚Æ‚ª‰Â”\‚Å‚·B(ƒp[ƒX‚ÉŽ¸”s‚·‚é‚ÆA—á‚É‚æ‚Á‚ÄƒGƒ‰[ƒƒbƒZ[ƒW‚ª $@ ‚É
+    ƒZƒbƒg‚³‚ê‚Ü‚·B) $expr ‚ªÈ—ª‚³‚ê‚é‚ÆA$_ ‚ð•]‰¿‚µ‚Ü‚·B
+
+    \•¶ƒGƒ‰[‚ª‚È‚¯‚ê‚ÎAŽ® $expr ‚Ì’l‚ðA¬‚³‚È JPerl ƒXƒNƒŠƒvƒg‚Ì‚æ‚¤‚É‚µ‚ÄŽÀs
+    ‚µ‚Ü‚·B‚±‚Ì‚Æ‚«ƒR[ƒh‚ÍA‚»‚ÌŽž“_‚Ì JPerl ƒXƒNƒŠƒvƒg‚ÌƒRƒ“ƒeƒLƒXƒg‚ÅŽÀs‚³‚ê
+    ‚Ü‚·B‚¾‚©‚çASjis::eval ‚ÅŽÀs‚³‚ê‚éƒR[ƒh‚©‚ç‚ÍA‰ñ‚è‚ðŽæ‚èˆÍ‚ÞƒXƒR[ƒv‚ÌƒŒƒL
+    ƒVƒJƒ‹•Ï”‚ðŒ©‚é‚±‚Æ‚ª‚Å‚«A(Sjis::eval ‚Ì’†‚Ås‚Á‚½)”ñƒ[ƒJƒ‹‚È•Ï”‚Ö‚Ì‘ã“üA
+    ƒTƒuƒ‹[ƒ`ƒ“‚âƒtƒH[ƒ}ƒbƒg‚Ì’è‹`‚ÍASjis::eval ‚ªI—¹‚µ‚½Œã‚à—LŒø‚Å‚·B
+    Sjis::eval ‚ÌƒR[ƒh‚ÍƒuƒƒbƒN‚Æ‚µ‚Äˆµ‚í‚ê‚é‚Ì‚ÅASjis::eval “à‚ÅéŒ¾‚µ‚½ƒ[ƒJ
+    ƒ‹‚ÈƒXƒR[ƒv‚ðŽ‚Â•Ï”‚ÍASjis::eval ‚ªI—¹‚·‚é‚Ü‚Å—LŒø‚Å‚·B(local‚Æmy‚ðŽQÆ‚Ì
+    ‚±‚ÆB)ƒuƒƒbƒN“à‚É’u‚©‚ê‚½ƒR[ƒh‚Ìê‡‚Æ“¯—l‚ÉAˆê”ÔÅŒã‚ÌƒZƒ~ƒRƒƒ“‚ÍÈ‚¢‚Ä‚à
+    \‚¢‚Ü‚¹‚ñB
+
+    Sjis::eval ‚ÍˆÈ‰º‚Ì‚æ‚¤‚ÉƒGƒXƒP[ƒv‚³‚ê‚Ü‚·:
+
+    -------------------------------------------------
+    ˆ—‘O                  ˆ—Œã
+    -------------------------------------------------
+    Sjis::eval { block }    eval { block }
+    Sjis::eval $expr        eval Sjis::escape $expr
+    Sjis::eval              eval Sjis::escape
+    -------------------------------------------------
+
+    Sjis::eval ‚Æ‚¢‚¤ƒTƒuƒ‹[ƒ`ƒ“‚ÍŽÀ‚Í‘¶Ý‚µ‚Ü‚¹‚ñB‚à‚µ‘¶Ý‚µ‚Ä‚¢‚½‚Æ‚·‚é‚ÆAmy
+    ‚ÅéŒ¾‚³‚ê‚½•Ï”‚ðƒVƒ“ƒOƒ‹ƒNƒH[ƒg‚ÅˆÍ‚ÝASjis::eval ‚Ìƒpƒ‰ƒ[ƒ^‚É‚µ‚½‚Æ‚«‚É
+    ¢‚é‚©‚ç‚Å‚·BSjis::escape ‚Í JPerl ƒXƒNƒŠƒvƒg‚ð Perl ƒXƒNƒŠƒvƒg‚ÉƒGƒXƒP[ƒv‚·
+    ‚éƒTƒuƒ‹[ƒ`ƒ“‚Å‚·B
+
+    ŽŸ‚ÉŽ¦‚·‚Ì‚ÍŠÈ’P‚È JPerl ƒVƒFƒ‹‚Ì—á‚Å‚·BJPerl ‚ÌƒR[ƒh‚ð“ü—Í‚·‚é‚æ‚¤‚Éƒ†[ƒU
+    ‚É‘Î‚µ‚Äƒvƒƒ“ƒvƒg‚ð•\Ž¦‚µ‚ÄA“ü—Í‚³‚ê‚½•¶Žš—ñ‚ðƒRƒ“ƒpƒCƒ‹‚µ‚Ä‚©‚çŽÀs‚µ‚ÄA”­
+    ¶‚µ‚½ƒGƒ‰[‚ð•\Ž¦‚µ‚Ü‚·:
+
+        #!/usr/bin/perl
+        # jperlshell.pl - ŠÈ’P‚È JPerl ƒVƒFƒ‹
+        use Sjis;
+        print "\nEnter some JPerl code: ";
+        while (<STDIN>) {
+            Sjis::eval;
+            print $@;
+            print "\nEnter some more JPerl code: ";
+        }
+
+    ŽŸ‚ÌƒXƒNƒŠƒvƒg rename.pl ‚ÍAJPerl ‚ÌŽ®‚Æ‚µ‚Ä—^‚¦‚ç‚ê‚½ŽwŽ¦‚ÉŠî‚Ã‚¢‚ÄA‘å—Ê‚Ì
+    ƒtƒ@ƒCƒ‹‚ðƒŠƒl[ƒ€‚µ‚Ü‚·:
+
+        #!/usr/bin/perl
+        # rename.pl - ƒtƒ@ƒCƒ‹‚Ì–¼‘O‚ð•ÏX‚·‚é
+        use Sjis;
+        $op = shift;
+        for (@ARGV) {
+            $was = $_;
+            Sjis::eval $op;
+            die if $@;
+            # ŽŸ‚Ìs‚ÍƒXƒNƒŠƒvƒg rename.pl ‚Å‚Í‚È‚­A
+            # ‘g‚Ýž‚ÝŠÖ” rename ‚ðŒÄ‚Ño‚·
+            if ($was ne $_) {
+                print STDERR "rename $was --> $_\n";
+                rename($was,$_);
+            }
+        }
+
+    ‚±‚ÌƒXƒNƒŠƒvƒg‚ÍAˆÈ‰º‚Ì‚æ‚¤‚É‚µ‚ÄŽg—p‚µ‚Ü‚·:
+
+        C:\WINDOWS> perl rename.pl 's/\.orig$//' *.orig
+        C:\WINDOWS> perl rename.pl 'y/A-Z/a-z/ unless /^Make/' *
+        C:\WINDOWS> perl rename.pl '$_ .= ".bad"' *.f
+
+    Sjis::eval ‚ðŽg‚¦‚ÎA‚»‚Ì‚Ü‚Ü‚Å‚Í’v–½“I‚É‚È‚é‚æ‚¤‚ÈƒGƒ‰[‚ðƒgƒ‰ƒbƒv‚·‚é‚±‚Æ‚ª
+    ‚Å‚«‚é‚Ì‚ÅA‚ ‚é‹@”\(—á‚¦‚Î fork ‚â symlink)‚ªŽÀ‘•‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ðŠm”F‚·
+    ‚é‚Ì‚É•Ö—˜‚Å‚·B
+
+    Sjis::eval { block } Œ`Ž®‚Å‚ÍƒRƒ“ƒpƒCƒ‹Žž‚É•¶–@ƒ`ƒFƒbƒN‚ªs‚í‚ê‚é‚Ì‚ÅA‚·‚×‚Ä
+    •¶–@ƒGƒ‰[‚Í(Sjis::eval $expr Œ`Ž®‚æ‚è‚à)‘Šú‚É”­Œ©‚³‚ê‚Ü‚·B‚µ‚½‚ª‚Á‚ÄA‘ÎÛ
+    ‚Æ‚È‚éƒR[ƒh‚ª•s•Ï‚ÅASjis::eval $expr ‚Æ Sjis::eval { block } ‚Ì‚Ç‚¿‚ç‚à‚ ‚È
+    ‚½‚Ì–Ú“I‚É“K‚µ‚Ä‚¢‚éê‡‚É‚ÍASjis::eval { block } ‚ðŽg‚¤‚±‚Æ‚ª–]‚Ü‚ê‚Ü‚·B
+    —á‚¦‚ÎAŽŸ‚Ì—á‚ðŒ©‚Ä‚­‚¾‚³‚¢:
+
+        # 0 ‚É‚æ‚éœŽZ‚ð’v–½“I‚Å‚È‚¢‚æ‚¤‚É‚·‚é
+        Sjis::eval { $answer = $a / $b; };
+        warn $@ if $@;
+
+        # “¯‚¶‚±‚Æ‚¾‚ªA‰½‰ñ‚àŽÀs‚·‚éê‡‚É‚ÍŒø—¦‚ªˆ«‚¢
+        Sjis::eval '$answer = $a / $b';
+        warn $@ if $@;
+
+        # ƒRƒ“ƒpƒCƒ‹Žž‚Ì•¶–@ƒGƒ‰[(ƒgƒ‰ƒbƒv‚³‚ê‚È‚¢)
+        Sjis::eval { $answer = }; # Œë‚è
+
+        # ŽÀsŽž‚Ì•¶–@ƒGƒ‰[
+        Sjis::eval '$answer =';   # ƒGƒ‰[ƒƒbƒZ[ƒW‚ª $@ ‚ÉƒZƒbƒg‚³‚ê‚é
+
+    ‚±‚±‚ÅAƒRƒ“ƒpƒCƒ‹‚ª¬Œ÷‚·‚é‚½‚ß‚É‚ÍA{ block } “à‚ÌƒR[ƒh‚Í³‚µ‚¢ JPerl ƒR[
+    ƒh‚Å‚È‚¯‚ê‚Î‚È‚è‚Ü‚¹‚ñB$expr ‚É“ü‚Á‚Ä‚¢‚éƒR[ƒh‚ÍŽÀsŽž‚Ü‚Åƒ`ƒFƒbƒN‚³‚ê‚È‚¢
+    ‚Ì‚ÅAŽÀsŽž‚É‚È‚ç‚È‚¯‚ê‚ÎƒGƒ‰[‚Í”­¶‚µ‚Ü‚¹‚ñB
+
+    Sjis::eval { block } Œ`Ž®‚ðƒ‰ƒCƒuƒ‰ƒŠ‚Ì—áŠO‚ð•ß‘¨‚·‚é‚½‚ß‚ÉŽg‚¤‚Æ‚«‚É‚Í–â‘è‚ª
+    ‚ ‚è‚Ü‚·BŒ»Ý‚Ì __DIE__ ƒtƒbƒN‚Ìó‘Ô‚Í‚Ù‚ÚŠmŽÀ‚É‰ó‚ê‚Ä‚¢‚é‚Æ‚¢‚¤——R‚ÅAƒ†[
+    ƒU[‚ÌƒR[ƒh‚ªÝ’è‚µ‚½ __DIE__ ƒtƒbƒN‚ðŽÀs‚µ‚½‚­‚È‚¢‚©‚à‚µ‚ê‚Ü‚¹‚ñB‚±‚Ì–Ú“I
+    ‚É‚ÍˆÈ‰º‚Ì—á‚Ì‚æ‚¤‚ÉAlocal $SIG{__DIE__} \‘¢‚ªŽg‚¦‚Ü‚·B
+
+    # a private exception trap for divide-by-zero
+    Sjis::eval { local $SIG{'__DIE__'}; $answer = $a / $b; };
+    warn $@ if $@;
+
+    ‚±‚ê‚Í“Á‚É•Ö—˜‚Å‚·; —^‚¦‚ç‚ê‚½ __DIE__ ƒtƒbƒN‚Í die ‚ð‚à‚¤ˆê“xŒÄ‚Ño‚·‚±‚Æ‚ª
+    ‚Å‚«A‚±‚ê‚É‚æ‚Á‚ÄƒGƒ‰[ƒƒbƒZ[ƒW‚ð•Ï‚¦‚éŒø‰Ê‚ª‚ ‚è‚Ü‚·:
+
+    # __DIE__ hooks may modify error messages
+    {
+        local $SIG{'__DIE__'} =
+            sub { (my $x = $_[0]) =~ s/foo/bar/g; die $x };
+        Sjis::eval { die "foo lives here" };
+        print $@ if $@; # prints "bar lives here"
+    }
+
+    ‚±‚ê‚Í‹——£‚Ì—£‚ê‚½“®ì‚Å‚ ‚é‚½‚ßA‚±‚Ì’¼Š´“I‚Å‚È‚¢U‚é•‘‚¢‚Í«—ˆ‚ÌƒŠƒŠ[ƒX‚Å
+    ‚ÍC³‚³‚ê‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñB
+
+    Sjis::eval ‚Å‚ÍAˆÈ‰º‚Ì‚æ‚¤‚Èê‡‚ÉA‰½‚ª’²‚×‚ç‚ê‚é‚©‚É“Á‚É’ˆÓ‚µ‚Ä‚¨‚­‚±‚Æ‚ª
+    •K—v‚Å‚·:
+
+    Sjis::eval $x;        # CASE 1
+    Sjis::eval "$x";      # CASE 2
+
+    Sjis::eval '$x';      # CASE 3
+    Sjis::eval { $x };    # CASE 4
+
+    Sjis::eval "\$$x++";  # CASE 5
+    $$x++;                # CASE 6
+
+    ã‹L‚Ì CASE 1 ‚Æ CASE 2 ‚Ì“®ì‚Í“¯ˆê‚ÅA•Ï” $x “à‚Ì ƒR[ƒh‚ðŽÀs‚µ‚Ü‚·B(‚½
+    ‚¾‚µACASE 2 ‚Å‚ÍA•K—v‚Ì‚È‚¢ƒ_ƒuƒ‹ƒNƒH[ƒg‚É‚æ‚Á‚ÄA“Ç‚Þl‚ª‰½‚ª‹N‚±‚é‚©¬—
+    ‚·‚é‚±‚Æ‚Å‚µ‚å‚¤(‰½‚à‹N‚±‚è‚Ü‚¹‚ñ‚ª)B)“¯—l‚É CASE 3 ‚Æ CASE 4 ‚Ì“®ì‚à“™‚µ‚­A
+    $x ‚Ì’l‚ð•Ô‚·ˆÈŠO‚É‰½‚à‚µ‚È‚¢ $x ‚Æ‚¢‚¤ƒR[ƒh‚ðŽÀs‚µ‚Ü‚·(ƒˆ‚ÉŒ©‚½–Ú‚Ì–â‘è
+    ‚ÅACASE 4 ‚ªD‚Ü‚ê‚Ü‚·‚ªAŽÀsŽž‚Å‚È‚­ƒRƒ“ƒpƒCƒ‹Žž‚ÉƒRƒ“ƒpƒCƒ‹‚³‚ê‚é‚Æ‚¢‚¤
+    —˜“_‚à‚ ‚è‚Ü‚·)BCASE 5 ‚Ìê‡‚ÍA’Êíƒ_ƒuƒ‹ƒNƒH[ƒg‚ðŽg—p‚µ‚Ü‚·B‚±‚Ìó‹µ‚ð
+    œ‚¯‚ÎACASE 6 ‚Ì‚æ‚¤‚ÉA’P‚ÉƒVƒ“ƒ{ƒŠƒbƒNƒŠƒtƒ@ƒŒƒ“ƒX‚ðŽg‚¦‚Î—Ç‚¢‚Å‚µ‚å‚¤B
+
+    Perl 5.14 ‚æ‚è‘O‚Å‚ÍA$@ ‚Ö‚Ì‘ã“ü‚Íƒ[ƒJƒ‹‰»‚³‚ê‚½•Ï”‚Ì•œ‹A‚Ì‘O‚É‹N‚«‚é‚Ì
+    ‚ÅAŒÃ‚¢ƒo[ƒWƒ‡ƒ“‚ÅŽÀs‚³‚ê‚éê‡‚ÍA‘S‚Ä‚Å‚Í‚È‚­ˆê•”‚¾‚¯‚ÌƒGƒ‰[‚ðƒ}ƒXƒN‚µ
+    ‚½‚¢ê‡‚É‚ÍˆêŽž•Ï”‚ª•K—v‚Å‚·:
+
+    # alter $@ on nefarious repugnancy only
+    {
+        my $e;
+        {
+            local $@; # protect existing $@
+            Sjis::eval { test_repugnancy() };
+            # $@ =~ /nefarious/ and die $@; # Perl 5.14 and higher only
+            $@ =~ /nefarious/ and $e = $@;
+        }
+        die $e if defined $e
+    }
+
+    Sjis::eval { block } ‚ÌƒuƒƒbƒN‚Íƒ‹[ƒv‚Æ‚Í‚Ý‚È‚³‚ê‚È‚¢‚Ì‚ÅAƒ‹[ƒv§Œä•¶
+    nextAlastAredo ‚ðŽg‚Á‚Ä”²‚¯o‚µ‚½‚èÄŽÀs‚µ‚½‚è‚·‚é‚±‚Æ‚Í‚Å‚«‚È‚¢B
+
 =item * ƒtƒ@ƒCƒ‹–¼ƒOƒƒrƒ“ƒO
 
     @glob = glob($expr);
@@ -1174,11 +1385,6 @@ perl5.00503 ‚ðŽg—p‚µ‚Ä‚¢‚éê‡‚Å‚àƒtƒ@ƒCƒ‹ƒeƒXƒg‰‰ŽZŽq‚ÍuÏ‚Ýd‚Ë‚év‚±‚Æ‚ª
   bytes::substr    substr    ƒoƒCƒgŽwŒü
   -----------------------------------------
 
-=head1 •W€ƒ‚ƒWƒ…[ƒ‹‚Ì“à—e‚ÌƒGƒXƒP[ƒv
-
-•W€ƒ‚ƒWƒ…[ƒ‹‚Ìƒtƒ@ƒCƒ‹‚ð /Perl/site/lib/Sjis ‚ÉƒRƒs[‚µ‚Ä 'use utf8;' ‚ð
-'use Sjis;' ‚É‘‚«Š·‚¦‚Ü‚·B•K—v‚É‰ž‚¶‚Ä‚»‚Ì‘¼‚Ì‘Š·‚¦‚ðs‚Á‚Ä‚­‚¾‚³‚¢B
-
 =head1 –³Ž‹‚·‚éƒvƒ‰ƒOƒ}‚¨‚æ‚Ñƒ‚ƒWƒ…[ƒ‹
 
   -----------------------------------------------------------
@@ -1285,7 +1491,7 @@ perl5.00503 ‚ðŽg—p‚µ‚Ä‚¢‚éê‡‚Å‚àƒtƒ@ƒCƒ‹ƒeƒXƒg‰‰ŽZŽq‚ÍuÏ‚Ýd‚Ë‚év‚±‚Æ‚ª
 
 =back
 
-=head1 Sjis ƒ\ƒtƒgƒEƒFƒA‚Ìƒ}ƒ‹ƒ`ƒoƒCƒgƒAƒ“ƒJ[ƒŠƒ“ƒOˆ—
+=head1 Sjisƒ\ƒtƒgƒEƒFƒA‚Ìƒ}ƒ‹ƒ`ƒoƒCƒgƒAƒ“ƒJ[ƒŠƒ“ƒOˆ—
 
 =over 2
 
@@ -1646,11 +1852,6 @@ MSWin32 ŠÂ‹«‚Ì ActivePerl ‚Ìƒo[ƒWƒ‡ƒ“ 5.6 ˆÈ~(Perl5.10.0‚àŠÜ‚Ý‚Ü‚·)A‚ ‚é‚¢‚Í‚
     Microsoft Windows ã‚Å chr(0x5c) ‚ÅI‚í‚éƒpƒX‚ðŽw’è‚µ‚Äƒtƒ@ƒCƒ‹ƒeƒXƒg(‰‰ŽZŽq)A
     ‚ ‚é‚¢‚Í lstat()Astat() ‚ðŽÀs‚·‚é‚ÆA${^WIN32_SLOPPY_STAT} ‚É^‚Ì’l‚ªÝ’è‚³‚ê
     ‚Ä‚¢‚éê‡‚Å‚à‚»‚Ìƒtƒ@ƒCƒ‹‚ðƒI[ƒvƒ“‚µ‚Ä’²‚×‚Ü‚·B
-
-=item * eval "string"
-
-    eval ‚Ì "string" ‚ðƒGƒXƒP[ƒv‚·‚é‹@”\‚Í‚Ü‚¾ŽÀ‘•‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB¡Œã‚Ìƒo[ƒWƒ‡ƒ“
-    ‚ÅƒTƒ|[ƒg‚³‚ê‚é‚Å‚µ‚å‚¤B
 
 =item * •¶Žš—ñ‚¨‚æ‚Ñ³‹K•\Œ»‚ÌƒfƒŠƒ~ƒ^
 
@@ -2214,19 +2415,19 @@ Unicode ƒTƒ|[ƒg‚ª perl ‚É“±“ü‚³‚ê‚éˆÈ‘O‚ÍAeq ‰‰ŽZŽq‚ÍA2‚Â‚ÌƒXƒJƒ‰[•Ï”‚É‚æ‚Á
 ‚Ä•\‚³‚ê‚½ƒoƒCƒg—ñ‚ð‚½‚¾”ä‚×‚Ä‚¢‚Ü‚µ‚½Bperl5.8 ˆÈ~Aeq ‚ÍA2‚Â‚ÌƒoƒCƒg—ñ‚ð”ä‚×‚é
 ‚Æ“¯Žž‚É UTF8 ƒtƒ‰ƒO‚ðl—¶‚µ‚Ü‚·B
 
+/* ˆÈ‰º‚Í–³—‚É—‰ð‚µ‚æ‚¤‚Æ‚µ‚È‚­‚Æ‚à\‚í‚È‚¢B */
+
   perl5.8 ˆÈ~‚Ìî•ñˆ—ƒ‚ƒfƒ‹
  
     +----------------------+---------------------+
     |     Text strings     |                     |
     +----------+-----------|    Binary strings   |
-    |   UTF8   |  Latin-1  |                     |
+    |  UTF-8   |  Latin-1  |                     |
     +----------+-----------+---------------------+
     | UTF8     |            Not UTF8             |
     | Flagged  |            Flagged              |
     +--------------------------------------------+
     http://perl-users.jp/articles/advent-calendar/2010/casual/4
- 
-    ‚±‚Ì}‚ðŠo‚¦‚È‚¢‚ÆƒvƒƒOƒ‰ƒ€‚ð‘‚¯‚Ü‚¹‚ñB
  
     (‚Ç‚¤‚µ‚Ä Latin-1 ‚¾‚¯“Á•Êˆµ‚¢‚·‚é‚Ì‚Å‚µ‚å‚¤‚©H)
 
@@ -2309,6 +2510,7 @@ Programming Perl, 3rd ed. (–M–ó ƒvƒƒOƒ‰ƒ~ƒ“ƒOPerl ‘æ3”Å) ‚Ì402ƒy[ƒW‚ð‚à‚¤ˆê“x
 
     JPerl ‚ª‚Æ‚Ä‚à—D‚ê‚Ä‚¢‚é——R‚Í (c) ‚ÌˆÊ’u‚É‚ ‚é‚©‚ç‚Å‚·B‚·‚È‚í‚¿“ú–{Œêˆ—
     ‚ðs‚¤‚½‚ß‚ÉƒXƒNƒŠƒvƒg‚É“Á•Ê‚È‹Lq‚ðs‚¤•K—v‚ª‚ ‚è‚Ü‚¹‚ñB
+    (japerl ‚ª‚»‚Ì–ð–Ú‚ðˆø‚«Œp‚°‚Ü‚·‚æ‚¤‚ÉI)
 
 =item * ƒS[ƒ‹3
 
@@ -2366,6 +2568,8 @@ Programming Perl, 3rd ed. ‚ª‘‚©‚ê‚½ ‚É‚ÍAUTF8 ƒtƒ‰ƒO‚Í¶‚Ü‚ê‚Ä‚¨‚ç‚¸APerl ‚Í
 
 =head1 Perl‚ÌŽå’£
 
+=head2 ‰‚ß‚Ä‚ÌPerl xviii‚æ‚è
+
   ƒRƒ“ƒsƒ…[ƒ^‰ÈŠwŽÒ‚Ì’†‚É‚Í(“Á‚ÉŠÒŒ³Žå‹`ŽÒ‚½‚¿‚Í)”Û’è‚·‚éŽÒ‚à‚¢‚é‚Ì‚¾‚ªA
  lŠÔ‚Æ‚¢‚¤‚à‚Ì‚Í•Ï‚í‚Á‚½Œ`‚ÌS‚ðŽ‚Á‚Ä‚¢‚é‚à‚Ì‚È‚Ì‚¾BS‚ÌŒ`‚Í•½’R‚Å‚Í‚È‚¢
  ‚Ì‚ÅA‚Ð‚Ç‚­˜c‚ß‚é‚±‚Æ‚È‚µ‚É‚Í•½‚ç‚È–Ê‚ÉŽÊ‘œ‚·‚é‚±‚Æ‚Í‚Å‚«‚È‚¢B‚µ‚©‚µ‰ß‹Ž
@@ -2377,14 +2581,14 @@ Programming Perl, 3rd ed. ‚ª‘‚©‚ê‚½ ‚É‚ÍAUTF8 ƒtƒ‰ƒO‚Í¶‚Ü‚ê‚Ä‚¨‚ç‚¸APerl ‚Í
  •½–Ê‚É‰Ÿ‚µž‚Ü‚ê‚é‚Æ‚¢‚¤‚±‚Æ‚ÍA‚Ü‚Á‚½‚­Šì‚Ñ‚Ì‚È‚¢‘¶Ý‚É‚È‚Á‚Ä‚µ‚Ü‚¤‚±‚Æ‚É
  “™‚µ‚¢B
 
- --- ‰‚ß‚Ä‚ÌPerl xviii
+=head2 ‰‚ß‚Ä‚ÌPerl ‘æ6”Å‚æ‚è
 
   ‚à‚µ‚±‚ê‚ð“ª’É‚ÌŽí‚¾‚ÆŽv‚¤‚È‚çA‚»‚Ì’Ê‚è‚Å‚·B’N‚à‚±‚Ì‚æ‚¤‚Èó‹µ‚ðD‚ñ‚Å
  ‚¢‚é‚í‚¯‚Å‚Í‚ ‚è‚Ü‚¹‚ñB‚Å‚àAPerl‚Í“ü—Í‚ÆƒGƒ“ƒR[ƒfƒBƒ“ƒO‚Ìˆµ‚¢‚ÉŠÖ‚µ‚ÄA
  ƒxƒXƒg‚ðs‚­‚µ‚Ä‚­‚ê‚Ü‚·B‚à‚µ—ðŽj‚ðƒŠƒZƒbƒg‚µ‚Ä‚â‚è’¼‚¹‚é‚Ì‚È‚çA‚»‚ÌŽž‚É‚Í
  ‚±‚ñ‚È‚É‘½‚­‚ÌŒë‚è‚ð”Æ‚³‚È‚¢‚Ì‚Å‚·‚ªB
 
- --- ‰‚ß‚Ä‚ÌPerl ‘æ6”Å
+=head2 ŽÀ—pPerlƒvƒƒOƒ‰ƒ~ƒ“ƒO ‘æ2”Å‚æ‚è
 
  ‚Æ‚Í‚¢‚¦Perl‚ÅUnicodeƒf[ƒ^‚ðˆ—‚·‚éÛ‚ÉŠo‚¦‚Ä‚¨‚©‚È‚¯‚ê‚Î‚È‚ç‚È‚¢Å‚àd—v‚È
  ‚±‚Æ‚ÍAUnicodeƒf[ƒ^‚ðŽg—p‚µ‚È‚¢ê‡(‚Ç‚Ìƒtƒ@ƒCƒ‹‚àUTF-8‚Æ‚µ‚Äƒ}[ƒN‚³‚ê‚Ä
@@ -2395,15 +2599,13 @@ Programming Perl, 3rd ed. ‚ª‘‚©‚ê‚½ ‚É‚ÍAUTF8 ƒtƒ‰ƒO‚Í¶‚Ü‚ê‚Ä‚¨‚ç‚¸APerl ‚Í
  ‚ç‚·‚±‚Æ‚à‚ ‚è‚Ü‚·‚ªA³‚µ‚¢‚±‚Æ‚ð–Ù‚Á‚Äs‚¤A‚»‚ê‚ªPerl‚Ì•ûŽ®‚Å‚ ‚èAPerl‚Ì•û
  j‚Å‚à‚ ‚è‚Ü‚·B
 
- --- ŽÀ—pPerlƒvƒƒOƒ‰ƒ~ƒ“ƒO ‘æ2”Å
-
-=head1 Sjis ƒ\ƒtƒgƒEƒFƒA’a¶‚Ì‚Í‚È‚µ
+=head1 Sjisƒ\ƒtƒgƒEƒFƒA’a¶‚Ì‚Í‚È‚µ
 
  Perl3 ˆÈ~‚Ì Perl ‚ÍƒoƒCƒiƒŠƒf[ƒ^‚ðˆ—‚·‚éƒXƒNƒŠƒvƒg‚ð‹Lq‚Å‚«‚Ü‚·B
  ‚»‚ê‚ÍŠÈ’P‚ÉŒ¾‚¦‚ÎA‚Ç‚ñ‚Èƒf[ƒ^‚Å‚àˆ—‚Å‚«‚é‚Æ‚¢‚¤‚±‚Æ‚Å‚·B
  
- ƒf[ƒ^‚Æ‚¢‚¤‚ÆA“ú–{‘“à‚Å‚Í(‚à‚Æ‚à‚Æ1981”N‚ÉCP/M-86‚Ì“à•”ˆ——p‚Æ‚µ‚ÄlˆÄ
- ‚³‚ê‚½)ƒVƒtƒgJIS•„†‰»•ûŽ®‚ªAî•ñŒðŠ·—pA‚³‚ç‚É‚Íî•ñ’~Ï—p‚Æ‚µ‚ÄL‚­Žg‚í
+ ƒf[ƒ^‚Æ‚¢‚¤‚Æ“ú–{‘“à‚Å‚ÍA‚à‚Æ‚à‚Æ1981”N‚ÉCP/M-86‚Ì“à•”ˆ——p‚Æ‚µ‚ÄlˆÄ
+ ‚³‚ê‚½ƒVƒtƒgJIS•„†‰»•ûŽ®‚ªAî•ñŒðŠ·—pA‚³‚ç‚É‚Íî•ñ’~Ï—p‚Æ‚µ‚ÄL‚­Žg‚í
  ‚ê‚Ä‚¢‚Ü‚·B‚¾‚©‚çA‚»‚Ìƒf[ƒ^‚ðˆ—‚·‚éƒXƒNƒŠƒvƒg‚ðƒVƒtƒgJIS‚Åì¬‚·‚é‚Ì
  ‚Í‚²‚­Ž©‘R‚È‘I‘ð‚Å‚·B
  
@@ -2425,18 +2627,48 @@ Programming Perl, 3rd ed. ‚ª‘‚©‚ê‚½ ‚É‚ÍAUTF8 ƒtƒ‰ƒO‚Í¶‚Ü‚ê‚Ä‚¨‚ç‚¸APerl ‚Í
  PerlƒXƒNƒŠƒvƒg    ƒf[ƒ^      ‰Â        ‰Â
  ---------------------------------------------------
  
- perl ƒCƒ“ƒ^ƒvƒŠƒ^‚ÍƒoƒCƒiƒŠ‚ÌƒXƒNƒŠƒvƒg‚ðŽÀs‚Å‚«‚È‚¢‚¯‚ê‚ÇAPerl Œ¾Œê‚Æ
- Perl ƒXƒNƒŠƒvƒg‚ª‚ ‚ê‚ÎA‚±‚ÌŒ‡“_‚ðƒJƒo[‚Å‚«‚»‚¤‚ÉŽv‚¦‚Ü‚·B
+ perl ƒCƒ“ƒ^ƒvƒŠƒ^‚ÍƒVƒtƒgJIS‚Å‹Lq‚³‚ê‚½ƒXƒNƒŠƒvƒg‚ðŽÀs‚Å‚«‚È‚¢‚¯‚ê‚ÇA
+ Perl Œ¾Œê‚É‚Í–{—ˆA‚»‚Ì‚æ‚¤‚È§ŒÀ‚ª‚ ‚é‚í‚¯‚Å‚Í‚ ‚è‚Ü‚¹‚ñB
  
- ‚Ü‚½Ž‹“_‚ð•Ï‚¦‚Ä Perl ˆÈŠO‚Ì‘¼‚ÌƒvƒƒOƒ‰ƒ~ƒ“ƒOŒ¾ŒêŠÂ‹«‚ðŠÜ‚ß‚ÄŒ©“n‚µ‚½‚Æ
- ‚«A‚Ð‚Æ‚Â‚ÌƒXƒNƒŠƒvƒgƒtƒ@ƒCƒ‹’†‚É•¡”‚Ì•„†‰»•ûŽ®‚ÅƒŠƒeƒ‰ƒ‹•¶Žš—ñ‚ð‹Lq
- ‚·‚éƒP[ƒX‚Í‚ ‚é‚Ì‚Å‚µ‚å‚¤‚©H
+ —v“_‚Í‚S‚Â‚ ‚è‚Ü‚·B
  
- ‚Ð‚Æ‚Â‚ÌƒXƒNƒŠƒvƒg’†‚ÌƒŠƒeƒ‰ƒ‹•¶Žš—ñ‚Ì•„†‰»•ûŽ®‚Í‚Ð‚Æ‚Â‚Å[•ª‚Å‚·B
- (Žc‚è‚Ì•„†‰»•ûŽ®‚Í16iƒGƒXƒP[ƒv‚Å‹Lq‚·‚é‚Æ‚¢‚¤‚±‚Æ‚Å‚·B)
+ ‚PDƒXƒNƒŠƒvƒg‚Ì•„†‰»•ûŽ®
  
- ‚±‚Ìƒ\ƒtƒgƒEƒFƒA‚Í‚»‚Ì‚æ‚¤‚ÈƒAƒCƒfƒBƒAE‘O’ñðŒ‚É‚æ‚Á‚Äì‚èŽn‚ß‚ç‚ê‚Ü‚µ
- ‚½B
+ ‚Ð‚Æ‚Â‚ÌƒXƒNƒŠƒvƒg’†‚É‚Q‚ÂˆÈã‚Ì•„†‰»•ûŽ®‚ÅƒŠƒeƒ‰ƒ‹•¶Žš—ñ‚ð‹Lq‚·‚éê‡A
+ ŽÀÛ‚ÉŽg‚¤•„†‰»•ûŽ®‚Í‚P‚Â‚Ì‚Ý‚Æ‚µAŽc‚è‚Í16iƒGƒXƒP[ƒv‚ðŽg‚Á‚Ä‹Lq‚·‚é
+ ‚Æ‚æ‚¢‚Å‚µ‚å‚¤B
+ ’·Šú“I‚È‰^—pE•ÛŽç‚ðl‚¦‚½ê‡A•¡”‚Ì•„†‰»•ûŽ®‚ª¬Ý‚µ‚½ƒXƒNƒŠƒvƒg‚ð•Ò
+ W‚Å‚«‚éŠÂ‹«‚ð‘O’ñ‚É‚Í‚Å‚«‚Ü‚¹‚ñB
+ 
+ ‚QD“üo—Íƒf[ƒ^‚Ì•„†‰»•ûŽ®
+ 
+ ƒŒƒR[ƒh‚²‚Æ‚ÉAƒtƒB[ƒ‹ƒh‚²‚Æ‚É•„†‰»•ûŽ®‚ªˆÙ‚È‚é‚à‚Ì‚ª¬Ý‚·‚éA‚³‚ç‚É
+ ‚Í‚»‚ê‚ç‚Ì•„†‰»•ûŽ®‚ªí‚É–¾Šm‚Æ‚ÍŒÀ‚ç‚¸Aƒf[ƒ^‚»‚Ì‚à‚Ì‚©‚ç„‘ª‚µ‚È‚¯‚ê
+ ‚Î‚È‚ç‚È‚¢A‚Æ‚¢‚¤‚Ì‚Íƒ[ƒ‹ƒhEƒƒCƒhEƒEƒFƒbƒu‚Ì•ª–ì‚ÉŒÀ‚ç‚ê‚Ä‚¢‚Ü‚·B
+ ‚¢‚Â‚Ì ‚©‚ç‚©Perl‚Í‚±‚Ìê‡‚ð "ˆê”Ê" ‚Æ‚µ‚Äˆµ‚Á‚Ä‚µ‚Ü‚Á‚Ä‚¢‚é‚Ì‚ÅAŒ»ŽÀ
+ ¢ŠE‚Åˆê”Ê“I‚Èu‚½‚¾’P‚É•¶Žš—ñ‚ðo—Í‚µ‚½‚¢v‚Æ‚¢‚¤‚æ‚¤‚È‚±‚Æ‚ª“ï‚µ‚­‚È‚è
+ ‚Ü‚µ‚½B
+ ˆê”Ê“I‚È‚à‚Ì‚ðˆê”Ê“I‚Éˆµ‚¢A—áŠO‚ð—áŠO‚Æ‚µ‚Äˆµ‚¤‚Æ‚¢‚¤ Perl –{—ˆ‚ÌŒ`‚É–ß
+ ‚¹‚ÎA"Easy jobs easy" ‚ðŽæ‚è–ß‚¹‚é‚Í‚¸‚Å‚·B
+ 
+ ‚RD•Ï”‚Ìƒf[ƒ^Œ^
+ 
+ Perl‚Ì•Ï”‚ÍAƒf[ƒ^Œ^‚ðéŒ¾‚µ‚Äì‚è•ª‚¯‚½‚è‚Í‚µ‚Ü‚¹‚ñBƒf[ƒ^Œ^‚ðˆÓŽ¯‚µ
+ ‚½‚¢ê–Ê‚Å‚ÍA‰‰ŽZŽq‚ðŽg‚¢•ª‚¯‚Ü‚·B
+ ‚»‚Ìì–@‚É‡‚í‚¹‚é‚È‚ç‚ÎAƒoƒCƒg—ñ‚Æ•¶Žš—ñ‚Íì‚è•ª‚¯‚é‚Ì‚Å‚Í‚È‚­AŠÖ”‚Ì
+ Žg‚¢•ª‚¯‚ð‚·‚é‚Ù‚¤‚ª‘S‘Ì‚Ì“ˆê«‚ª‚ ‚è‚Ü‚·B
+ 
+ ‚SDencode/decode ‚Æ convert ‚Ìˆá‚¢
+ 
+ encode/decode ‚ÍŒ¾Œêˆ—Œn‚Ì“s‡‚É‡‚í‚¹‚ÄAƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒvƒƒOƒ‰ƒ}‚ª
+ ‹Lq‚µ‚È‚¯‚ê‚Î‚È‚è‚Ü‚¹‚ñBƒvƒƒOƒ‰ƒ}‚Íƒc[ƒ‹‚ðŽg‚¤‘¤‚©‚çƒc[ƒ‹‚ÉŽg‚í‚ê‚é
+ ‘¤‚É‚È‚è‚Ü‚·B‚Æ‚­‚ÉuŠO•”‚Éo—Í‚Å‚«‚È‚¢ó‘Ô‚ª³‚µ‚¢ó‘Ôv‚Æ‚¢‚¤‚Ì‚Íƒf
+ ƒoƒbƒO‚ð¢“ï‚É‚µ‚Ä‚¢‚Ü‚·B
+ ˆê•û‚ÅAjcode.pl ‚Ì convert ‚ÍƒvƒƒOƒ‰ƒ}‚ª•K—v‚É‰ž‚¶‚Ä‹Lq‚·‚é‚à‚Ì‚Å‚·B
+ convert Œã‚Ìƒf[ƒ^‚ª“Ç‚ß‚é‚Ì‚Å‚ ‚ê‚ÎA‚»‚ê‚Íu³‚µ‚¢vƒvƒƒOƒ‰ƒ€‚Å‚·B
+ 
+ ‚±‚Ìƒ\ƒtƒgƒEƒFƒA‚Í‚»‚Ì‚æ‚¤‚ÈƒAƒCƒfƒBƒAA‘O’ñðŒA–Ú•W‚É‚æ‚Á‚Äì‚èŽn‚ß‚ç
+ ‚ê‚Ü‚µ‚½B
 
 =head1 ŽQl•¶Œ£AƒŠƒ“ƒN
 
@@ -2713,6 +2945,27 @@ Programming Perl, 3rd ed. ‚ª‘‚©‚ê‚½ ‚É‚ÍAUTF8 ƒtƒ‰ƒO‚Í¶‚Ü‚ê‚Ä‚¨‚ç‚¸APerl ‚Í
  500ƒy[ƒW
  ISBN 4-89100-438-X
  http://ec.nikkeibp.co.jp/item/books/587500.html
+
+ ‘O“c ŒO‚³‚ñ, Perl‚Ì—ðŽj Perl 1,2,3,4
+ http://www.slideshare.net/KaoruMaeda/perl-perl-1234
+
+ ¬£‚³‚ñ, u•¶Žš—ñv‚É‚Â‚¢‚Ä
+ http://d.hatena.ne.jp/nurse/20141107#1415355181
+
+ ¼”ö ‘×˜a‚³‚ñ, u•¶Žš—ñ‚ð•¶Žš‚Ì—ñ‚Æ‚Ý‚È‚·’Pƒ‰»v‚Á‚Ä‚Ç‚¤‚¢‚¤‚±‚ÆH‰ðà•Ò
+ http://d.hatena.ne.jp/nishiohirokazu/20141107/1415286729
+
+ ¬£‚³‚ñ, “ú–{ŒêEUC‚Ì—ðŽj 22:00
+ http://d.hatena.ne.jp/nurse/20090308/1236517235
+
+ Mike Whitaker‚³‚ñ, Perl And Unicode
+ http://www.slideshare.net/Penfold/perl-and-unicode
+
+ Ricardo Signes‚³‚ñ, Perl 5.14 for Pragmatists
+ http://www.slideshare.net/rjbs/perl-514-8809465
+
+ Ricardo Signes‚³‚ñ, What's New in Perl? v5.10 - v5.16
+ http://www.slideshare.net/rjbs/whats-new-in-perl-v510-v516
 
  ’·’Jì —E‚³‚ñ, ‘Û‰»³‹K•\Œ»ƒ‰ƒCƒuƒ‰ƒŠ‚È‚Ç
  http://lc.linux.or.jp/lc2001/papers/dfa-i18n-paper.pdf
